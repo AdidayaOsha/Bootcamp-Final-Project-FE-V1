@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreateCategory = () => {
@@ -18,15 +17,16 @@ const CreateCategory = () => {
     });
   };
 
-  const onSubmit = () => {
-    console.log(category);
-    Axios.post(`${API_URL}/products/addcategory`, category)
-      .then((results) => {
-        console.log(results.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const onSubmit = async () => {
+    try {
+      await Axios.post(`${API_URL}/products/addcategory`, category).then(
+        (results) => {
+          console.log(results.data);
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
