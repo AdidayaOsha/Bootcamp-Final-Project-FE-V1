@@ -8,6 +8,10 @@ import CategoriesScreen from "./pages/CategoriesScreen";
 import AddProduct from "./pages/AddProduct";
 import ProductEditScreen from "./pages/ProductEditScreen";
 
+import Home from "./pages/User/Home";
+import Catalog from "./pages/User/Catalog";
+import Details from "./pages/User/Details";
+
 import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,6 +26,10 @@ function App() {
           <Route path="/addproduct" element={<AddProduct />} />
           <Route path="/product/edit/:id" element={<ProductEditScreen />} />
           <Route path="*" element={<NotFound />} />
+
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/detail/:id" element={<Details />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
