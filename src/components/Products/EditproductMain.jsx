@@ -47,7 +47,7 @@ const EditProductMain = (props) => {
                     <textarea
                       placeholder="Type here"
                       className="form-control"
-                      rows="7"
+                      rows="5"
                       required
                       value={productId.description}
                     ></textarea>

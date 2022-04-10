@@ -7,20 +7,57 @@ import Axios from "axios";
 const MainProducts = () => {
   const [data, setData] = useState([]);
   const [sortValue, setSortValue] = useState("");
+  const [warehouses, setWarehouses] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    getProducts();
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    getWarehouses();
   }, []);
 
   // GET PRODUCTS
-  const getProducts = () => {
-    Axios.get(`${API_URL}/products`)
-      .then((results) => {
-        setData(results.data);
-      })
-      .catch((err) => {
-        console.log(err);
+  const getProducts = async () => {
+    await Axios.get(`${API_URL}/products`).then((results) => {
+      setData(results.data);
+    });
+    getProducts().catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const getCategories = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/categories`).then((results) => {
+        setCategories(results.data);
       });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getWarehouses = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
+        setWarehouses(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const SelectCategories = () => {
+    return categories.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
+  const SelectWarehouse = () => {
+    return warehouses.map((val) => {
+      return <option>{val.name}</option>;
+    });
   };
 
   // SORTING PRODUCTS
@@ -51,11 +88,17 @@ const MainProducts = () => {
     return (
       <thead>
         <tr>
-          <th></th>
+          <th>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" />
+            </div>
+          </th>
+          <th>ID</th>
           <th>Image</th>
           <th>Name</th>
           <th>Description</th>
           <th>Price</th>
+          <th>Category</th>
           <th>Stock Ready</th>
           <th>Stock Reserved</th>
           <th>Warehouse</th>
@@ -69,6 +112,11 @@ const MainProducts = () => {
     return Products.map((val) => {
       return (
         <tr key={val.id}>
+          <td>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" />
+            </div>
+          </td>
           <th>{val.id}</th>
           <td>
             <img
@@ -79,6 +127,7 @@ const MainProducts = () => {
           <td>{val.name}</td>
           <td>{val.description.slice(0, 12)}...</td>
           <td>{val.price}</td>
+          <td>Men Fashion</td>
           <td>{val.stockReady}</td>
           <td>{val.stockReserved}</td>
           <td>{val.warehouse}</td>
@@ -123,31 +172,27 @@ const MainProducts = () => {
       <div className="card my-4 shadow-sm">
         <header className="card-header bg-white ">
           <div className="row gx-3 py-3">
-            <div className="col-lg-4 col-md-6 me-auto ">
+            <div className="col-lg-4 col-md-6 me-auto flex flex-row">
               <input
                 type="search"
                 placeholder="Search Product"
                 className="form-control p-2"
               />
+              <button className="btn btn-outline border-0 hover:btn-ghost">
+                Search
+              </button>
             </div>
+
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
                 <option>Choose Warehouse</option>
-                <option>BSD</option>
-                <option>Jakarta</option>
-                <option>Bekasi</option>
+                <SelectWarehouse />
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
                 <option>All category</option>
-                <option>Electronics</option>
-                <option>Clothings</option>
-                <option>Food and Drinks</option>
-                <option>Music</option>
-                <option>Food and Drinks</option>
-                <option>Food and Drinks</option>
-                <option>Food and Drinks</option>
+                <SelectCategories />
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">

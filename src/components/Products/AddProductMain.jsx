@@ -5,16 +5,31 @@ import { API_URL } from "../../constant/api";
 
 const AddProductMain = () => {
   const [newData, setNewData] = useState({});
+  const [warehouses, setWarehouses] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const inputHandler = (e) => {
     const name = e.target.name;
     const value =
-      name === "price" || name === "stock" ? +e.target.value : e.target.value;
+      name === "price" ||
+      name === "stock" ||
+      name === "productCategoryId" ||
+      name === "warehouseId"
+        ? +e.target.value
+        : e.target.value;
     setNewData({
       ...newData,
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    getWarehouses();
+  }, []);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -27,6 +42,38 @@ const AddProductMain = () => {
     //     console.log(err);
     //   });
     console.log(newData);
+  };
+
+  const getCategories = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/categories`).then((results) => {
+        setCategories(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getWarehouses = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
+        setWarehouses(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const SelectCategories = () => {
+    return categories.map((val, id) => {
+      return <option value={`${val.id}`}>{val.name}</option>;
+    });
+  };
+
+  const SelectWarehouse = () => {
+    return warehouses.map((val, id) => {
+      return <option value={`${val.id}`}>{val.name}</option>;
+    });
   };
 
   return (
@@ -57,7 +104,7 @@ const AddProductMain = () => {
                       required
                       onChange={(e) => inputHandler(e)}
                     />
-                    <div className="mb-2">
+                    <div className="mt-2">
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder="Type here"
@@ -99,11 +146,30 @@ const AddProductMain = () => {
                   </div>
 
                   <div className="mb-2">
-                    <select className="form-select">
-                      <option>Choose Category</option>
-                      <option>Men Fashion</option>
-                      <option>Jakarta</option>
-                      <option>Bekasi</option>
+                    <label htmlFor="product_price" className="form-label">
+                      Product Category
+                    </label>
+                    <select
+                      onChange={(e) => inputHandler(e)}
+                      className="form-select"
+                      name="productCategoryId"
+                    >
+                      <option selected>Choose Category</option>
+                      <SelectCategories />
+                    </select>
+                  </div>
+
+                  <div className="mb-2">
+                    <label htmlFor="product_price" className="form-label">
+                      Warehouse
+                    </label>
+                    <select
+                      onChange={(e) => inputHandler(e)}
+                      className="form-select"
+                      name="warehouseId"
+                    >
+                      <option selected>Choose Warehouse</option>
+                      <SelectWarehouse />
                     </select>
                   </div>
 
