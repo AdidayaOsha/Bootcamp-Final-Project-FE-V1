@@ -9,8 +9,6 @@ const CreateCategory = () => {
   const [category, setCategory] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
-
   const inputHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -25,7 +23,6 @@ const CreateCategory = () => {
     Axios.post(`${API_URL}/products/addcategory`, category)
       .then((results) => {
         console.log(results.data);
-        toast.success("OKAY");
       })
       .catch((err) => {
         console.log(err);

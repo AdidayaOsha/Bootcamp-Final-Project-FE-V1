@@ -39,7 +39,7 @@ const MainProducts = () => {
         } else if (sortValue === "sort") {
           results = await Axios.get(`${API_URL}/products`);
         }
-        setData(results.data);
+        // setData(results.data);
       } catch (err) {
         console.log(err);
       }
