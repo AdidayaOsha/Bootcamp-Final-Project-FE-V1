@@ -4,7 +4,7 @@ import Axios from "axios"
 
 const Authentication = () => {
     const { token } = useParams();
-    const [message, setMessage] = useState("Kamu belum verified")
+    const [message, setMessage] = useState("You are not verified yet!")
 
 
     const sendVerification = () => {
