@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import '../assets/styles/user.css';
-import '../assets/styles/responsive.css';
+import "../assets/styles/user.css";
+import "../assets/styles/responsive.css";
 
 const Header = () => {
   return (
@@ -44,7 +44,11 @@ const Header = () => {
               <div className="row ">
                 <div className="col-6 d-flex align-items-center">
                   <Link className="navbar-brand" to="/">
-                    <img alt="logo" src="/images/logo.jpg" style={{width:30,borderRadius:60}}/>
+                    <img
+                      alt="logo"
+                      src="/images/logo.jpg"
+                      style={{ width: 30, borderRadius: 60 }}
+                    />
                   </Link>
                 </div>
                 <div className="col-6 d-flex align-items-center justify-content-end Login-Register">
@@ -74,26 +78,26 @@ const Header = () => {
                       </div>
                     </div>
                   ) : ( */}
-                    <div className="btn-group">
-                      <button
-                        type="button"
-                        className="name-button dropdown-toggle"
-                        data-toggle="dropdown"
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                      >
-                        <i class="fas fa-user"></i>
-                      </button>
-                      <div className="dropdown-menu">
-                        <Link className="dropdown-item" to="/login">
-                          Login
-                        </Link>
+                  <div className="btn-group">
+                    <button
+                      type="button"
+                      className="name-button dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <i class="fas fa-user"></i>
+                    </button>
+                    <div className="dropdown-menu">
+                      <Link className="dropdown-item" to="/login">
+                        Login
+                      </Link>
 
-                        <Link className="dropdown-item" to="/register">
-                          Register
-                        </Link>
-                      </div>
+                      <Link className="dropdown-item" to="/register">
+                        Register
+                      </Link>
                     </div>
+                  </div>
                   {/* )} */}
 
                   <Link to="/cart" className="cart-mobile-icon">
@@ -122,7 +126,11 @@ const Header = () => {
             <div className="row">
               <div className="col-md-3 col-4 d-flex align-items-center">
                 <Link className="navbar-brand" to="/">
-                  <img alt="logo" src="/images/logo.jpg" style={{width:60,borderRadius:60}}/>
+                  <img
+                    alt="logo"
+                    src="/images/logo.jpg"
+                    style={{ width: 60, borderRadius: 60 }}
+                  />
                 </Link>
               </div>
               {/* <div className="col-md-6 col-8 d-flex align-items-center">
@@ -164,11 +172,11 @@ const Header = () => {
                     </div>
                   </div>
                 ) : ( */}
-                  <>
-                    <Link to="/catalog">Catalog</Link>
-                    <Link to="/register">Register</Link>
-                    <Link to="/login">Login</Link>
-                  </>
+                <>
+                  <Link to="/catalog">Catalog</Link>
+                  <Link to="/register">Register</Link>
+                  <Link to="/login">Login</Link>
+                </>
                 {/* )} */}
 
                 {/* <Link to="/cart">

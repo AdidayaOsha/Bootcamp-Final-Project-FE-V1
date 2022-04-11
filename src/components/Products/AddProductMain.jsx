@@ -4,25 +4,14 @@ import Axios from "axios";
 import { API_URL } from "../../constant/api";
 
 const AddProductMain = () => {
-  const [newData, setNewData] = useState({});
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [stockReady, setStockReady] = useState(0);
+  const [optionCategories, setOptionCategories] = useState([]);
+  const [optionWarehouse, setOptionWarehouse] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
-
-  const inputHandler = (e) => {
-    e.preventDefault();
-    const name = e.target.name;
-    const value =
-      name === "price" ||
-      name === "stock" ||
-      name === "productCategoryId" ||
-      name === "warehouseId"
-        ? +e.target.value
-        : e.target.value;
-    setNewData({
-      ...newData,
-      [name]: value,
-    });
-  };
 
   useEffect(() => {
     getWarehouses();
@@ -33,8 +22,15 @@ const AddProductMain = () => {
   }, []);
 
   const onSubmit = (e) => {
-    // e.preventDefault();
-    alert(newData);
+    e.preventDefault();
+    alert({
+      name,
+      description,
+      price,
+      stockReady,
+      optionCategories,
+      optionWarehouse,
+    });
     // Axios.post(`${API_URL}/products/add`, newData)
     //   .then((results) => {
     //     console.log(results.data);
@@ -42,7 +38,6 @@ const AddProductMain = () => {
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    console.log(newData);
   };
 
   const getCategories = async () => {
@@ -66,14 +61,14 @@ const AddProductMain = () => {
   };
 
   const SelectCategories = () => {
-    return categories.map((val, index) => {
-      return <option value={index + 1}>{val.name}</option>;
+    return categories.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
     });
   };
 
   const SelectWarehouse = () => {
-    return warehouses.map((val, index) => {
-      return <option value={index + 1}>{val.name}</option>;
+    return warehouses.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
     });
   };
 
@@ -103,7 +98,7 @@ const AddProductMain = () => {
                       name="name"
                       id="product_title"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setName(e.target.value)}
                     />
                     <div className="mt-2">
                       <label className="form-label">Description</label>
@@ -113,7 +108,7 @@ const AddProductMain = () => {
                         name="description"
                         rows="7"
                         required
-                        onChange={(e) => inputHandler(e)}
+                        onChange={(e) => setDescription(e.target.value)}
                       ></textarea>
                     </div>
                   </div>
@@ -128,7 +123,7 @@ const AddProductMain = () => {
                       name="price"
                       id="product_price"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setPrice(e.target.value)}
                     />
                   </div>
                   <div className="mb-2">
@@ -142,7 +137,7 @@ const AddProductMain = () => {
                       name="stock"
                       id="product_stock"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setStockReady(e.target.value)}
                     />
                   </div>
 
@@ -151,9 +146,13 @@ const AddProductMain = () => {
                       Product Category
                     </label>
                     <select
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => {
+                        setOptionCategories(e.target.value);
+                        e.preventDefault();
+                      }}
                       className="form-select"
                       name="productCategoryId"
+                      value={optionCategories}
                     >
                       <option>Choose Category</option>
                       <SelectCategories />
@@ -165,9 +164,13 @@ const AddProductMain = () => {
                       Warehouse
                     </label>
                     <select
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setOptionWarehouse(e.target.value);
+                      }}
                       className="form-select"
                       name="warehouseId"
+                      value={optionWarehouse}
                     >
                       <option>Choose Warehouse</option>
                       <SelectWarehouse />

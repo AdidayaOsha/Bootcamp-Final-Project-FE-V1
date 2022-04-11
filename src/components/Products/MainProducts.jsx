@@ -72,17 +72,17 @@ const MainProducts = () => {
       try {
         let results;
         if (sortValue === "az") {
-          results = await Axios.get(`${API_URL}/sort/az`);
+          results = await Axios.get(`${API_URL}/products/sort/az`);
         } else if (sortValue === "za") {
-          results = await Axios.get(`${API_URL}/sort/za`);
+          results = await Axios.get(`${API_URL}/products/sort/za`);
         } else if (sortValue === "lowprice") {
-          results = await Axios.get(`${API_URL}/sort/lowprice`);
+          results = await Axios.get(`${API_URL}/products/sort/lowprice`);
         } else if (sortValue === "highprice") {
-          results = await Axios.get(`${API_URL}/sort/highprice`);
+          results = await Axios.get(`${API_URL}/products/sort/highprice`);
         } else if (sortValue === "sort") {
           results = await Axios.get(`${API_URL}/products`);
         }
-        console.log(results);
+        console.log(results.data);
         setData(results.data);
       } catch (err) {
         console.log(err);
@@ -201,7 +201,10 @@ const MainProducts = () => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select
-                onChange={(e) => setSortValue(e.target.value)}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setSortValue(e.target.value);
+                }}
                 className="form-select"
                 name="sort"
               >
@@ -216,7 +219,7 @@ const MainProducts = () => {
                   Lowest Price
                 </option>
                 <option name="highprice" value="highprice">
-                  Highest Price Price
+                  Highest Price
                 </option>
               </select>
             </div>
