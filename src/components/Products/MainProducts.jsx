@@ -11,6 +11,10 @@ const MainProducts = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    getProducts();
+  }, []);
+
+  useEffect(() => {
     getCategories();
   }, []);
 
@@ -20,12 +24,14 @@ const MainProducts = () => {
 
   // GET PRODUCTS
   const getProducts = async () => {
-    await Axios.get(`${API_URL}/products`).then((results) => {
-      setData(results.data);
-    });
-    getProducts().catch((err) => {
-      console.log(err);
-    });
+    await Axios.get(`${API_URL}/products`)
+      .then((results) => {
+        setData(results.data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const getCategories = async () => {
@@ -50,7 +56,7 @@ const MainProducts = () => {
 
   const SelectCategories = () => {
     return categories.map((val) => {
-      return <option value={val.id}>{val.name}</option>;
+      return <option>{val.name}</option>;
     });
   };
 
@@ -76,7 +82,8 @@ const MainProducts = () => {
         } else if (sortValue === "sort") {
           results = await Axios.get(`${API_URL}/products`);
         }
-        // setData(results.data);
+        console.log(results);
+        setData(results.data);
       } catch (err) {
         console.log(err);
       }
@@ -109,7 +116,7 @@ const MainProducts = () => {
   };
 
   const TableBody = () => {
-    return Products.map((val) => {
+    return data.map((val) => {
       return (
         <tr key={val.id}>
           <td>
@@ -119,15 +126,12 @@ const MainProducts = () => {
           </td>
           <th>{val.id}</th>
           <td>
-            <img
-              className="mask mask-squircle w-12"
-              src="https://api.lorem.space/image/shoes?w=160&h=160"
-            />
+            <img className="mask mask-squircle w-12" src={val.product_image} />
           </td>
           <td>{val.name}</td>
           <td>{val.description.slice(0, 12)}...</td>
           <td>{val.price}</td>
-          <td>Men Fashion</td>
+          <td>{val.product_category.name}</td>
           <td>{val.stockReady}</td>
           <td>{val.stockReserved}</td>
           <td>{val.warehouse}</td>
@@ -196,12 +200,24 @@ const MainProducts = () => {
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
-                <option>A-Z</option>
-                <option>Z-A</option>
-                <option>Lowest Price</option>
-                <option>Highest Price Price</option>
-                <option>Most Bought</option>
+              <select
+                onChange={(e) => setSortValue(e.target.value)}
+                className="form-select"
+                name="sort"
+              >
+                <option value="sort">Default</option>
+                <option name="az" value="az">
+                  A-Z
+                </option>
+                <option name="za" value="za">
+                  Z-A
+                </option>
+                <option name="lowprice" value="lowprice">
+                  Lowest Price
+                </option>
+                <option name="highprice" value="highprice">
+                  Highest Price Price
+                </option>
               </select>
             </div>
           </div>

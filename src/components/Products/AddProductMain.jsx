@@ -9,6 +9,7 @@ const AddProductMain = () => {
   const [categories, setCategories] = useState([]);
 
   const inputHandler = (e) => {
+    e.preventDefault();
     const name = e.target.name;
     const value =
       name === "price" ||
@@ -32,7 +33,7 @@ const AddProductMain = () => {
   }, []);
 
   const onSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     alert(newData);
     // Axios.post(`${API_URL}/products/add`, newData)
     //   .then((results) => {
@@ -65,14 +66,14 @@ const AddProductMain = () => {
   };
 
   const SelectCategories = () => {
-    return categories.map((val, id) => {
-      return <option value={`${val.id}`}>{val.name}</option>;
+    return categories.map((val, index) => {
+      return <option value={index + 1}>{val.name}</option>;
     });
   };
 
   const SelectWarehouse = () => {
-    return warehouses.map((val, id) => {
-      return <option value={`${val.id}`}>{val.name}</option>;
+    return warehouses.map((val, index) => {
+      return <option value={index + 1}>{val.name}</option>;
     });
   };
 
@@ -154,7 +155,7 @@ const AddProductMain = () => {
                       className="form-select"
                       name="productCategoryId"
                     >
-                      <option selected>Choose Category</option>
+                      <option>Choose Category</option>
                       <SelectCategories />
                     </select>
                   </div>
@@ -168,7 +169,7 @@ const AddProductMain = () => {
                       className="form-select"
                       name="warehouseId"
                     >
-                      <option selected>Choose Warehouse</option>
+                      <option>Choose Warehouse</option>
                       <SelectWarehouse />
                     </select>
                   </div>
