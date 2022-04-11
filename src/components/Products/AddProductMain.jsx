@@ -4,21 +4,33 @@ import Axios from "axios";
 import { API_URL } from "../../constant/api";
 
 const AddProductMain = () => {
-  const [newData, setNewData] = useState({});
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [stockReady, setStockReady] = useState(0);
+  const [optionCategories, setOptionCategories] = useState([]);
+  const [optionWarehouse, setOptionWarehouse] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const inputHandler = (e) => {
-    const name = e.target.name;
-    const value =
-      name === "price" || name === "stock" ? +e.target.value : e.target.value;
-    setNewData({
-      ...newData,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    getWarehouses();
+  }, []);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    alert(newData);
+    alert({
+      name,
+      description,
+      price,
+      stockReady,
+      optionCategories,
+      optionWarehouse,
+    });
     // Axios.post(`${API_URL}/products/add`, newData)
     //   .then((results) => {
     //     console.log(results.data);
@@ -26,7 +38,38 @@ const AddProductMain = () => {
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    console.log(newData);
+  };
+
+  const getCategories = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/categories`).then((results) => {
+        setCategories(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getWarehouses = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
+        setWarehouses(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const SelectCategories = () => {
+    return categories.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
+  const SelectWarehouse = () => {
+    return warehouses.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
   };
 
   return (
@@ -55,9 +98,9 @@ const AddProductMain = () => {
                       name="name"
                       id="product_title"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setName(e.target.value)}
                     />
-                    <div className="mb-2">
+                    <div className="mt-2">
                       <label className="form-label">Description</label>
                       <textarea
                         placeholder="Type here"
@@ -65,7 +108,7 @@ const AddProductMain = () => {
                         name="description"
                         rows="7"
                         required
-                        onChange={(e) => inputHandler(e)}
+                        onChange={(e) => setDescription(e.target.value)}
                       ></textarea>
                     </div>
                   </div>
@@ -80,7 +123,7 @@ const AddProductMain = () => {
                       name="price"
                       id="product_price"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setPrice(e.target.value)}
                     />
                   </div>
                   <div className="mb-2">
@@ -94,16 +137,43 @@ const AddProductMain = () => {
                       name="stock"
                       id="product_stock"
                       required
-                      onChange={(e) => inputHandler(e)}
+                      onChange={(e) => setStockReady(e.target.value)}
                     />
                   </div>
 
                   <div className="mb-2">
-                    <select className="form-select">
+                    <label htmlFor="product_price" className="form-label">
+                      Product Category
+                    </label>
+                    <select
+                      onChange={(e) => {
+                        setOptionCategories(e.target.value);
+                        e.preventDefault();
+                      }}
+                      className="form-select"
+                      name="productCategoryId"
+                      value={optionCategories}
+                    >
                       <option>Choose Category</option>
-                      <option>Men Fashion</option>
-                      <option>Jakarta</option>
-                      <option>Bekasi</option>
+                      <SelectCategories />
+                    </select>
+                  </div>
+
+                  <div className="mb-2">
+                    <label htmlFor="product_price" className="form-label">
+                      Warehouse
+                    </label>
+                    <select
+                      onChange={(e) => {
+                        e.preventDefault();
+                        setOptionWarehouse(e.target.value);
+                      }}
+                      className="form-select"
+                      name="warehouseId"
+                      value={optionWarehouse}
+                    >
+                      <option>Choose Warehouse</option>
+                      <SelectWarehouse />
                     </select>
                   </div>
 

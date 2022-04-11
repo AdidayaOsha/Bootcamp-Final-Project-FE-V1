@@ -3,6 +3,7 @@ import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 const CreateCategory = () => {
   const [category, setCategory] = useState("");
@@ -21,7 +22,9 @@ const CreateCategory = () => {
     try {
       await Axios.post(`${API_URL}/products/addcategory`, category).then(
         (results) => {
+          toast.success("Category Added!");
           console.log(results.data);
+          setCategory("");
         }
       );
     } catch (err) {
