@@ -9,18 +9,19 @@ const MainProducts = () => {
   const [sortValue, setSortValue] = useState("");
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    getProducts();
-  }, []);
+  // useEffect(() => {
+  //   getProducts();
+  // }, []);
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+  // useEffect(() => {
+  //   getCategories();
+  // }, []);
 
-  useEffect(() => {
-    getWarehouses();
-  }, []);
+  // useEffect(() => {
+  //   getWarehouses();
+  // }, []);
 
   // GET PRODUCTS
   const getProducts = async () => {
@@ -28,6 +29,16 @@ const MainProducts = () => {
       .then((results) => {
         setData(results.data);
         console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onSearch = () => {
+    Axios.post(`${API_URL}/products/search`, { name: search })
+      .then((results) => {
+        setData(results.data);
       })
       .catch((err) => {
         console.log(err);
@@ -178,11 +189,16 @@ const MainProducts = () => {
           <div className="row gx-3 py-3">
             <div className="col-lg-4 col-md-6 me-auto flex flex-row">
               <input
-                type="search"
+                type="text"
                 placeholder="Search Product"
                 className="form-control p-2"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="btn btn-outline border-0 hover:btn-ghost">
+              <button
+                onClick={onSearch}
+                className="btn btn-outline border-0 hover:btn-ghost"
+              >
                 Search
               </button>
             </div>
