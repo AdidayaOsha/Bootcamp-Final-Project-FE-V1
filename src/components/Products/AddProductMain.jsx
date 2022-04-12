@@ -7,54 +7,59 @@ const AddProductMain = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
-  const [stockReady, setStockReady] = useState(0);
-  const [optionCategories, setOptionCategories] = useState([]);
-  const [optionWarehouse, setOptionWarehouse] = useState([]);
+  const [stock_ready, setStock_ready] = useState(0);
+  const [productCategoryId, setProductCategoryId] = useState("");
+  const [warehouseId, setWarehouseId] = useState("");
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    const getWarehouses = async () => {
+      try {
+        await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
+          setWarehouses(results.data);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
     getWarehouses();
   }, []);
 
   useEffect(() => {
+    const getCategories = async () => {
+      try {
+        await Axios.get(`${API_URL}/products/categories`).then((results) => {
+          setCategories(results.data);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
     getCategories();
   }, []);
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    alert({
-      name,
-      description,
-      price,
-      stockReady,
-      optionCategories,
-      optionWarehouse,
-    });
-    // Axios.post(`${API_URL}/products/add`, newData)
-    //   .then((results) => {
-    //     console.log(results.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  };
-
-  const getCategories = async () => {
     try {
-      await Axios.get(`${API_URL}/products/categories`).then((results) => {
-        setCategories(results.data);
+      console.log({
+        name,
+        description,
+        price,
+        stock_ready,
+        productCategoryId,
+        warehouseId,
       });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getWarehouses = async () => {
-    try {
-      await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
-        setWarehouses(results.data);
-      });
+      // await Axios.post(`${API_URL}/products/add`, {
+      //   name,
+      //   description,
+      //   price,
+      //   stock_ready,
+      //   productCategoryId,
+      //   warehouseId,
+      // }).then((results) => {
+      //   console.log(results.data);
+      // });
     } catch (err) {
       console.log(err);
     }
@@ -123,7 +128,7 @@ const AddProductMain = () => {
                       name="price"
                       id="product_price"
                       required
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => setPrice(+e.target.value)}
                     />
                   </div>
                   <div className="mb-2">
@@ -137,7 +142,7 @@ const AddProductMain = () => {
                       name="stock"
                       id="product_stock"
                       required
-                      onChange={(e) => setStockReady(e.target.value)}
+                      onChange={(e) => setStock_ready(+e.target.value)}
                     />
                   </div>
 
@@ -147,12 +152,12 @@ const AddProductMain = () => {
                     </label>
                     <select
                       onChange={(e) => {
-                        setOptionCategories(e.target.value);
+                        setProductCategoryId(+e.target.value);
                         e.preventDefault();
                       }}
                       className="form-select"
                       name="productCategoryId"
-                      value={optionCategories}
+                      value={productCategoryId}
                     >
                       <option>Choose Category</option>
                       <SelectCategories />
@@ -166,11 +171,11 @@ const AddProductMain = () => {
                     <select
                       onChange={(e) => {
                         e.preventDefault();
-                        setOptionWarehouse(e.target.value);
+                        setWarehouseId(+e.target.value);
                       }}
                       className="form-select"
                       name="warehouseId"
-                      value={optionWarehouse}
+                      value={warehouseId}
                     >
                       <option>Choose Warehouse</option>
                       <SelectWarehouse />
