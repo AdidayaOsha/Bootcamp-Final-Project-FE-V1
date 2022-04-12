@@ -11,17 +11,17 @@ const MainProducts = () => {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
 
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
+  useEffect(() => {
+    getProducts();
+  }, []);
 
-  // useEffect(() => {
-  //   getCategories();
-  // }, []);
+  useEffect(() => {
+    getCategories();
+  }, []);
 
-  // useEffect(() => {
-  //   getWarehouses();
-  // }, []);
+  useEffect(() => {
+    getWarehouses();
+  }, []);
 
   // GET PRODUCTS
   const getProducts = async () => {

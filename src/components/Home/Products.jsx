@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
 // import Pagination from "./pagination";
@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 // import { listProduct } from "../../Redux/Actions/ProductActions";
 // import Loading from "../LoadingError/Loading";
 // import Message from "../LoadingError/Error";
+import { API_URL } from "../../constant/api";
+import Axios from "axios";
 import {popularProducts} from '../../data/HomePage';
 
 const Products = () => {
+  const [data, setData] = useState([]);
   // const { keyword, pagenumber } = props;
   // const dispatch = useDispatch();
 
@@ -18,6 +21,22 @@ const Products = () => {
   // useEffect(() => {
   //   dispatch(listProduct(keyword, pagenumber));
   // }, [dispatch, keyword, pagenumber]);
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+   // GET PRODUCTS
+   const getProducts = async () => {
+    await Axios.get(`${API_URL}/catalog/home`)
+      .then((results) => {
+        setData(results.data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <div className="container">
@@ -33,15 +52,15 @@ const Products = () => {
                   <Message variant="alert-danger">{error}</Message>
                 ) : ( */}
                   <>
-                    {popularProducts.map((product) => (
+                    {data.map((product) => (
                       <div
                         className="shop col-lg-3 col-md-6 col-sm-6"
-                        key={product._id}
+                        key={product.id}
                       >
                         <div className="border-product">
                           <Link to={`/detail/${product.id}`}>
                             <div className="shopBack">
-                              <img src={product.image} alt={product.name} 
+                              <img src={product.product_image} alt={product.name} 
                               />
                               <i className="icon fas fa-search box-icon"><p>See details</p></i>
                             </div>
@@ -58,7 +77,7 @@ const Products = () => {
                               value={product.rating}
                               text={`${product.numReviews} reviews`}
                             /> */}
-                            <h3>Rp {product.price}.000,00</h3>
+                            <h3>Rp {product.price},00</h3>
                             {product.stock==0 ? (
                                 <p className="shopoutofstock">Out of stock</p>
                             ):(

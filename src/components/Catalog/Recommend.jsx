@@ -1,25 +1,27 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import { mobile } from "../../assets/styles/responsive";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Rating from "../Home/Rating";
-// import Pagination from "./pagination";
-import { useDispatch, useSelector } from "react-redux";
-// import { listProduct } from "../../Redux/Actions/ProductActions";
-// import Loading from "../LoadingError/Loading";
-// import Message from "../LoadingError/Error";
 import {allProducts} from '../../data/HomePage';
+import { API_URL } from "../../constant/api";
+import Axios from "axios";
 
 const Recommend = () => {
-  // const { keyword, pagenumber } = props;
-  // const dispatch = useDispatch();
+  const [data, setData] = useState([]);
 
-  // const productList = useSelector((state) => state.productList);
-  // const { loading, error, products, page, pages } = productList;
+  useEffect(() => {
+    getProducts();
+  }, []);
 
-  // useEffect(() => {
-  //   dispatch(listProduct(keyword, pagenumber));
-  // }, [dispatch, keyword, pagenumber]);
+  // GET PRODUCTS
+  const getProducts = async () => {
+    await Axios.get(`${API_URL}/products`)
+      .then((results) => {
+        setData(results.data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <div className="container">
@@ -27,15 +29,8 @@ const Recommend = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                {/* {loading ? (
-                  <div className="mb-5">
-                    <Loading />
-                  </div>
-                ) : error ? (
-                  <Message variant="alert-danger">{error}</Message>
-                ) : ( */}
                   <>
-                    {allProducts.slice(0,6).map((product) => (
+                    {data.slice(0,6).map((product) => (
                       <div
                         className="shop col-lg-2 col-md-6 col-sm-6"
                         key={product._id}
@@ -43,7 +38,7 @@ const Recommend = () => {
                         <div className="border-product">
                           <Link to={`/detail/${product.id}`}>
                             <div className="shopBack">
-                              <img src={product.image} alt={product.name} 
+                              <img src={product.product_image} alt={product.name} 
                               />
                               <i className="icon fas fa-search box-icon-catalog"><p>See details</p></i>
                             </div>
@@ -51,17 +46,13 @@ const Recommend = () => {
 
                           <div className="shoptext">
                             <p className="shopname">
-                              <Link to={`/details/${product._id}`}>
+                              <Link to={`/details/${product.id}`}>
                               {product.name}
                               </Link>
                             </p>
 
-                            {/* <Rating
-                              value={product.rating}
-                              text={`${product.numReviews} reviews`}
-                            /> */}
-                            <h3>Rp {product.price}.000,00</h3>
-                            {product.stock==0 ? (
+                            <h3>Rp {product.price},00</h3>
+                            {0==0 ? (
                                 <p className="shopoutofstock">Out of stock</p>
                             ):(
                                 <p className="shopoutstock">Available Stock : {product.stock}</p>

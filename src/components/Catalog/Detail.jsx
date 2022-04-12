@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Rating from "../Home/Rating";
 
-const Detail = () => {
+const Detail = ({toDetail}) => {
   const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");

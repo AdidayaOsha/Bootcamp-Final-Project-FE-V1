@@ -183,7 +183,6 @@ textarea:focus {
 .shopBack img:hover {
   width: 100%;
   height: 250px;
-  background-color: coral;
   object-fit: contain;
   border-radius: 10px;
   position: absolute;
