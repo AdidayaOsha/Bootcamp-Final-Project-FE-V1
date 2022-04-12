@@ -8,13 +8,15 @@ import { API_URL } from "../constant/api";
 import Products from "../data/Products";
 
 const ProductEditScreen = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState({});
+  const { id } = useParams();
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        await Axios.get(`${API_URL}/products`).then((results) => {
+        await Axios.get(`${API_URL}/products/search/${id}`).then((results) => {
           setProducts(results.data);
+          console.log(results.data);
         });
       } catch (err) {
         console.log(err);
@@ -23,15 +25,14 @@ const ProductEditScreen = () => {
     getProducts();
   }, []);
 
-  const { id } = useParams();
-  const productData = products.find((val) => val.id === Number(id));
+  // const productData = products.find((val) => val.id === Number(id));
 
   return (
     <>
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <EditProductMain editData={productData} />
+        <EditProductMain editData={products} />
       </main>
     </>
   );

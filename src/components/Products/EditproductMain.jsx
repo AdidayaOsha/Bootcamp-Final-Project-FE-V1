@@ -5,6 +5,7 @@ const EditProductMain = (props) => {
   const { editData } = props;
   console.log(editData);
 
+  // console.log(editData.warehouse_product.id);
   return (
     <>
       <section className="content-main" style={{ maxWidth: "1200px" }}>
@@ -37,7 +38,7 @@ const EditProductMain = (props) => {
                       className="form-control"
                       id="product_title"
                       required
-                      // value={editData.name}
+                      value={editData.name}
                     />
                   </div>
 
@@ -48,7 +49,7 @@ const EditProductMain = (props) => {
                       className="form-control"
                       rows="5"
                       required
-                      // value={editData.description}
+                      value={editData.description}
                     ></textarea>
                   </div>
 
@@ -62,7 +63,7 @@ const EditProductMain = (props) => {
                       className="form-control"
                       id="product_price"
                       required
-                      // value={editData.price}
+                      value={editData.price}
                     />
                   </div>
 
