@@ -1,36 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Rating from "./Rating";
-// import Pagination from "./pagination";
-import { useDispatch, useSelector } from "react-redux";
-// import { listProduct } from "../../Redux/Actions/ProductActions";
-// import Loading from "../LoadingError/Loading";
-// import Message from "../LoadingError/Error";
+import { currencyFormatter } from '../../helpers/currencyFormatter';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
-import {popularProducts} from '../../data/HomePage';
 
 const Products = () => {
   const [data, setData] = useState([]);
-  // const { keyword, pagenumber } = props;
-  // const dispatch = useDispatch();
 
-  // const productList = useSelector((state) => state.productList);
-  // const { loading, error, products, page, pages } = productList;
-
-  // useEffect(() => {
-  //   dispatch(listProduct(keyword, pagenumber));
-  // }, [dispatch, keyword, pagenumber]);
   useEffect(() => {
     getProducts();
-  }, []);
+  },[]);
 
-   // GET PRODUCTS
-   const getProducts = async () => {
-    await Axios.get(`${API_URL}/catalog/home`)
+  // GET PRODUCTS
+  const getProducts = async () => {
+    await Axios.get(`${API_URL}/catalog`)
       .then((results) => {
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
         setData(results.data);
-        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -38,78 +30,53 @@ const Products = () => {
   };
 
   return (
-    <>
       <div className="container">
         <div className="section">
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                {/* {loading ? (
-                  <div className="mb-5">
-                    <Loading />
-                  </div>
-                ) : error ? (
-                  <Message variant="alert-danger">{error}</Message>
-                ) : ( */}
-                  <>
-                    {data.map((product) => (
-                      <div
-                        className="shop col-lg-3 col-md-6 col-sm-6"
-                        key={product.id}
-                      >
-                        <div className="border-product">
-                          <Link to={`/detail/${product.id}`}>
-                            <div className="shopBack">
-                              <img src={product.product_image} alt={product.name} 
-                              />
-                              <i className="icon fas fa-search box-icon"><p>See details</p></i>
-                            </div>
-                          </Link>
-
-                          <div className="shoptext">
-                            <p className="shopname">
-                              {/* <Link to={`/products/${product._id}`}> */}
-                              {product.name}
-                              {/* </Link> */}
-                            </p>
-
-                            {/* <Rating
-                              value={product.rating}
-                              text={`${product.numReviews} reviews`}
-                            /> */}
-                            <h3>Rp {product.price},00</h3>
-                            {product.stock==0 ? (
-                                <p className="shopoutofstock">Out of stock</p>
-                            ):(
-                                <p className="shopoutstock">Available Stock : {product.stock}</p>
-                            )}
-                            <button className="shopbutton">Buy now</button>
-                          </div>
+                {data.slice(0,6).map((product) => (
+                  <div
+                    className="shop col-lg-2 col-md-6 col-sm-6"
+                    key={product._id}
+                  >
+                    <div className="border-product">
+                      <Link to={`/detail/${product.id}`}>
+                        <div className="shopBack">
+                          <img src={product.product_image} alt={product.name} 
+                          />
+                          <i className="icon fas fa-search box-icon-catalog"><p>See details</p></i>
                         </div>
-                      </div>
-                      
-                    ))}
-                  </>
-                {/* )} */}
+                      </Link>
 
-                
+                      <div className="shoptext">
+                        <p className="shopname">
+                          <Link to={`/details/${product.id}`}>
+                          {product.name}
+                          </Link>
+                        </p>
+
+                        <h3>{currencyFormatter(product.price)}</h3>
+                        {product.stock==0 ? (
+                            <p className="shopoutofstock">Out of stock</p>
+                        ):(
+                            <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
+                        )}
+                        <button className="shopbutton">Buy now</button>
+                      </div>
+                    </div>
+                  </div> 
+                ))}
                 <button className="btn-to-product">
                 <Link to={`/catalog`} >
                   Show More Products <i style={{marginLeft:10}} className="icon fas fa-arrow-right"></i>
                   </Link>
                   </button>
-                {/* Pagination */}
-                {/* <Pagination
-                  pages={pages}
-                  page={page}
-                  keyword={keyword ? keyword : ""}
-                /> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
   );
 };
 

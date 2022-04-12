@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {allProducts} from '../../data/HomePage';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { currencyFormatter } from '../../helpers/currencyFormatter';
 
 const Recommend = () => {
   const [data, setData] = useState([]);
+  const [upTo, setUpTo] = useState(false);
 
   useEffect(() => {
     getProducts();
+    window.scrollTo(0, 0);
   }, []);
 
-  // GET PRODUCTS
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setUpTo(false)
+  },[upTo]);
+
   const getProducts = async () => {
-    await Axios.get(`${API_URL}/products`)
+    await Axios.get(`${API_URL}/catalog`)
       .then((results) => {
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
         setData(results.data);
-        console.log(data);
       })
       .catch((err) => {
         console.log(err);
@@ -36,7 +48,7 @@ const Recommend = () => {
                         key={product._id}
                       >
                         <div className="border-product">
-                          <Link to={`/detail/${product.id}`}>
+                          <Link to={`/detail/${product.id}`} onClick={()=>setUpTo(true)}>
                             <div className="shopBack">
                               <img src={product.product_image} alt={product.name} 
                               />
@@ -51,11 +63,11 @@ const Recommend = () => {
                               </Link>
                             </p>
 
-                            <h3>Rp {product.price},00</h3>
-                            {0==0 ? (
+                            <h3>{currencyFormatter(product.price)}</h3>
+                            {product.stock==0 ? (
                                 <p className="shopoutofstock">Out of stock</p>
                             ):(
-                                <p className="shopoutstock">Available Stock : {product.stock}</p>
+                                <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
                             )}
                             <button className="shopbutton">Buy now</button>
                           </div>
@@ -64,14 +76,6 @@ const Recommend = () => {
                       
                     ))}
                   </>
-                {/* )} */}
-
-                {/* Pagination */}
-                {/* <Pagination
-                  pages={pages}
-                  page={page}
-                  keyword={keyword ? keyword : ""}
-                /> */}
               </div>
             </div>
           </div>

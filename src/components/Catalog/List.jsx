@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../../assets/styles/responsive";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { currencyFormatter } from '../../helpers/currencyFormatter';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 
 const List = () => {
-  let navigate = useNavigate();
   const [data, setData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sortValue, setSortValue] = useState("");
-  const [category, setCategory] = useState(0);
+  const [category, setCategory] = useState("0");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const List = () => {
   }, []);
 
   useEffect(() => {
-    if(category!=0){
+    if(category!=="0"){
       getCategoryById(category);
     } else {
       getProducts();
@@ -42,7 +42,13 @@ const List = () => {
         } else if (sortValue === "sort") {
           results = await Axios.get(`${API_URL}/catalog`);
         }
-        console.log(results.data);
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
         setData(results.data);
       } catch (err) {
         console.log(err);
@@ -57,10 +63,17 @@ const List = () => {
     });
   };
 
-   // GET PRODUCTS
-   const getProducts = async () => {
+  // GET PRODUCTS
+  const getProducts = async () => {
     await Axios.get(`${API_URL}/catalog`)
       .then((results) => {
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
         setData(results.data);
       })
       .catch((err) => {
@@ -93,8 +106,14 @@ const List = () => {
   const getCategoryById = async (category) => {
     try {
       await Axios.get(`${API_URL}/catalog/category/${category}`).then((results) => {
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
         setData(results.data);
-        console.log(results.data)
       });
     } catch (err) {
       console.log(err);
@@ -103,14 +122,6 @@ const List = () => {
 
   const searchItems = (searchValue) => {
     setSearch(searchValue)
-  }
-
-  const submit = () => {
-    getProductByName()
-  }
-
-  const toDetail = (id) => {
-    navigate("/detail", { product: id });
   }
 
   return (
@@ -152,7 +163,7 @@ const List = () => {
               placeholder="Search"
               onChange={(e) => searchItems(e.target.value)}
             />
-            <button onCLick={()=>submit()} type="submit" className="search-button">
+            <button className="search-button">
               search
             </button>
           </form>
@@ -161,36 +172,52 @@ const List = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                  <>
-                    {data.map((product) => (
+                 {data.map((product) => (
                       <div
                         className="shop col-lg-2 col-md-6 col-sm-6"
-                        key={product.id}
+                        key={product._id}
                       >
                         <div className="border-product">
-                          <div className="shopBack" onClick={()=>toDetail(product.id)}>
-                            <img src={product.product_image} alt={product.name} 
-                            />
-                            <i className="icon fas fa-search box-icon-catalog"><p>See details</p></i>
-                          </div>
+                          <Link to={`/detail/${product.id}`}>
+                            <div className="shopBack">
+                              <img src={product.product_image} alt={product.name} 
+                              />
+                              <i className="icon fas fa-search box-icon-catalog"><p>See details</p></i>
+                            </div>
+                          </Link>
 
                           <div className="shoptext">
-                            <p className="shopname" onClick={()=>toDetail(product.id)}>
+                            <p className="shopname">
+                              <Link to={`/details/${product.id}`}>
                               {product.name}
+                              </Link>
                             </p>
-                            <h3>Rp {product.price},00</h3>
-                            {0==0 ? (
+
+                            <h3>{currencyFormatter(product.price)}</h3>
+                            {product.stock==0 ? (
                                 <p className="shopoutofstock">Out of stock</p>
                             ):(
-                                <p className="shopoutstock">Available Stock : {product.stock}</p>
+                                <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
                             )}
                             <button className="shopbutton">Buy now</button>
                           </div>
                         </div>
                       </div>
                       
-                    ))}
-                  </>
+                  ))} 
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
               </div>
             </div>
           </div>
