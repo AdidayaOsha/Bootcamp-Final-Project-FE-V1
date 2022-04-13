@@ -49,6 +49,10 @@ const MainProducts = () => {
     getWarehouses();
   }, []);
 
+  const inputHandler = (e) => {
+    setSearch(e.target.value);
+  };
+
   // SORTING PRODUCTS
   useEffect(() => {
     const getBySort = async () => {
@@ -74,8 +78,8 @@ const MainProducts = () => {
     getBySort();
   }, [sortValue]);
 
-  const onSearch = () => {
-    Axios.post(`${API_URL}/products/search`, { name: search })
+  const onSearch = async () => {
+    await Axios.post(`${API_URL}/products/search`, { name: search })
       .then((results) => {
         setData(results.data);
       })
@@ -139,13 +143,13 @@ const MainProducts = () => {
           <td>{val.description.slice(0, 12)}...</td>
           <td>Rp. {val.price}</td>
           <td>{val.product_category.name}</td>
-          <td>{val.warehouse_product.stock_ready}</td>
-          <td>{val.warehouse_product.stock_reserved}</td>
-          <td>{val.warehouse.name}</td>
+          <td>{val.warehouse_products[0].stock_ready}</td>
+          <td>{val.warehouse_products[0].stock_reserved}</td>
+          <td>{val.warehouse_products[0].warehouse.name}</td>
           <td>
             <div className="my-2 space-x-1">
               <Link
-                to={`/products/edit/${val.id}`}
+                to={`/products/find/${val.id}`}
                 className="btn btn-sm btn-accent p-2 pb-3"
               >
                 <i className="fas fa-pen"></i>
@@ -184,25 +188,62 @@ const MainProducts = () => {
     );
   };
 
-  const SearchAndFilter = () => {
+  const Pagination = () => {
     return (
+      <div className="btn-group flex justify-center">
+        <div className="btn-group space-x-2 mt-2">
+          <button className="btn btn-primary">«</button>
+          <button className="btn text-black bg-base-200">Page 1</button>
+          <button className="btn btn-primary">»</button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section className="content-main">
+      <div className="space-y-2 flex flex-row items-center space-x-3">
+        <h2 className="text-2xl">Manage Products</h2>
+        <div>
+          <Link to="/addproduct" className="btn btn-primary">
+            Add New Product
+          </Link>
+        </div>
+      </div>
+
+      {/* Search and Filter Section */}
       <div className="card my-4 shadow-sm">
         <header className="card-header bg-white ">
           <div className="row gx-3 py-3 space-x-2">
             <div className="col-lg-4 col-md-6 me-auto flex flex-row">
-              <input
-                type="text"
-                placeholder="Search Product"
-                className="form-control p-2"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <button
-                onClick={onSearch}
-                className="btn btn-outline border-0 hover:btn-ghost"
-              >
-                Search
-              </button>
+              <div className="input-group">
+                <input
+                  type="text"
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search Product…"
+                  className="input input-bordered"
+                  value={search}
+                />
+                <button
+                  onClick={onSearch}
+                  className="btn btn-square btn-primary"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="col-lg-2 col-6 col-md-3">
@@ -217,6 +258,7 @@ const MainProducts = () => {
                 <SelectCategories />
               </select>
             </div>
+            {/* SELECTED */}
             <div className="col-lg-2 col-6 col-md-3">
               <select
                 onChange={(e) => setSortValue(e.target.value)}
@@ -243,34 +285,6 @@ const MainProducts = () => {
           </div>
         </header>
       </div>
-    );
-  };
-
-  const Pagination = () => {
-    return (
-      <div className="btn-group flex justify-center">
-        <div className="btn-group space-x-2 mt-2">
-          <button className="btn btn-primary">«</button>
-          <button className="btn text-black bg-base-200">Page 1</button>
-          <button className="btn btn-primary">»</button>
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <section className="content-main">
-      <div className="space-y-2 flex flex-row items-center space-x-3">
-        <h2 className="text-2xl">Manage Products</h2>
-        <div>
-          <Link to="/addproduct" className="btn btn-primary">
-            Add New Product
-          </Link>
-        </div>
-      </div>
-
-      {/* Search and Filter Section */}
-      <SearchAndFilter />
 
       <div className="overflow-x-auto">
         <table className="table table-compact w-full text-center">

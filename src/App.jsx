@@ -28,7 +28,7 @@ function App() {
           <Route path="/products" element={<ProductScreen />} />
           <Route path="/category" element={<CategoriesScreen />} />
           <Route path="/addproduct" element={<AddProduct />} />
-          <Route path="/products/edit/:id" element={<ProductEditScreen />} />
+          <Route path="/products/find/:id" element={<ProductEditScreen />} />
 
           <Route path="/authentication/:token" element={<Authentication />} />
           <Route path="/register" element={<Register />} />
