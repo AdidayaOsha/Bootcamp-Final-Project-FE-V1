@@ -1,81 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Products from "../../data/Products";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 
 const MainProducts = () => {
   const [data, setData] = useState([]);
-  const [sortValue, setSortValue] = useState("");
+  const [sortValue, setSortValue] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
 
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
-
-  // useEffect(() => {
-  //   getCategories();
-  // }, []);
-
-  // useEffect(() => {
-  //   getWarehouses();
-  // }, []);
-
-  // GET PRODUCTS
-  const getProducts = async () => {
-    await Axios.get(`${API_URL}/products`)
-      .then((results) => {
-        setData(results.data);
-        console.log(data);
-      })
-      .catch((err) => {
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        await Axios.get(`${API_URL}/products`).then((results) => {
+          setData(results.data);
+        });
+      } catch (err) {
         console.log(err);
-      });
-  };
+      }
+    };
+    getProducts();
+  }, []);
 
-  const onSearch = () => {
-    Axios.post(`${API_URL}/products/search`, { name: search })
-      .then((results) => {
-        setData(results.data);
-      })
-      .catch((err) => {
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        await Axios.get(`${API_URL}/products/categories`).then((results) => {
+          setCategories(results.data);
+        });
+      } catch (err) {
         console.log(err);
-      });
-  };
+      }
+    };
+    getCategories();
+  }, []);
 
-  const getCategories = async () => {
-    try {
-      await Axios.get(`${API_URL}/products/categories`).then((results) => {
-        setCategories(results.data);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getWarehouses = async () => {
-    try {
-      await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
-        setWarehouses(results.data);
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const SelectCategories = () => {
-    return categories.map((val) => {
-      return <option>{val.name}</option>;
-    });
-  };
-
-  const SelectWarehouse = () => {
-    return warehouses.map((val) => {
-      return <option>{val.name}</option>;
-    });
-  };
+  useEffect(() => {
+    const getWarehouses = async () => {
+      try {
+        await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
+          setWarehouses(results.data);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getWarehouses();
+  }, []);
 
   // SORTING PRODUCTS
   useEffect(() => {
@@ -93,14 +65,38 @@ const MainProducts = () => {
         } else if (sortValue === "sort") {
           results = await Axios.get(`${API_URL}/products`);
         }
-        console.log(results.data);
         setData(results.data);
+        console.log(results.data);
       } catch (err) {
         console.log(err);
       }
     };
     getBySort();
   }, [sortValue]);
+
+  const onSearch = () => {
+    Axios.post(`${API_URL}/products/search`, { name: search })
+      .then((results) => {
+        setData(results.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const SelectCategories = () => {
+    return categories.map((val, idx) => {
+      return <option key={idx}>{val.name}</option>;
+    });
+  };
+
+  const SelectWarehouse = () => {
+    return warehouses.map((val, idx) => {
+      return <option key={idx}>{val.name}</option>;
+    });
+  };
+
+  const productFiltering = async () => {};
 
   const TableHead = () => {
     return (
@@ -127,9 +123,9 @@ const MainProducts = () => {
   };
 
   const TableBody = () => {
-    return data.map((val) => {
+    return data.map((val, idx) => {
       return (
-        <tr key={val.id}>
+        <tr key={idx}>
           <td>
             <div className="form-check">
               <input className="form-check-input" type="checkbox" value="" />
@@ -141,15 +137,15 @@ const MainProducts = () => {
           </td>
           <td>{val.name}</td>
           <td>{val.description.slice(0, 12)}...</td>
-          <td>{val.price}</td>
+          <td>Rp. {val.price}</td>
           <td>{val.product_category.name}</td>
-          <td>{val.stockReady}</td>
-          <td>{val.stockReserved}</td>
-          <td>{val.warehouse}</td>
+          <td>{val.warehouse_product.stock_ready}</td>
+          <td>{val.warehouse_product.stock_reserved}</td>
+          <td>{val.warehouse.name}</td>
           <td>
             <div className="my-2 space-x-1">
               <Link
-                to={`/product/edit/${val.id}`}
+                to={`/products/edit/${val.id}`}
                 className="btn btn-sm btn-accent p-2 pb-3"
               >
                 <i className="fas fa-pen"></i>
@@ -168,10 +164,16 @@ const MainProducts = () => {
     return (
       <tfoot>
         <tr className="">
+          <th>
+            <div className="form-check">
+              <input className="form-check-input" type="checkbox" value="" />
+            </div>
+          </th>
           <th></th>
           <th>Image</th>
           <th>Name</th>
           <th>Description</th>
+          <th>Category</th>
           <th>Price</th>
           <th>Stock Ready</th>
           <th>Stock Reserved</th>
@@ -186,7 +188,7 @@ const MainProducts = () => {
     return (
       <div className="card my-4 shadow-sm">
         <header className="card-header bg-white ">
-          <div className="row gx-3 py-3">
+          <div className="row gx-3 py-3 space-x-2">
             <div className="col-lg-4 col-md-6 me-auto flex flex-row">
               <input
                 type="text"
@@ -217,14 +219,13 @@ const MainProducts = () => {
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select
-                onChange={(e) => {
-                  e.preventDefault();
-                  setSortValue(e.target.value);
-                }}
+                onChange={(e) => setSortValue(e.target.value)}
                 className="form-select"
                 name="sort"
               >
-                <option value="sort">Default</option>
+                <option name="sort" value="sort">
+                  Default
+                </option>
                 <option name="az" value="az">
                   A-Z
                 </option>
