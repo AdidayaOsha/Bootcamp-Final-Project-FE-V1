@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const EditProductMain = (props) => {
   const { editData } = props;
-  console.log(editData);
 
-  // console.log(editData.warehouse_product.id);
-  return (
-    <>
+  return editData.map((val) => {
+    return (
       <section className="content-main" style={{ maxWidth: "1200px" }}>
         <form>
           <div className="flex flex-row space-x-3">
@@ -30,15 +28,13 @@ const EditProductMain = (props) => {
 
                   {/* PRODUCT NAME */}
                   <div className="mb-2">
-                    <label htmlFor="product_title" className="form-label">
-                      Product Title
-                    </label>
+                    <label className="form-label">Product Title</label>
                     <input
                       type="text"
                       className="form-control"
                       id="product_title"
                       required
-                      value={editData.name}
+                      value={val.name}
                     />
                   </div>
 
@@ -49,49 +45,42 @@ const EditProductMain = (props) => {
                       className="form-control"
                       rows="5"
                       required
-                      value={editData.description}
+                      value={val.description}
                     ></textarea>
                   </div>
 
                   {/* PRODUCT PRICE */}
                   <div className="mb-2">
-                    <label htmlFor="product_price" className="form-label">
-                      Price
-                    </label>
+                    <label className="form-label">Price</label>
                     <input
                       type="number"
                       className="form-control"
                       id="product_price"
                       required
-                      value={editData.price}
+                      value={val.price}
                     />
                   </div>
 
                   {/* PRODUCT STOCK READY*/}
                   <div className="mb-2">
-                    <label htmlFor="product_price" className="form-label">
-                      Stock Ready
-                    </label>
+                    <label className="form-label">Stock Ready</label>
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
-                      id="product_stock"
+                      id="product_ready"
                       required
-                      // value={editData.warehouse_product.stock_ready}
+                      value={val.warehouse_products[0].stock_ready}
                     />
                   </div>
 
                   {/* PRODUCT STOCK RESERVED*/}
                   <div className="mb-2">
-                    <label htmlFor="product_price" className="form-label">
-                      Stock Reserved
-                    </label>
+                    <label className="form-label">Stock Reserved</label>
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
                       id="product_stock_reserved"
-                      required
-                      // value={editData.warehouse_product.stock_reserved}
+                      value={val.warehouse_products[0].stock_reserved}
                     />
                   </div>
 
@@ -99,9 +88,9 @@ const EditProductMain = (props) => {
                   <div className="mb-2">
                     <label className="form-label">Warehouse</label>
                     <textarea
+                      type="text"
                       className="form-control"
-                      required
-                      // defaultValue={editData.warehouse.name}
+                      value={val.warehouse_products[0].warehouse.name}
                     ></textarea>
                   </div>
                   <div>
@@ -116,8 +105,8 @@ const EditProductMain = (props) => {
           <div></div>
         </form>
       </section>
-    </>
-  );
+    );
+  });
 };
 
 export default EditProductMain;
