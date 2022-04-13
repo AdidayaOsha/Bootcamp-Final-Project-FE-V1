@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const EditProductMain = (props) => {
-  const { productId } = props;
+  const { editData } = props;
+  console.log(editData);
 
+  // console.log(editData.warehouse_product.id);
   return (
     <>
       <section className="content-main" style={{ maxWidth: "1200px" }}>
@@ -21,7 +23,7 @@ const EditProductMain = (props) => {
                 <div className="card-body">
                   {/* PRODUCT IMAGE */}
                   <div className="mb-2">
-                    <div>{productId.image}</div>
+                    <div></div>
                     <label className="form-label">Images</label>
                     <input className="form-control mt-1" type="file" />
                   </div>
@@ -33,11 +35,10 @@ const EditProductMain = (props) => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Type here"
                       className="form-control"
                       id="product_title"
                       required
-                      value={productId.name}
+                      value={editData.name}
                     />
                   </div>
 
@@ -45,11 +46,10 @@ const EditProductMain = (props) => {
                   <div className="mb-2">
                     <label className="form-label">Description</label>
                     <textarea
-                      placeholder="Type here"
                       className="form-control"
                       rows="5"
                       required
-                      value={productId.description}
+                      value={editData.description}
                     ></textarea>
                   </div>
 
@@ -60,11 +60,10 @@ const EditProductMain = (props) => {
                     </label>
                     <input
                       type="number"
-                      placeholder="Type here"
                       className="form-control"
                       id="product_price"
                       required
-                      value={productId.price}
+                      value={editData.price}
                     />
                   </div>
 
@@ -75,11 +74,10 @@ const EditProductMain = (props) => {
                     </label>
                     <input
                       type="number"
-                      placeholder="Type here"
                       className="form-control"
                       id="product_stock"
                       required
-                      value={productId.stockReady}
+                      // value={editData.warehouse_product.stock_ready}
                     />
                   </div>
 
@@ -90,11 +88,10 @@ const EditProductMain = (props) => {
                     </label>
                     <input
                       type="number"
-                      placeholder="Type here"
                       className="form-control"
                       id="product_stock_reserved"
                       required
-                      value={productId.stockReserved}
+                      // value={editData.warehouse_product.stock_reserved}
                     />
                   </div>
 
@@ -102,10 +99,9 @@ const EditProductMain = (props) => {
                   <div className="mb-2">
                     <label className="form-label">Warehouse</label>
                     <textarea
-                      placeholder="Type here"
                       className="form-control"
                       required
-                      value={productId.warehouse}
+                      // defaultValue={editData.warehouse.name}
                     ></textarea>
                   </div>
                   <div>
