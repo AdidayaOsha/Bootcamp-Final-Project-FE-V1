@@ -94,7 +94,7 @@ const Detail = () => {
                         </button>
                         </Link>
                       </>
-                    )};
+                    )}
                   </div>
                 </div>
               </div>
