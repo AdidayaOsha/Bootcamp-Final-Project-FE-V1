@@ -15,12 +15,17 @@ const EditProductMain = (props) => {
   let [warehouseId, setWarehouseId] = useState(0);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [product_image, setProduct_Image] = useState("");
+  console.log(product_image);
 
   const navigate = useNavigate();
 
   const onSubmitUpdate = async (id) => {
     try {
+      const formData = new FormData();
+      formData.append("product_image", product_image);
       await Axios.patch(`${API_URL}/products/update/${id}`, {
+        formData,
         name,
         description,
         price,
@@ -92,9 +97,16 @@ const EditProductMain = (props) => {
                   {/* PRODUCT IMAGE */}
                   <div className="mb-2">
                     <div></div>
-                    <label className="form-label">Images</label>
-                    <img src="" alt="" />
-                    <input className="form-control mt-1" type="file" />
+                    <label className="form-label"></label>
+                    <img src={`${API_URL}/${val.product_image}`} alt="" />
+                    <input
+                      className="form-control mt-1"
+                      type="file"
+                      size="lg"
+                      name="product_image"
+                      id="fileName"
+                      onChange={(e) => setProduct_Image(e.target.files[0])}
+                    />
                   </div>
 
                   {/* PRODUCT NAME */}

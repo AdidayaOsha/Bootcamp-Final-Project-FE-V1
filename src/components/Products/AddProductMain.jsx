@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
 
@@ -13,6 +13,8 @@ const AddProductMain = () => {
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [product_image, setProduct_Image] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getWarehouses = async () => {
@@ -40,8 +42,7 @@ const AddProductMain = () => {
     getCategories();
   }, []);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
       const formData = new FormData();
       formData.append("product_image", product_image);
@@ -51,9 +52,11 @@ const AddProductMain = () => {
       formData.append("stock_ready", stock_ready);
       formData.append("productCategoryId", productCategoryId);
       formData.append("warehouseId", warehouseId);
+      console.log(formData);
 
       await Axios.post(`${API_URL}/products/add`, formData).then((results) => {
         console.log(results.data);
+        navigate("/products");
       });
     } catch (err) {
       console.log(err);

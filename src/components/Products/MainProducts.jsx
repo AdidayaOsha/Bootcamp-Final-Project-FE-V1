@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { toast } from "react-toastify";
 
 const MainProducts = () => {
   const [data, setData] = useState([]);
@@ -49,8 +50,15 @@ const MainProducts = () => {
     getWarehouses();
   }, []);
 
-  const inputHandler = (e) => {
-    setSearch(e.target.value);
+  const onDelete = async (id) => {
+    try {
+      await Axios.delete(`${API_URL}/products/delete/${id}`).then((results) => {
+        toast("Product Has Been Deleted");
+        Navigate("/products");
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // SORTING PRODUCTS
@@ -100,8 +108,6 @@ const MainProducts = () => {
     });
   };
 
-  const productFiltering = async () => {};
-
   const TableHead = () => {
     return (
       <thead>
@@ -137,7 +143,10 @@ const MainProducts = () => {
           </td>
           <th>{val.id}</th>
           <td>
-            <img className="mask mask-squircle w-12" src={val.product_image} />
+            <img
+              className="mask mask-squircle w-12"
+              src={`${API_URL}/${val.product_image}`}
+            />
           </td>
           <td>{val.name}</td>
           <td>{val.description.slice(0, 12)}...</td>
@@ -154,7 +163,11 @@ const MainProducts = () => {
               >
                 <i className="fas fa-pen"></i>
               </Link>
-              <Link to="#" className="btn btn-sm btn-error p-2 pb-3">
+              <Link
+                to="#"
+                className="btn btn-sm btn-error p-2 pb-3"
+                onClick={() => onDelete(val.id)}
+              >
                 <i className="fas fa-trash-alt"></i>
               </Link>
             </div>
