@@ -11,8 +11,8 @@ const EditProductMain = (props) => {
   let [description, setDescription] = useState("");
   let [price, setPrice] = useState(0);
   let [stock_ready, setStock_ready] = useState(0);
-  let [productCategoryId, setProductCategoryId] = useState("");
-  let [warehouseId, setWarehouseId] = useState("");
+  let [productCategoryId, setProductCategoryId] = useState(0);
+  let [warehouseId, setWarehouseId] = useState(0);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -93,6 +93,7 @@ const EditProductMain = (props) => {
                   <div className="mb-2">
                     <div></div>
                     <label className="form-label">Images</label>
+                    <img src="" alt="" />
                     <input className="form-control mt-1" type="file" />
                   </div>
 
@@ -178,9 +179,7 @@ const EditProductMain = (props) => {
                           ? productCategoryId
                           : (productCategoryId = val.product_category.id)
                       }
-                      onChange={(e) => {
-                        setProductCategoryId(+e.target.value);
-                      }}
+                      onChange={(e) => setProductCategoryId(+e.target.value)}
                     >
                       {SelectCategories()}
                     </select>
@@ -188,9 +187,7 @@ const EditProductMain = (props) => {
 
                   {/* PRODUCT WAREHOUSE*/}
                   <div className="mb-2">
-                    <label htmlFor="product_price" className="form-label">
-                      Warehouse
-                    </label>
+                    <label className="form-label">Warehouse</label>
                     <select
                       className="form-select"
                       name="warehouseId"
@@ -200,10 +197,7 @@ const EditProductMain = (props) => {
                           : (warehouseId =
                               val.warehouse_products[0].warehouse.id)
                       }
-                      onChange={(e) => {
-                        e.preventDefault();
-                        setWarehouseId(+e.target.value);
-                      }}
+                      onChange={(e) => setWarehouseId(+e.target.value)}
                     >
                       {SelectWarehouse()}
                     </select>

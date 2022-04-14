@@ -12,6 +12,7 @@ const AddProductMain = () => {
   const [warehouseId, setWarehouseId] = useState("");
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [product_image, setProduct_Image] = useState("");
 
   useEffect(() => {
     const getWarehouses = async () => {
@@ -42,24 +43,18 @@ const AddProductMain = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log({
-        name,
-        description,
-        price,
-        stock_ready,
-        productCategoryId,
-        warehouseId,
+      const formData = new FormData();
+      formData.append("product_image", product_image);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("stock_ready", stock_ready);
+      formData.append("productCategoryId", productCategoryId);
+      formData.append("warehouseId", warehouseId);
+
+      await Axios.post(`${API_URL}/products/add`, formData).then((results) => {
+        console.log(results.data);
       });
-      // await Axios.post(`${API_URL}/products/add`, {
-      //   name,
-      //   description,
-      //   price,
-      //   stock_ready,
-      //   productCategoryId,
-      //   warehouseId,
-      // }).then((results) => {
-      //   console.log(results.data);
-      // });
     } catch (err) {
       console.log(err);
     }
@@ -183,14 +178,22 @@ const AddProductMain = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="form-label">Images</label>
-                    <input className="form-control mt-1" type="file" />
+                    <label className="form-label">Upload Images</label>
+                    <input
+                      className="form-control mt-1"
+                      type="file"
+                      size="lg"
+                      name="product_image"
+                      id="fileName"
+                      onChange={(e) => setProduct_Image(e.target.files[0])}
+                    />
                   </div>
                   <div>
                     <button
                       type="submit"
                       className="btn btn-primary"
                       onClick={(e) => onSubmit(e)}
+                      encType="multipart/form-data"
                     >
                       Publish now
                     </button>

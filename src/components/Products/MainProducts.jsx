@@ -221,7 +221,7 @@ const MainProducts = () => {
                   type="text"
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search Product…"
-                  className="input input-bordered"
+                  className="input input-bordered w-80"
                   value={search}
                 />
                 <button
