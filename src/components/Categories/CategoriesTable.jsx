@@ -75,10 +75,8 @@ const CategoriesTable = () => {
   return (
     <div className="col-md-12 col-lg-8">
       <table className="table">
-        <TableHead />
-        <tbody>
-          <TableBody />
-        </tbody>
+        {TableHead()}
+        <tbody>{TableBody()}</tbody>
       </table>
     </div>
   );

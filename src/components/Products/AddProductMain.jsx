@@ -160,7 +160,7 @@ const AddProductMain = () => {
                       value={productCategoryId}
                     >
                       <option>Choose Category</option>
-                      <SelectCategories />
+                      {SelectCategories()}
                     </select>
                   </div>
 
@@ -178,7 +178,7 @@ const AddProductMain = () => {
                       value={warehouseId}
                     >
                       <option>Choose Warehouse</option>
-                      <SelectWarehouse />
+                      {SelectWarehouse()}
                     </select>
                   </div>
 

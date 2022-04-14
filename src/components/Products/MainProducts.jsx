@@ -249,13 +249,13 @@ const MainProducts = () => {
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
                 <option>Choose Warehouse</option>
-                <SelectWarehouse />
+                {SelectWarehouse()}
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
                 <option>All category</option>
-                <SelectCategories />
+                {SelectCategories()}
               </select>
             </div>
             {/* SELECTED */}
@@ -288,13 +288,11 @@ const MainProducts = () => {
 
       <div className="overflow-x-auto">
         <table className="table table-compact w-full text-center">
-          <TableHead />
-          <tbody>
-            <TableBody />
-          </tbody>
-          <TableFoot />
+          {TableHead()}
+          <tbody>{TableBody()}</tbody>
+          {TableFoot()}
         </table>
-        <Pagination />
+        {Pagination()}
       </div>
     </section>
   );
