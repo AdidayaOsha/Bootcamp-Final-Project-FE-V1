@@ -13,9 +13,9 @@ const MainCategories = () => {
         <div className="card-body">
           <div className="row">
             {/* Create category */}
-            <CreateCategory />
+            {CreateCategory()}
             {/* Categories table */}
-            <CategoriesTable />
+            {CategoriesTable()}
           </div>
         </div>
       </div>
