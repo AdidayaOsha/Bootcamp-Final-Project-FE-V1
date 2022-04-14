@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
 
@@ -12,6 +12,9 @@ const AddProductMain = () => {
   const [warehouseId, setWarehouseId] = useState("");
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [product_image, setProduct_Image] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getWarehouses = async () => {
@@ -39,27 +42,22 @@ const AddProductMain = () => {
     getCategories();
   }, []);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async () => {
     try {
-      console.log({
-        name,
-        description,
-        price,
-        stock_ready,
-        productCategoryId,
-        warehouseId,
+      const formData = new FormData();
+      formData.append("product_image", product_image);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("stock_ready", stock_ready);
+      formData.append("productCategoryId", productCategoryId);
+      formData.append("warehouseId", warehouseId);
+      console.log(formData);
+
+      await Axios.post(`${API_URL}/products/add`, formData).then((results) => {
+        console.log(results.data);
+        navigate("/products");
       });
-      // await Axios.post(`${API_URL}/products/add`, {
-      //   name,
-      //   description,
-      //   price,
-      //   stock_ready,
-      //   productCategoryId,
-      //   warehouseId,
-      // }).then((results) => {
-      //   console.log(results.data);
-      // });
     } catch (err) {
       console.log(err);
     }
@@ -183,14 +181,22 @@ const AddProductMain = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="form-label">Images</label>
-                    <input className="form-control mt-1" type="file" />
+                    <label className="form-label">Upload Images</label>
+                    <input
+                      className="form-control mt-1"
+                      type="file"
+                      size="lg"
+                      name="product_image"
+                      id="fileName"
+                      onChange={(e) => setProduct_Image(e.target.files[0])}
+                    />
                   </div>
                   <div>
                     <button
                       type="submit"
                       className="btn btn-primary"
                       onClick={(e) => onSubmit(e)}
+                      encType="multipart/form-data"
                     >
                       Publish now
                     </button>

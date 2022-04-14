@@ -11,16 +11,21 @@ const EditProductMain = (props) => {
   let [description, setDescription] = useState("");
   let [price, setPrice] = useState(0);
   let [stock_ready, setStock_ready] = useState(0);
-  let [productCategoryId, setProductCategoryId] = useState("");
-  let [warehouseId, setWarehouseId] = useState("");
+  let [productCategoryId, setProductCategoryId] = useState(0);
+  let [warehouseId, setWarehouseId] = useState(0);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [product_image, setProduct_Image] = useState("");
+  console.log(product_image);
 
   const navigate = useNavigate();
 
   const onSubmitUpdate = async (id) => {
     try {
+      const formData = new FormData();
+      formData.append("product_image", product_image);
       await Axios.patch(`${API_URL}/products/update/${id}`, {
+        formData,
         name,
         description,
         price,
@@ -92,8 +97,16 @@ const EditProductMain = (props) => {
                   {/* PRODUCT IMAGE */}
                   <div className="mb-2">
                     <div></div>
-                    <label className="form-label">Images</label>
-                    <input className="form-control mt-1" type="file" />
+                    <label className="form-label"></label>
+                    <img src={`${API_URL}/${val.product_image}`} alt="" />
+                    <input
+                      className="form-control mt-1"
+                      type="file"
+                      size="lg"
+                      name="product_image"
+                      id="fileName"
+                      onChange={(e) => setProduct_Image(e.target.files[0])}
+                    />
                   </div>
 
                   {/* PRODUCT NAME */}
@@ -178,9 +191,7 @@ const EditProductMain = (props) => {
                           ? productCategoryId
                           : (productCategoryId = val.product_category.id)
                       }
-                      onChange={(e) => {
-                        setProductCategoryId(+e.target.value);
-                      }}
+                      onChange={(e) => setProductCategoryId(+e.target.value)}
                     >
                       {SelectCategories()}
                     </select>
@@ -188,9 +199,7 @@ const EditProductMain = (props) => {
 
                   {/* PRODUCT WAREHOUSE*/}
                   <div className="mb-2">
-                    <label htmlFor="product_price" className="form-label">
-                      Warehouse
-                    </label>
+                    <label className="form-label">Warehouse</label>
                     <select
                       className="form-select"
                       name="warehouseId"
@@ -200,10 +209,7 @@ const EditProductMain = (props) => {
                           : (warehouseId =
                               val.warehouse_products[0].warehouse.id)
                       }
-                      onChange={(e) => {
-                        e.preventDefault();
-                        setWarehouseId(+e.target.value);
-                      }}
+                      onChange={(e) => setWarehouseId(+e.target.value)}
                     >
                       {SelectWarehouse()}
                     </select>
