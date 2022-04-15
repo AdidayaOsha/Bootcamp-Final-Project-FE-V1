@@ -203,12 +203,11 @@ const MainProducts = () => {
 
   const Pagination = () => {
     return (
-      <div className="btn-group flex justify-center">
-        <div className="btn-group space-x-2 mt-2">
-          <button className="btn btn-primary">«</button>
-          <button className="btn text-black bg-base-200">Page 1</button>
-          <button className="btn btn-primary">»</button>
-        </div>
+      <div className="btn-group flex flex-row m-auto w-1/6 ">
+        <button className="btn btn-outline">1</button>
+        <button className="btn btn-outline btn-active">2</button>
+        <button className="btn btn-outline">3</button>
+        <button className="btn btn-outline">4</button>
       </div>
     );
   };
@@ -234,7 +233,7 @@ const MainProducts = () => {
                   type="text"
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search Product…"
-                  className="input input-bordered w-80"
+                  className="input input-bordered w-60"
                   value={search}
                 />
                 <button
@@ -260,13 +259,13 @@ const MainProducts = () => {
             </div>
 
             <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
+              <select className="select w-full max-w-xs input-bordered text-gray-500">
                 <option>Choose Warehouse</option>
                 {SelectWarehouse()}
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
+              <select className="select w-full max-w-xs input-bordered text-gray-500">
                 <option>All category</option>
                 {SelectCategories()}
               </select>
@@ -274,8 +273,8 @@ const MainProducts = () => {
             {/* SELECTED */}
             <div className="col-lg-2 col-6 col-md-3">
               <select
+                className="select w-full max-w-xs input-bordered text-gray-500"
                 onChange={(e) => setSortValue(e.target.value)}
-                className="form-select"
                 name="sort"
               >
                 <option name="sort" value="sort">
