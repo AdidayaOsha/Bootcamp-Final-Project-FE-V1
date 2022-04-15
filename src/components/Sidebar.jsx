@@ -26,7 +26,7 @@ const Sidebar = () => {
             <li className="menu-item">
               <NavLink
                 activeclassname="active"
-                className="menu-link"
+                className="menu-link ml-1"
                 to="/products"
               >
                 <i className="icon fas fa-shopping-bag"></i>
