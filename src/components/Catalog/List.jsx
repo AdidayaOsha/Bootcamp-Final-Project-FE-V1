@@ -124,6 +124,19 @@ const List = () => {
     setSearch(searchValue)
   }
 
+  const afterSubmission= (event) => {
+    event.preventDefault();
+    console.log(search)
+    Axios.post(`${API_URL}/catalog/search`, { name: search })
+    .then((results) => {
+      // setData(results.data);
+      console.log(results.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
   return (
     <>
       <div className="container">
@@ -156,16 +169,14 @@ const List = () => {
             </Select>
         </Filter>
         <div className="col-md-6 col-6 d-flex align-items-center">
-          <form className="input-group">
+          <form className="input-group" onSubmit = {afterSubmission}>
             <Input
               type="search"
               className="form-control rounded search"
               placeholder="Search"
               onChange={(e) => searchItems(e.target.value)}
             />
-            <button className="search-button">
-              search
-            </button>
+            <input className="search-button" type = "submit" value = "Search" />
           </form>
         </div>
       </FilterContainer>
