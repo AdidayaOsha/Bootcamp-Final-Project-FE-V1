@@ -1,11 +1,21 @@
 import React from "react";
+import CartDetails from "../components/Checkout/CartDetails";
+import OrderProgress from "../components/Checkout/OrderProgress";
+import OrderSummary from "../components/Checkout/OrderSummary";
+import BillingAddress from "../components/Checkout/BillingAddress";
 
-const BillingDetails = () => {
+const CheckoutDetails = () => {
   return (
-    <div>
-      <h1>Billing Page</h1>
-    </div>
+    <>
+      <div className="mt-20">
+        <OrderProgress />
+      </div>
+      <div className="flex w-screen space-x-4 pt-5 justify-end pr-48">
+        <BillingAddress />
+        <OrderSummary />
+      </div>
+    </>
   );
 };
 
-export default BillingDetails;
+export default CheckoutDetails;
