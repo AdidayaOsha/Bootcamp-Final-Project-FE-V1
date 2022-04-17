@@ -12,11 +12,18 @@ const List = () => {
   const [sortValue, setSortValue] = useState("");
   const [category, setCategory] = useState("0");
   const [search, setSearch] = useState("");
+  const [pagination, setPagination] = useState([]);
+  const [pageStart, setPageStart] = useState(0);
+  const [pageEnd, setPageEnd] = useState(6);
 
   useEffect(() => {
     getProducts();
     getCategories();
   }, []);
+
+  useEffect(() => {
+    getIndex(6);
+  }, [data]);
 
   useEffect(() => {
     if(category!=="0"){
@@ -83,10 +90,16 @@ const List = () => {
 
    // GET PRODUCTS
    const getProductByName = async () => {
-    await Axios.get(`${API_URL}/catalog/search/${search}`)
+    await Axios.post(`${API_URL}/products/search`, { name: search })
       .then((results) => {
-        console.log(results.data)
-        // setData(results.data);
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
+        setData(results.data);
       })
       .catch((err) => {
         console.log(err);
@@ -127,14 +140,24 @@ const List = () => {
   const afterSubmission= (event) => {
     event.preventDefault();
     console.log(search)
-    Axios.post(`${API_URL}/catalog/search`, { name: search })
-    .then((results) => {
-      // setData(results.data);
-      console.log(results.data)
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    getProductByName()
+  }
+
+  const getIndex = (number) => {
+    let total = Math.floor(data.length/number)
+    let page = []
+    for (let i = 1; i <= total; i++) {
+      page.push(i);
+    }
+    setPagination(page)
+  }
+
+  const selectpage = (id) => {
+    let num = id
+    let start = (num-1)*6
+    let end = num*6
+    setPageStart(start)
+    setPageEnd(end)
   }
 
   return (
@@ -183,10 +206,10 @@ const List = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                 {data.map((product) => (
+                 {data.slice(pageStart,pageEnd).map((product) => (
                       <div
                         className="shop col-lg-2 col-md-6 col-sm-6"
-                        key={product._id}
+                        key={product.id}
                       >
                         <div className="border-product">
                           <Link to={`/detail/${product.id}`}>
@@ -221,9 +244,11 @@ const List = () => {
                       <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1">Previous</a>
                       </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      {pagination.map((item)=> {
+                        return (
+                          <li class="page-item" key={item} onClick={()=>selectpage(item)}><button class="page-link">{item}</button></li>
+                        )
+                      })}
                       <li class="page-item">
                         <a class="page-link" href="#">Next</a>
                       </li>
