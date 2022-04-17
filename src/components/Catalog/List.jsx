@@ -229,11 +229,16 @@ const List = () => {
 
                             <h3>{currencyFormatter(product.price)}</h3>
                             {product.stock==0 ? (
+                              <>
                                 <p className="shopoutofstock">Out of stock</p>
+                                <button className="shopbutton" disabled>Buy now</button>
+                              </>
                             ):(
+                              <>
                                 <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
+                                <button className="shopbutton">Buy now</button>
+                              </>
                             )}
-                            <button className="shopbutton">Buy now</button>
                           </div>
                         </div>
                       </div>

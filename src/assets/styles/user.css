@@ -228,6 +228,10 @@ textarea:focus {
   background-color: turquoise;
   color: white;
 }
+.shopbutton:disabled {
+  background-color: grey;
+  color: white;
+}
 .rating {
   margin: 5px 0;
 }
