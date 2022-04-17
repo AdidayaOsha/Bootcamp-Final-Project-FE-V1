@@ -69,7 +69,7 @@ const Products = () => {
 
                       <div className="shoptext">
                         <p className="shopname">
-                          <Link to={`/details/${product.id}`}>
+                          <Link to={`/detail/${product.id}`}>
                           {product.name}
                           </Link>
                         </p>

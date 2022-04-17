@@ -189,45 +189,45 @@ const List = () => {
     <>
       <div className="container">
         <div className="section">
-        <FilterContainer>
-        <Filter>
-          <FilterText>Filter Category:</FilterText>
-          <Select
-          value={category}
-           onChange={(e) => {
-            e.preventDefault();
-            setCategory(e.target.value)
-            }}>
-            <Option value="0">
-              All Category
-            </Option>
-            <SelectCategories />
-          </Select>
-            <FilterText>Sort Products:</FilterText>
-            <Select
+          <FilterContainer>
+            <Filter>
+              <FilterText>Filter Category:</FilterText>
+              <Select
+              value={category}
               onChange={(e) => {
                 e.preventDefault();
-                setSortValue(e.target.value);
-              }}>
-              <Option value="sort" selected>Newest</Option>
-              <Option name="highprice" value="highprice">Highest Price</Option>
-              <Option name="lowprice" value="lowprice">Lowest Price</Option>
-              <Option name="az" value="az">A-Z</Option>
-              <Option name="za" value="za">Z-A</Option>
-            </Select>
-        </Filter>
-        <div className="col-md-4 col-4 d-flex align-items-center">
-          <form className="input-group" onSubmit = {afterSubmission}>
-            <Input
-              type="search"
-              className="form-control rounded search"
-              placeholder="Search"
-              onChange={(e) => searchItems(e.target.value)}
-            />
-            <input className="search-button" type = "submit" value = "Search" />
-          </form>
-        </div>
-      </FilterContainer>
+                setCategory(e.target.value)
+                }}>
+                <Option value="0">
+                  All Category
+                </Option>
+                <SelectCategories />
+              </Select>
+                <FilterText>Sort Products:</FilterText>
+                <Select
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setSortValue(e.target.value);
+                  }}>
+                  <Option value="sort" selected>Newest</Option>
+                  <Option name="highprice" value="highprice">Highest Price</Option>
+                  <Option name="lowprice" value="lowprice">Lowest Price</Option>
+                  <Option name="az" value="az">A-Z</Option>
+                  <Option name="za" value="za">Z-A</Option>
+                </Select>
+            </Filter>
+            <Filter className="col-md-4 col-4 d-flex align-items-center">
+              <form className="input-group" onSubmit = {afterSubmission}>
+                <Input
+                  type="search"
+                  className="form-control rounded search"
+                  placeholder="Search"
+                  onChange={(e) => searchItems(e.target.value)}
+                />
+                <input className="search-button" type = "submit" value = "Search" />
+              </form>
+            </Filter>
+          </FilterContainer>
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
@@ -247,7 +247,7 @@ const List = () => {
 
                           <div className="shoptext">
                             <p className="shopname">
-                              <Link to={`/details/${product.id}`}>
+                              <Link to={`/detail/${product.id}`}>
                               {product.name}
                               </Link>
                             </p>
