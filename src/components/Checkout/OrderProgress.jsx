@@ -5,7 +5,7 @@ const OrderProgress = () => {
   return (
     <>
       {/* HEADER STARTS */}
-      <div className="">
+      <div className="mt-20">
         {/* Checkout Links */}
         <div className="ml-60 mt-10 mb-4">
           <div>
@@ -53,19 +53,19 @@ const OrderProgress = () => {
       </div>
       {/* HEADER ENDS */}
 
-      <div className="h-[600px] flex w-screen space-x-2 pt-5 justify-end pr-48">
+      <div className="flex w-screen space-x-4 pt-5 justify-end pr-48">
         {/* DIV PRODUCT CARD */}
         <div className="w-1/2">
-          <div className="w-full h-full">
+          <div className="w-full">
             {/* TABLE STARTS HERE */}
-            <div className=" w-full h-2/5 rounded-xl border-1">
-              <div className="bg-red-200 p-3 rounded-t-xl">
-                <h2>
+            <div className=" w-full rounded-xl shadow-sm">
+              <div className="p-3 rounded-t-xl">
+                <h2 className="font-bold">
                   Cart <span className="text-gray-400">(1 Item)</span>
                 </h2>
               </div>
               <div className="h-3/5 flex space-x-5 w-full px-2">
-                <table className="w-full">
+                <table className="w-full my-2">
                   <thead>
                     <tr className=" text-sm text-gray-500 h-14 bg-slate-100 ">
                       <th className="text-left w-1/2 rounded-l-md pl-2">
@@ -78,7 +78,7 @@ const OrderProgress = () => {
                     </tr>
                   </thead>
                   <tbody className="text-sm">
-                    <tr className="bg-red-200 text-center">
+                    <tr className="text-center h-20 border-none">
                       <td>
                         <div className="flex items-center">
                           <div>
@@ -87,7 +87,7 @@ const OrderProgress = () => {
                               src="https://media.istockphoto.com/photos/sport-shoes-on-isolated-white-background-picture-id956501428?k=20&m=956501428&s=612x612&w=0&h=UC4qdZa2iA0PJvv0RIBlJDyF80wxFyLPq4YWvZa30Sc="
                             />
                           </div>
-                          <div>
+                          <div className="space-y-1">
                             <div>
                               <p className="font-bold">
                                 Nike Air Force 1 NDESTRUKT
@@ -103,23 +103,23 @@ const OrderProgress = () => {
                               <div>
                                 <p className="text-gray-400">
                                   Color:
-                                  <span className="text-black">Green</span>
+                                  <span className="text-black"> Green</span>
                                 </p>
                               </div>
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="text-left">Rp. 100</td>
+                      <td className="text-left">Rp. 200000</td>
                       <td className="text-left">
                         <div>
                           <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
                             <span className="text-4xl">-</span>
-                            <span className="text-1xl">2</span>
+                            <span className="text-1xl">1</span>
                             <span className="text-2xl">+</span>
                           </div>
                           <div>
-                            <p className="text-gray-400 text-xs text-center">
+                            <p className="text-gray-400 text-xs text-center mt-1">
                               available: 42
                             </p>
                           </div>
@@ -136,18 +136,57 @@ const OrderProgress = () => {
             </div>
             <div>
               <Link to="/">
-                <div className="text-gray-400 hover:text-gray-500 text-sm space-x-2 mt-3 flex group">
+                <div className="text-gray-400 hover:text-gray-500 text-sm space-x-2 my-3 flex group">
                   <i className="fas fa-arrow-left transition-all group-hover:mr-1"></i>
-                  <h2 className=" font-bold">Continue Shopping</h2>
+                  <h2 className="font-bold">Continue Shopping</h2>
                 </div>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* DIV ORDER SUMMARY */}
-        <div className=" w-1/4 flex flex-col">
-          <div className="w-full h-3/4 bg-slate-200 rounded-xl">HIHIHI</div>
+        {/* RIGHT COL ORDER SUMMARY */}
+        <div className=" w-3/12 flex flex-col ">
+          <div className="w-full rounded-xl flex flex-col p-4 shadow-sm">
+            {/* Title Order Summary */}
+            <div>
+              <h1 className="font-bold">Order Summary</h1>
+            </div>
+            <div className="space-y-6 text-sm mt-4">
+              <div className="flex justify-between">
+                <h2>Sub Total</h2>
+                <h2 className="font-bold">Rp. 20000</h2>
+              </div>
+              <div className="flex justify-between">
+                <h2>Discount</h2>
+                <h2>-</h2>
+              </div>
+              <div className="flex justify-between">
+                <h2>Shipping</h2>
+                <h2 className="font-bold">Free</h2>
+              </div>
+              <span className="flex border-top h-[2px] bg-slate-100 w-full"></span>
+              <div className="flex justify-between">
+                <div className="text-lg font-bold">
+                  <h2>Total</h2>
+                </div>
+                <div className="">
+                  <h2 className="text-lg font-bold text-accent text-right">
+                    Rp. 2.000.000
+                  </h2>
+                  <p className="text-xs font-extralight text-right italic">
+                    (PPN Included if Applicable)
+                  </p>
+                </div>
+              </div>
+              <div className="border-2 rounded-md flex justify-between p-2">
+                <h2 className="text-lg">DISCOUNT5</h2>
+                <button className="btn btn-ghost text-accent btn-sm">
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
           <button className="mt-4 btn btn-block btn-accent text-white">
             CHECKOUT
           </button>
