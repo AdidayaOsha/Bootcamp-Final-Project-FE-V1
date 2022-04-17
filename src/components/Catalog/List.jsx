@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { currencyFormatter } from '../../helpers/currencyFormatter';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const List = () => {
   const [data, setData] = useState([]);
@@ -14,7 +16,8 @@ const List = () => {
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState([]);
   const [pageStart, setPageStart] = useState(0);
-  const [pageEnd, setPageEnd] = useState(6);
+  const [pageEnd, setPageEnd] = useState(12);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getProducts();
@@ -22,7 +25,7 @@ const List = () => {
   }, []);
 
   useEffect(() => {
-    getIndex(6);
+    getIndex(12);
   }, [data]);
 
   useEffect(() => {
@@ -133,6 +136,22 @@ const List = () => {
     }
   };
 
+  const addToCart = async (id) => {
+    await Axios.post(`${API_URL}/carts/add`, 
+      { quantity: 1,
+        productId: id,
+        userId: 1})
+      .then((results) => {
+        toast.success("Product has been added to cart !", {
+          position: toast.POSITION.TOP_CENTER,
+          className: 'alert-addtocart'
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const searchItems = (searchValue) => {
     setSearch(searchValue)
   }
@@ -144,18 +163,19 @@ const List = () => {
   }
 
   const getIndex = (number) => {
-    let total = Math.floor(data.length/number)
+    let total = Math.ceil(data.length/number)
     let page = []
     for (let i = 1; i <= total; i++) {
       page.push(i);
     }
     setPagination(page)
+    console.log(total)
   }
 
   const selectpage = (id) => {
     let num = id
-    let start = (num-1)*6
-    let end = num*6
+    let start = (num-1)*12
+    let end = num*12
     setPageStart(start)
     setPageEnd(end)
   }
@@ -191,7 +211,7 @@ const List = () => {
               <Option name="za" value="za">Z-A</Option>
             </Select>
         </Filter>
-        <div className="col-md-6 col-6 d-flex align-items-center">
+        <div className="col-md-4 col-4 d-flex align-items-center">
           <form className="input-group" onSubmit = {afterSubmission}>
             <Input
               type="search"
@@ -236,7 +256,7 @@ const List = () => {
                             ):(
                               <>
                                 <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
-                                <button className="shopbutton">Buy now</button>
+                                <button className="shopbutton" onClick={()=>addToCart(product.id)}>Buy now</button>
                               </>
                             )}
                           </div>
@@ -246,17 +266,17 @@ const List = () => {
                   ))} 
                   <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                      <li class="page-item disabled">
+                      {/* <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1">Previous</a>
-                      </li>
+                      </li> */}
                       {pagination.map((item)=> {
                         return (
-                          <li class="page-item" key={item} onClick={()=>selectpage(item)}><button class="page-link">{item}</button></li>
+                          <li className="page-item" key={item} onClick={()=>selectpage(item)}><button className="page-link">{item}</button></li>
                         )
                       })}
-                      <li class="page-item">
+                      {/* <li class="page-item">
                         <a class="page-link" href="#">Next</a>
-                      </li>
+                      </li> */}
                     </ul>
                   </nav>
               </div>

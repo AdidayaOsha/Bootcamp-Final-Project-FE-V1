@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { currencyFormatter } from '../../helpers/currencyFormatter';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Recommend = () => {
   const [data, setData] = useState([]);
@@ -34,6 +36,23 @@ const Recommend = () => {
         console.log(err);
       });
   };
+
+  const addToCart = async (id) => {
+    await Axios.post(`${API_URL}/carts/add`, 
+      { quantity: 1,
+        productId: id,
+        userId: 1})
+      .then((results) => {
+        toast.success("Product has been added to cart !", {
+          position: toast.POSITION.TOP_CENTER,
+          className: 'alert-addtocart'
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <div className="container">
@@ -72,7 +91,7 @@ const Recommend = () => {
                             ):(
                               <>
                                 <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
-                                <button className="shopbutton">Buy now</button>
+                                <button className="shopbutton" onClick={()=>addToCart(product.id)}>Buy now</button>
                               </>
                             )}
                           </div>
