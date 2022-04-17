@@ -40,17 +40,17 @@
         title: "LIFESTYLE SHOES",
       },
       {
-        id: 1,
+        id: 4,
         img: "https://cdn.newsapi.com.au/image/v1/8850d4fab61904e5e37b88c8dec8ded4?width=650",
         title: "RUNNING SHOES",
       },
       {
-        id: 2,
+        id: 5,
         img: "https://i.ytimg.com/vi/25jZMktp1B4/maxresdefault.jpg",
         title: "SKATEBOARDING SHOES",
       },
       {
-        id: 3,
+        id: 6,
         img: "https://www.golfdiscount.com/blog/wp-content/uploads/2018/06/best-nike-golf-shoes-under-100-702x335.jpg",
         title: "GOLF SHOES",
       },

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../../assets/styles/responsive";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { currencyFormatter } from '../../helpers/currencyFormatter';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
@@ -17,12 +17,18 @@ const List = () => {
   const [pagination, setPagination] = useState([]);
   const [pageStart, setPageStart] = useState(0);
   const [pageEnd, setPageEnd] = useState(12);
-  const [page, setPage] = useState(1);
+  const location = useLocation();
 
   useEffect(() => {
-    getProducts();
-    getCategories();
-  }, []);
+    if(location.state!=null){
+      getCategories();
+      setCategory(location.state)
+      getCategoryById(location.state)
+    } else {
+      getCategories();
+      getProducts();
+    }
+  },[]);
 
   useEffect(() => {
     getIndex(12);
@@ -169,7 +175,6 @@ const List = () => {
       page.push(i);
     }
     setPagination(page)
-    console.log(total)
   }
 
   const selectpage = (id) => {
