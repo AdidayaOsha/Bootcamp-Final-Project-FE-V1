@@ -3,6 +3,7 @@ import "./App.css";
 import "./responsive.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import ProductScreen from "./pages/productScreen";
 import CategoriesScreen from "./pages/CategoriesScreen";
 import AddProduct from "./pages/AddProduct";
@@ -18,22 +19,33 @@ import Details from "./pages/User/Details";
 
 import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+import CheckoutDetails from "./pages/CheckoutDetails";
+import BillingDetails from "./pages/BillingDetails";
+import SummaryDetails from "./pages/SummaryDetails";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          {/* PRODUCTS */}
           <Route path="/products" element={<ProductScreen />} />
           <Route path="/category" element={<CategoriesScreen />} />
           <Route path="/addproduct" element={<AddProduct />} />
           <Route path="/products/find/:id" element={<ProductEditScreen />} />
 
+          {/* CARTS */}
+          <Route path="/checkout" element={<CheckoutDetails />} />
+          <Route path="/billing" element={<BillingDetails />} />
+          <Route path="/summary" element={<SummaryDetails />} />
+
+          {/* USER */}
           <Route path="/authentication/:token" element={<Authentication />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
 
+          {/* HOMEPAGE */}
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/detail/:id" element={<Details />} />
           <Route path="/" element={<Home />} />
