@@ -228,6 +228,10 @@ textarea:focus {
   background-color: turquoise;
   color: white;
 }
+.shopbutton:disabled {
+  background-color: grey;
+  color: white;
+}
 .rating {
   margin: 5px 0;
 }
@@ -695,7 +699,18 @@ textarea:focus {
 /* Pagination */
 .pagination .page-link {
   padding: 10px 30px;
-  color: black;
+  color: white;
+  background-color: teal;
+}
+.pagination .page-link:hover {
+  padding: 10px 30px;
+  color: white;
+  background-color: turquoise;
+}
+.pagination .page-link-select {
+  padding: 10px 30px;
+  color: white;
+  background-color: teal;
 }
 .page-item.active .page-link {
   background-color: black;
@@ -753,5 +768,9 @@ textarea:focus {
   margin: auto;
   box-shadow: 3px 3px 3px teal;
   font-weight: bold;
+  color: white;
+}
+.alert-addtocart {
+  background-color: teal;
   color: white;
 }

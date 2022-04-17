@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../../assets/styles/responsive";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { currencyFormatter } from '../../helpers/currencyFormatter';
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const List = () => {
   const [data, setData] = useState([]);
@@ -12,11 +14,25 @@ const List = () => {
   const [sortValue, setSortValue] = useState("");
   const [category, setCategory] = useState("0");
   const [search, setSearch] = useState("");
+  const [pagination, setPagination] = useState([]);
+  const [pageStart, setPageStart] = useState(0);
+  const [pageEnd, setPageEnd] = useState(12);
+  const location = useLocation();
 
   useEffect(() => {
-    getProducts();
-    getCategories();
-  }, []);
+    if(location.state!=null){
+      getCategories();
+      setCategory(location.state)
+      getCategoryById(location.state)
+    } else {
+      getCategories();
+      getProducts();
+    }
+  },[]);
+
+  useEffect(() => {
+    getIndex(12);
+  }, [data]);
 
   useEffect(() => {
     if(category!=="0"){
@@ -83,10 +99,16 @@ const List = () => {
 
    // GET PRODUCTS
    const getProductByName = async () => {
-    await Axios.get(`${API_URL}/catalog/search/${search}`)
+    await Axios.post(`${API_URL}/products/search`, { name: search })
       .then((results) => {
-        console.log(results.data)
-        // setData(results.data);
+        results.data.map((item)=>{
+          let sum = 0;
+          item.warehouse_products.forEach(element => {
+            sum += element.stock_ready-element.stock_reserved
+          });
+          item["stock"] = sum;
+        })
+        setData(results.data);
       })
       .catch((err) => {
         console.log(err);
@@ -120,62 +142,99 @@ const List = () => {
     }
   };
 
+  const addToCart = async (id) => {
+    await Axios.post(`${API_URL}/carts/add`, 
+      { quantity: 1,
+        productId: id,
+        userId: 1})
+      .then((results) => {
+        toast.success("Product has been added to cart !", {
+          position: toast.POSITION.TOP_CENTER,
+          className: 'alert-addtocart'
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const searchItems = (searchValue) => {
     setSearch(searchValue)
+  }
+
+  const afterSubmission= (event) => {
+    event.preventDefault();
+    console.log(search)
+    getProductByName()
+  }
+
+  const getIndex = (number) => {
+    let total = Math.ceil(data.length/number)
+    let page = []
+    for (let i = 1; i <= total; i++) {
+      page.push(i);
+    }
+    setPagination(page)
+  }
+
+  const selectpage = (id) => {
+    let num = id
+    let start = (num-1)*12
+    let end = num*12
+    setPageStart(start)
+    setPageEnd(end)
   }
 
   return (
     <>
       <div className="container">
         <div className="section">
-        <FilterContainer>
-        <Filter>
-          <FilterText>Filter Category:</FilterText>
-          <Select
-          value={category}
-           onChange={(e) => {
-            e.preventDefault();
-            setCategory(e.target.value)
-            }}>
-            <Option value="0">
-              All Category
-            </Option>
-            <SelectCategories />
-          </Select>
-            <FilterText>Sort Products:</FilterText>
-            <Select
+          <FilterContainer>
+            <Filter>
+              <FilterText>Filter Category:</FilterText>
+              <Select
+              value={category}
               onChange={(e) => {
                 e.preventDefault();
-                setSortValue(e.target.value);
-              }}>
-              <Option value="sort" selected>Newest</Option>
-              <Option name="highprice" value="highprice">Highest Price</Option>
-              <Option name="lowprice" value="lowprice">Lowest Price</Option>
-              <Option name="az" value="az">A-Z</Option>
-              <Option name="za" value="za">Z-A</Option>
-            </Select>
-        </Filter>
-        <div className="col-md-6 col-6 d-flex align-items-center">
-          <form className="input-group">
-            <Input
-              type="search"
-              className="form-control rounded search"
-              placeholder="Search"
-              onChange={(e) => searchItems(e.target.value)}
-            />
-            <button className="search-button">
-              search
-            </button>
-          </form>
-        </div>
-      </FilterContainer>
+                setCategory(e.target.value)
+                }}>
+                <Option value="0">
+                  All Category
+                </Option>
+                <SelectCategories />
+              </Select>
+                <FilterText>Sort Products:</FilterText>
+                <Select
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setSortValue(e.target.value);
+                  }}>
+                  <Option value="sort" selected>Newest</Option>
+                  <Option name="highprice" value="highprice">Highest Price</Option>
+                  <Option name="lowprice" value="lowprice">Lowest Price</Option>
+                  <Option name="az" value="az">A-Z</Option>
+                  <Option name="za" value="za">Z-A</Option>
+                </Select>
+            </Filter>
+            <Filter className="col-md-4 col-4 d-flex align-items-center">
+              <form className="input-group" onSubmit = {afterSubmission}>
+                <Input
+                  type="search"
+                  className="form-control rounded search"
+                  placeholder="Search"
+                  onChange={(e) => searchItems(e.target.value)}
+                />
+                <input className="search-button" type = "submit" value = "Search" />
+              </form>
+            </Filter>
+          </FilterContainer>
           <div className="row">
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
-                 {data.map((product) => (
+                 {data.slice(pageStart,pageEnd).map((product) => (
                       <div
                         className="shop col-lg-2 col-md-6 col-sm-6"
-                        key={product._id}
+                        key={product.id}
                       >
                         <div className="border-product">
                           <Link to={`/detail/${product.id}`}>
@@ -188,18 +247,23 @@ const List = () => {
 
                           <div className="shoptext">
                             <p className="shopname">
-                              <Link to={`/details/${product.id}`}>
+                              <Link to={`/detail/${product.id}`}>
                               {product.name}
                               </Link>
                             </p>
 
                             <h3>{currencyFormatter(product.price)}</h3>
                             {product.stock==0 ? (
+                              <>
                                 <p className="shopoutofstock">Out of stock</p>
+                                <button className="shopbutton" disabled>Buy now</button>
+                              </>
                             ):(
+                              <>
                                 <p className="shopoutstock">Available Stock : {product.stock} pcs</p>
+                                <button className="shopbutton" onClick={()=>addToCart(product.id)}>Buy now</button>
+                              </>
                             )}
-                            <button className="shopbutton">Buy now</button>
                           </div>
                         </div>
                       </div>
@@ -207,15 +271,17 @@ const List = () => {
                   ))} 
                   <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                      <li class="page-item disabled">
+                      {/* <li class="page-item disabled">
                         <a class="page-link" href="#" tabindex="-1">Previous</a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
+                      </li> */}
+                      {pagination.map((item)=> {
+                        return (
+                          <li className="page-item" key={item} onClick={()=>selectpage(item)}><button className="page-link">{item}</button></li>
+                        )
+                      })}
+                      {/* <li class="page-item">
                         <a class="page-link" href="#">Next</a>
-                      </li>
+                      </li> */}
                     </ul>
                   </nav>
               </div>
