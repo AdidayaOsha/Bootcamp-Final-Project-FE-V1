@@ -29,7 +29,7 @@ const OrderSummary = () => {
                 <h2>Total</h2>
               </div>
               <div className="">
-                <h2 className="text-lg font-bold text-accent text-right">
+                <h2 className="text-lg font-bold text-red-400 text-right">
                   Rp. 2.000.000
                 </h2>
                 <p className="text-xs font-extralight text-right italic">
