@@ -87,7 +87,7 @@ const PaymentSummary = () => {
       <div className="w-1/2 flex flex-col space-y-2">
         <div className="w-full flex space-x-6">
           {/* Delivery Time */}
-          <div className="w-full h-36 rounded-xl shadow-sm bg-gray-50">
+          <div className="w-full h-32 rounded-xl shadow-sm ">
             <div className="p-3 rounded-t-xl">
               <div className="flex flex-col justify-between ">
                 <div className="space-x-2">
@@ -98,7 +98,7 @@ const PaymentSummary = () => {
                     <select
                       name=""
                       id=""
-                      className="text-left text-md border-2 rounded-md"
+                      className="text-left text-md border-2 rounded-md text-md"
                     >
                       <option value="">Same Day</option>
                       <option value="">Next Day</option>
@@ -116,7 +116,7 @@ const PaymentSummary = () => {
             </div>
           </div>
           {/* Choose Courier */}
-          <div className=" w-full h-36 rounded-xl shadow-sm bg-gray-50">
+          <div className=" w-full h-32 rounded-xl shadow-sm ">
             <div className="p-3 rounded-t-xl">
               <div className="space-y-3">
                 <div className="flex space-x-2">
@@ -145,7 +145,7 @@ const PaymentSummary = () => {
         </div>
 
         {/* PAYMENT OPTIONS */}
-        <div className=" w-full rounded-xl shadow-sm bg-gray-50">
+        <div className=" w-full rounded-xl shadow-sm ">
           <div className="p-3 rounded-t-xl">
             <div className="flex flex-col">
               <div className="space-x-2">
