@@ -31,6 +31,32 @@ const BillingAddress = () => {
             </div>
           </div>
         </div>
+        <div className="w-full items-end">
+          <div className=" w-full rounded-xl shadow-sm">
+            <div className="p-3 rounded-t-xl">
+              <div className="space-y-3">
+                <div className="flex space-x-2">
+                  <h2 className="font-bold">Osha Prima Adidaya</h2>
+                  <p className="text-gray-400 text-sm">( Apartment)</p>
+                </div>
+                <h2 className="">
+                  437 W Cambridge Ave Greenwood, South Carolina(SC), 29646{" "}
+                </h2>
+                <div className="flex justify-between items-center">
+                  <h2 className="text-gray-400">(864) 223-5297</h2>
+                  <div className="flex space-x-2 mt-4">
+                    <button className="flex btn btn-outline btn-black btn-sm font-bold normal-case">
+                      Delete
+                    </button>
+                    <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
+                      Deliver To This Address
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   };
