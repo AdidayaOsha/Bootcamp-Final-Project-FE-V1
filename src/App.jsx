@@ -22,7 +22,7 @@ import { ToastContainer } from "react-toastify";
 
 import CheckoutDetails from "./pages/CheckoutDetails";
 import BillingDetails from "./pages/BillingDetails";
-import SummaryDetails from "./pages/SummaryDetails";
+import PaymentDetails from "./pages/PaymentDetails";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
           {/* CARTS */}
           <Route path="/checkout" element={<CheckoutDetails />} />
           <Route path="/billing" element={<BillingDetails />} />
-          <Route path="/summary" element={<SummaryDetails />} />
+          <Route path="/payment" element={<PaymentDetails />} />
 
           {/* USER */}
           <Route path="/authentication/:token" element={<Authentication />} />
