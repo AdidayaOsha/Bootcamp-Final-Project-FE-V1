@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "async": "^3.2.3",
     "autoprefixer": "^10.4.4",
     "daisyui": "^2.13.6",
     "postcss": "^8.4.12",

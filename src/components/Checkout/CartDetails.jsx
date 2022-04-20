@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 
 const CartDetails = () => {
-  const [data, setData] = useState({});
+  const [newData, setNewData] = useState([]);
+  const [quantity, setQuantity] = useState([]);
+
+  const dispatch = useDispatch();
+  const cartGlobal = useSelector((state) => state.cart);
 
   useEffect(() => {
-    const getUserCart = async (id) => {
-      try {
+    try {
+      const getUserCart = async (userId) => {
         const results = await Axios.get(`${API_URL}/carts/get/1`);
-        setData(results.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserCart();
+        dispatch({
+          type: "GET_CART",
+          payload: results.data,
+        });
+      };
+      getUserCart();
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   const TableHead = () => {
@@ -33,58 +41,76 @@ const CartDetails = () => {
   };
 
   const ProductList = () => {
-    return (
-      <tr className="text-center h-20 border-none">
-        <td>
-          <div className="flex items-center">
-            <div>
-              <img
-                className="mask mask-squircle w-20"
-                src="https://media.istockphoto.com/photos/sport-shoes-on-isolated-white-background-picture-id956501428?k=20&m=956501428&s=612x612&w=0&h=UC4qdZa2iA0PJvv0RIBlJDyF80wxFyLPq4YWvZa30Sc="
-              />
-            </div>
-            <div className="space-y-2">
+    return cartGlobal.cartList.carts?.map((val) => {
+      return (
+        <tr className="text-center h-20 border-none">
+          <td>
+            <div className="flex items-center space-x-2">
               <div>
-                <p className="font-bold">{data.name}</p>
+                <img
+                  className="mask mask-squircle w-20"
+                  src={`${API_URL}/${val.product.product_image}`}
+                />
               </div>
-              <div className="flex">
+              <div className="space-y-2">
                 <div>
-                  <p className="text-gray-400">
-                    Size: <span className="text-black">9</span>
-                  </p>
+                  <p className="font-bold text-left">{val.product.name}</p>
                 </div>
-                <span className="border-1 h-5 mx-2"></span>
-                <div>
-                  <p className="text-gray-400">
-                    Color:
-                    <span className="text-black"> Green</span>
-                  </p>
+                <div className="flex">
+                  <div>
+                    <p className="text-gray-400">
+                      Size: <span className="text-black">9</span>
+                    </p>
+                  </div>
+                  <span className="border-1 h-5 mx-2"></span>
+                  <div>
+                    <p className="text-gray-400">
+                      Color:
+                      <span className="text-black"> Green</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </td>
-        <td className="text-left">Rp. 200000</td>
-        <td className="text-left">
-          <div>
-            <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
-              <span className="text-4xl">-</span>
-              <span className="text-1xl">1</span>
-              <span className="text-2xl">+</span>
-            </div>
+          </td>
+          <td className="text-left">Rp. {val.product.price}</td>
+          <td className="text-left">
             <div>
-              <p className="text-gray-400 text-xs text-center mt-1">
-                available: 42
-              </p>
+              <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
+                <button
+                  className="text-4xl"
+                  onClick={() =>
+                    quantity > 1 ? setQuantity(quantity - 1) : setQuantity(1)
+                  }
+                >
+                  -
+                </button>
+                <span className="text-1xl">{val.quantity}</span>
+                <button
+                  className="text-2xl"
+                  onClick={() => setQuantity(quantity + 1)}
+                >
+                  +
+                </button>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs text-center mt-1">
+                  available:
+                  {val.product.warehouse_products[0].stock_ready}
+                </p>
+              </div>
             </div>
-          </div>
-        </td>
-        <td className="text-center">Rp. 2000</td>
-        <td>
-          <i className="fas fa-trash-alt"></i>
-        </td>
-      </tr>
-    );
+          </td>
+          <td className="text-center">
+            Rp. {val.product.price * val.quantity}{" "}
+          </td>
+
+          <td>
+            <i className="hover:cursor-pointer fas fa-trash-alt"></i>
+          </td>
+        </tr>
+      );
+    });
   };
 
   return (
@@ -95,7 +121,10 @@ const CartDetails = () => {
         <div className=" w-full rounded-xl shadow-sm">
           <div className="p-3 rounded-t-xl">
             <h2 className="font-bold">
-              Cart <span className="text-gray-400">(1 Item)</span>
+              Cart{" "}
+              <span className="text-gray-400">
+                ({cartGlobal.cartList.carts?.length} Item)
+              </span>
             </h2>
           </div>
           <div className="h-3/5 flex space-x-5 w-full px-2">
