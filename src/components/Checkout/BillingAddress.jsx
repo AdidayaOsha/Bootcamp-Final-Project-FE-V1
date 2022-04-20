@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { API_URL } from "../../constant/api";
+import Axios from "axios";
 
 const BillingAddress = () => {
+  const [data, setData] = useState({});
+
+  const addressHandler = async () => {
+    try {
+      const res = await Axios.post(`${API_URL}`);
+      setData(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const TableAdress = () => {
     const userGlobal = useSelector((state) => state.user);
     return userGlobal.user_addresses?.map((val) => {
@@ -51,32 +64,6 @@ const BillingAddress = () => {
               </div>
             </div>
           </div>
-          {/* <div className="w-full items-end">
-            <div className=" w-full rounded-xl shadow-sm">
-              <div className="p-3 rounded-t-xl">
-                <div className="space-y-3">
-                  <div className="flex space-x-2">
-                    <h2 className="font-bold">Osha Prima Adidaya</h2>
-                    <p className="text-gray-400 text-sm">( Apartment)</p>
-                  </div>
-                  <h2 className="">
-                    437 W Cambridge Ave Greenwood, South Carolina(SC), 29646{" "}
-                  </h2>
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-gray-400">(864) 223-5297</h2>
-                    <div className="flex space-x-2 mt-4">
-                      <button className="flex btn btn-outline btn-black btn-xs font-bold normal-case">
-                        Delete
-                      </button>
-                      <button className="flex btn btn-outline btn-accent btn-xs font-bold normal-case">
-                        Deliver To This Address
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </>
       );
     });
@@ -95,9 +82,32 @@ const BillingAddress = () => {
             </Link>
           </div>
           <div>
-            <button className="text-accent btn btn-ghost btn-sm hover:bg-gray-200 normal-case">
+            <label
+              for="my-modal-3"
+              className="btn modal-button text-accent btn-ghost btn-sm hover:bg-gray-200 normal-case"
+              onClick={() => addressHandler()}
+            >
               + Add New Address
-            </button>
+            </label>
+
+            <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+            <div className="modal">
+              <div className="modal-box relative">
+                <label
+                  for="my-modal-3"
+                  className="btn btn-sm btn-circle absolute right-2 top-2"
+                >
+                  ✕
+                </label>
+                <h3 className="text-lg font-bold">
+                  Congratulations random Interner user!
+                </h3>
+                <p className="py-4">
+                  You've been selected for a chance to get one year of
+                  subscription to use Wikipedia for free!
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </>
