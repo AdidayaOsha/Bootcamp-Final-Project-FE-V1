@@ -14,9 +14,8 @@ const MainProducts = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        await Axios.get(`${API_URL}/products`).then((results) => {
-          setData(results.data);
-        });
+        const results = await Axios.get(`${API_URL}/products`);
+        setData(results.data);
       } catch (err) {
         console.log(err);
       }
