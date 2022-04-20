@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import $ from "jquery";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const logout = () => {
+    dispatch({
+      type: "ADMIN_LOGOUT"
+    })
+    localStorage.removeItem("adminDataEmmerce")
+    navigate('/')
+  }
   useEffect(() => {
     $("[data-trigger]").on("click", function (e) {
       e.preventDefault();
@@ -73,8 +83,8 @@ const Header = () => {
               <Link className="dropdown-item" to="#">
                 Settings
               </Link>
-              <Link className="dropdown-item text-danger" to="#">
-                Exit
+              <Link onClick={logout} className="dropdown-item text-danger" to="/">
+                Log Out
               </Link>
             </div>
           </li>
