@@ -33,7 +33,7 @@ const CartDetails = () => {
     return (
       <thead>
         <tr className=" text-sm text-gray-500 h-14 bg-slate-100 ">
-          <th className="text-left w-1/2 rounded-l-md pl-2">Product</th>
+          <th className="text-left w-5/12 rounded-l-md pl-2">Product</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Total Price</th>
@@ -105,7 +105,7 @@ const CartDetails = () => {
             </div>
           </td>
           <td className="text-center">
-            Rp. {val.product.price * val.quantity}{" "}
+            {currencyFormatter(val.product.price * val.quantity)}{" "}
           </td>
 
           <td>
