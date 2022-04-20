@@ -23,7 +23,7 @@ const BillingAddress = () => {
                 </h2>
                 <div className="flex justify-between items-center">
                   <h2 className="text-gray-400">021-7587535</h2>
-                  <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
+                  <button className="flex btn btn-outline btn-accent btn-xs font-bold normal-case">
                     Deliver To This Address
                   </button>
                 </div>
@@ -45,10 +45,10 @@ const BillingAddress = () => {
                 <div className="flex justify-between items-center">
                   <h2 className="text-gray-400">(864) 223-5297</h2>
                   <div className="flex space-x-2 mt-4">
-                    <button className="flex btn btn-outline btn-black btn-sm font-bold normal-case">
+                    <button className="flex btn btn-outline btn-black btn-xs font-bold normal-case">
                       Delete
                     </button>
-                    <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
+                    <button className="flex btn btn-outline btn-accent btn-xs font-bold normal-case">
                       Deliver To This Address
                     </button>
                   </div>

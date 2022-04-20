@@ -5,16 +5,16 @@ import "../assets/styles/user.css";
 import "../assets/styles/responsive.css";
 
 const Header = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userGlobal = useSelector((state) => state.user)
+  const userGlobal = useSelector((state) => state.user);
   const logout = () => {
     dispatch({
-      type: "USER_LOGOUT"
-    })
-    localStorage.removeItem("userDataEmmerce")
-    navigate('/')
-  }
+      type: "USER_LOGOUT",
+    });
+    localStorage.removeItem("userDataEmmerce");
+    navigate("/login");
+  };
   return (
     <div>
       {/* Top Header */}
@@ -184,18 +184,22 @@ const Header = () => {
                 ) : ( */}
                 <>
                   <Link to="/catalog">Catalog</Link>
-                  {userGlobal.id === 0 ?
+                  {userGlobal.id === 0 ? (
                     <>
                       <Link to="/register">Register</Link>
                       <Link to="/login">Login</Link>
                       <Link to="/admin">Admin</Link>
                     </>
-                    :
+                  ) : (
                     <>
-                      <h1 className="text-gray-100 pr-7">WELCOME {userGlobal.username}!</h1>
-                      <button className="text-gray-100" onClick={logout}>LOGOUT</button>
+                      <h1 className="text-gray-100 pr-7">
+                        WELCOME {userGlobal.username}!
+                      </h1>
+                      <button className="text-gray-100" onClick={logout}>
+                        LOGOUT
+                      </button>
                     </>
-                  }
+                  )}
                 </>
                 {/* )} */}
 

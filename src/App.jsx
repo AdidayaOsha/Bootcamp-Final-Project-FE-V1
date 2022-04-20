@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { API_URL } from "./constant/api";
 import "./App.css";
 import "./responsive.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,8 +10,8 @@ import AddProduct from "./pages/AddProduct";
 import ProductEditScreen from "./pages/ProductEditScreen";
 
 import AdminAuthentication from "./pages/AdminAuth/AdminAuthentication";
-import AdminForgotPassword from "./pages/AdminAuth/AdminForgotPassword";
-import AdminRecoverPassword from "./pages/AdminAuth/AdminRecoverPassword";
+// import AdminForgotPassword from "./pages/Auth/AdminForgotPassword";
+// import AdminRecoverPassword from "./pages/Auth/AdminRecoverPassword";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 
@@ -29,56 +30,68 @@ import { ToastContainer } from "react-toastify";
 import CheckoutDetails from "./pages/CheckoutDetails";
 import BillingDetails from "./pages/BillingDetails";
 import PaymentDetails from "./pages/PaymentDetails";
-import Axios from "axios"
-import { useDispatch } from 'react-redux'
+import Axios from "axios";
+import { useDispatch } from "react-redux";
 
 function App() {
-  const dispatch = useDispatch()
-  const userLocalStorage = localStorage.getItem("userDataEmmerce")
-  const adminLocalStorage = localStorage.getItem("adminDataEmmerce")
-
+  const dispatch = useDispatch();
+  const userLocalStorage = localStorage.getItem("userDataEmmerce");
+  const adminLocalStorage = localStorage.getItem("adminDataEmmerce");
 
   const userKeepLogin = () => {
-    console.log(userLocalStorage)
-    Axios.post(`http://localhost:9990/users/auth`, {}, {
-      headers: {
-        'Authorization': `Bearer ${userLocalStorage}`
+    console.log(userLocalStorage);
+    Axios.post(
+      `http://localhost:9990/users/auth`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${userLocalStorage}`,
+        },
       }
-    })
+    )
       .then((res) => {
-        console.log(res)
+        console.log(res);
         dispatch({
           type: "USER_KEEP_LOGIN",
-          payload: res.data
-        })
+          payload: res.data,
+        });
+        dispatch({
+          type: "GET_CART",
+          payload: res.data.carts,
+        });
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
+
   const adminKeepLogin = () => {
-    console.log(adminLocalStorage)
-    Axios.post(`http://localhost:9990/admins/auth`, {}, {
-      headers: {
-        'Authorization': `Bearer ${adminLocalStorage}`
+    console.log(adminLocalStorage);
+    Axios.post(
+      `http://localhost:9990/admins/auth`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${adminLocalStorage}`,
+        },
       }
-    })
+    )
       .then((res) => {
-        console.log(res)
+        console.log(res);
         dispatch({
           type: "ADMIN_KEEP_LOGIN",
-          payload: res.data
-        })
+          payload: res.data,
+        });
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    userKeepLogin()
-    adminKeepLogin()
-  }, [])
+    userKeepLogin();
+    adminKeepLogin();
+  }, []);
 
   return (
     <>
@@ -94,9 +107,12 @@ function App() {
           <Route path="/checkout" element={<CheckoutDetails />} />
           <Route path="/billing" element={<BillingDetails />} />
           <Route path="/payment" element={<PaymentDetails />} />
-          <Route path="/adminauthentication/:token" element={<AdminAuthentication />} />
-          <Route path="/adminforgotpassword" element={<AdminForgotPassword />} />
-          <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} />
+          <Route
+            path="/adminauthentication/:token"
+            element={<AdminAuthentication />}
+          />
+          {/* <Route path="/adminforgotpassword" element={<AdminForgotPassword />} /> */}
+          {/* <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} /> */}
           <Route path="/adminregister" element={<AdminRegister />} />
           <Route path="/admin" element={<AdminLogin />} />
 
