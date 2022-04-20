@@ -14,9 +14,9 @@ const ProductEditScreen = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        await Axios.get(`${API_URL}/products/find/${id}`).then((results) => {
-          setProducts(results.data);
-        });
+        const res = await Axios.get(`${API_URL}/products/find/${id}`);
+        setProducts(res.data);
+        console.log(res.data);
       } catch (err) {
         console.log(err);
       }

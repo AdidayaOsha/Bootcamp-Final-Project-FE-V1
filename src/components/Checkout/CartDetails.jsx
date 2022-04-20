@@ -1,6 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../constant/api";
+import Axios from "axios";
+
 const CartDetails = () => {
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const getUserCart = async (id) => {
+      try {
+        const results = await Axios.get(`${API_URL}/carts/get/1`);
+        setData(results.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserCart();
+  }, []);
+
   const TableHead = () => {
     return (
       <thead>
@@ -28,7 +45,7 @@ const CartDetails = () => {
             </div>
             <div className="space-y-2">
               <div>
-                <p className="font-bold">Nike Air Force 1 NDESTRUKT</p>
+                <p className="font-bold">{data.name}</p>
               </div>
               <div className="flex">
                 <div>
