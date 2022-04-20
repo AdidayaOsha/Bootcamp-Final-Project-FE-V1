@@ -104,9 +104,7 @@ const CartDetails = () => {
               </div>
             </div>
           </td>
-          <td className="text-center">
-            {currencyFormatter(val.product.price * val.quantity)}{" "}
-          </td>
+          <td className="text-center">{currencyFormatter(val.subtotal)} </td>
 
           <td>
             <i className="hover:cursor-pointer fas fa-trash-alt"></i>
