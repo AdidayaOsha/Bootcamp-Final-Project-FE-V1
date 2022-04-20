@@ -9,8 +9,8 @@ import AddProduct from "./pages/AddProduct";
 import ProductEditScreen from "./pages/ProductEditScreen";
 
 import AdminAuthentication from "./pages/AdminAuth/AdminAuthentication";
-// import AdminForgotPassword from "./pages/Auth/AdminForgotPassword";
-// import AdminRecoverPassword from "./pages/Auth/AdminRecoverPassword";
+import AdminForgotPassword from "./pages/AdminAuth/AdminForgotPassword";
+import AdminRecoverPassword from "./pages/AdminAuth/AdminRecoverPassword";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 
@@ -95,8 +95,8 @@ function App() {
           <Route path="/billing" element={<BillingDetails />} />
           <Route path="/payment" element={<PaymentDetails />} />
           <Route path="/adminauthentication/:token" element={<AdminAuthentication />} />
-          {/* <Route path="/adminforgotpassword" element={<AdminForgotPassword />} /> */}
-          {/* <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} /> */}
+          <Route path="/adminforgotpassword" element={<AdminForgotPassword />} />
+          <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} />
           <Route path="/adminregister" element={<AdminRegister />} />
           <Route path="/admin" element={<AdminLogin />} />
 

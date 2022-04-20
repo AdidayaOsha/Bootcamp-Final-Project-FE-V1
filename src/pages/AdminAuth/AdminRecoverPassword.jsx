@@ -2,41 +2,38 @@ import React, { useState } from 'react'
 import Axios from "axios"
 import * as Yup from "yup"
 import { useFormik } from 'formik'
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from 'react-redux'
 
-const AdminLogin = () => {
-    const [errMessage, setErrMessage] = useState("");
+const AdminRecoverPassword = () => {
+    const [successMessage, setSuccessMessage] = useState("");
     const [passwordShown, setPasswordShown] = useState(false);
+    const { token } = useParams();
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            email: "",
             password: "",
+            confirmPassword: ""
         },
         validationSchema: Yup.object({
-            email: Yup.string().email("Invalid email address").required("Email is Required"),
             password: Yup.string().required("Password is Required"),
+            confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], "Password must match").required("Password Confirmation is Required"),
         }),
         onSubmit: (values) => {
-            console.log(values)
-            Axios.post(`http://localhost:9990/admins/login`, {
-                email: values.email,
+            Axios.patch(`http://localhost:9990/admins/recoverpassword`, {
                 password: values.password
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             })
-                .then(res => {
+                .then((res) => {
                     console.log(res)
-                    localStorage.setItem("adminDataEmmerce", JSON.stringify(res.data.token))
-                    dispatch({
-                        type: "ADMIN_LOGIN",
-                        payload: res.data.dataAdmin
-                    })
-                    navigate('/category')
+                    setSuccessMessage("Password successfully changed, use your new password to login.")
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err)
-                    setErrMessage(err.response.data)
                 })
         }
     })
@@ -59,27 +56,9 @@ const AdminLogin = () => {
                     </div>
                     <form class="text-center" onSubmit={formik.handleSubmit}>
                         <h1 class="font-bold tracking-wider text-3xl mb-8 w-full text-gray-600">
-                            Admin Login
+                            Admin Password Recovery
                         </h1>
-                        {
-                            errMessage ?
-                                <h1 className='text-red-600'>{errMessage}</h1>
-                                :
-                                null
-                        }
-                        <div className='input-container py-2 text-left'>
-                            <input
-                                className={formik.touched.email && formik.errors.email ? "border-2 border-gray-100 focus:outline-none bg-red-100 hover:bg-red-200 block w-full py-2 px-4 rounded-lg focus:border-red-700 focus:bg-red-100" : "border-2 border-gray-100 focus:outline-none bg-gray-100 hover:bg-gray-200 block w-full py-2 px-4 rounded-lg focus:border-gray-700"}
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="Email"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.email}
-                            />
-                            {formik.touched.email && formik.errors.email ? <p class="text-red-600 text-xs font-light">{formik.errors.email}</p> : null}
-                        </div>
+                        <p className="mb-8">Please enter a new password</p>
                         <div className='input-container py-2 text-left'>
                             <input
                                 className={formik.touched.password && formik.errors.password ? "border-2 border-gray-100 focus:outline-none bg-red-100 hover:bg-red-200 block w-full py-2 px-4 rounded-lg focus:border-red-700 focus:bg-red-100" : "border-2 border-gray-100 focus:outline-none bg-gray-100 hover:bg-gray-200 block w-full py-2 px-4 rounded-lg focus:border-gray-700"}
@@ -94,23 +73,35 @@ const AdminLogin = () => {
                             {formik.touched.password && formik.errors.password ? <p class="text-red-600 text-xs font-light">{formik.errors.password}</p> : null}
                             <button onClick={togglePassword}>Show Password</button>
                         </div>
+                        <div className='input-container py-2 text-left'>
+                            <input
+                                className={formik.touched.confirmPassword && formik.errors.confirmPassword ? "border-2 border-gray-100 focus:outline-none bg-red-100 hover:bg-red-200 block w-full py-2 px-4 rounded-lg focus:border-red-700 focus:bg-red-100" : 'border-2 border-gray-100 focus:outline-none bg-gray-100 hover:bg-gray-200 block w-full py-2 px-4 rounded-lg focus:border-gray-700'}
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type={passwordShown ? "text" : "password"}
+                                placeholder="Confirm Password"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.confirmPassword}
+                            />
+                            {formik.touched.confirmPassword && formik.errors.confirmPassword ? <p class="text-red-600 text-xs font-light">{formik.errors.confirmPassword}</p> : null}
+                        </div>
+                        {
+                            successMessage ?
+                                <h1 className='text-green-600'>{successMessage}</h1>
+                                :
+                                null
+                        }
                         <div class="py-2">
                             <button type="submit" class="border-2 border-gray-100 focus:outline-none bg-pink-600 text-white font-bold tracking-wider block w-full p-2 rounded-lg focus:border-gray-700 hover:bg-pink-700">
-                                Login
+                                Reset Password
                             </button>
                         </div>
                     </form>
-                    <div class="text-center">
-                        <a href="/adminforgotpassword" class="hover:underline">Forgot password?</a>
-                    </div>
-                    <div class="text-center mt-12">
-                        <span>Don't have an account? </span>
-                        <a href="/adminregister" class="text-md text-pink-600 underline font-light hover:font-semibold hover:text-pink-800">Create One</a>
-                    </div>
                 </div>
             </div>
         </section>
     )
 }
 
-export default AdminLogin
+export default AdminRecoverPassword
