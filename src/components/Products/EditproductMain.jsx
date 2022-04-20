@@ -116,7 +116,7 @@ const EditProductMain = (props) => {
                       type="text"
                       className="form-control"
                       id="name"
-                      required
+                      // required
                       value={name ? name : (name = val.name)}
                       onChange={(e) => setName(e.target.value)}
                     />
