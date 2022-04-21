@@ -99,13 +99,26 @@ const BillingAddress = () => {
                 >
                   ✕
                 </label>
-                <h3 className="text-lg font-bold">
-                  Congratulations random Interner user!
+                <h3 className="text-lg font-bold text-center mb-2">
+                  Please Input Your New Address
                 </h3>
-                <p className="py-4">
-                  You've been selected for a chance to get one year of
-                  subscription to use Wikipedia for free!
-                </p>
+                <div class="form-control w-full max-w-xs m-auto">
+                  <label class="label">
+                    <div className="flex ">
+                      <span class="label-text">
+                        Address{" "}
+                        <span className="text-gray-400 text-sm">
+                          Ex: Jl. Kenangan Blok V2 No.9
+                        </span>
+                      </span>
+                    </div>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Type here"
+                    class="input input-bordered w-full max-w-xs"
+                  />
+                </div>
               </div>
             </div>
           </div>
