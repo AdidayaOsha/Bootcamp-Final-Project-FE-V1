@@ -15,9 +15,9 @@ const BillingAddress = () => {
       console.log(err);
     }
   };
+  const userGlobal = useSelector((state) => state.user);
 
   const TableAdress = () => {
-    const userGlobal = useSelector((state) => state.user);
     return userGlobal.user_addresses?.map((val) => {
       return (
         <>
@@ -100,12 +100,14 @@ const BillingAddress = () => {
                   ✕
                 </label>
                 <h3 className="text-lg font-bold text-center mb-2">
-                  Please Input Your New Address
+                  Please Input Your New Address for
+                  <br />
+                  {userGlobal.full_name}
                 </h3>
-                <div class="form-control w-full max-w-xs m-auto">
+                <div class="form-control border-transparent hover:border-transparent w-full max-w-xs m-auto">
                   <label class="label">
                     <div className="flex ">
-                      <span class="label-text">
+                      <span className="label-text">
                         Address{" "}
                         <span className="text-gray-400 text-sm">
                           Ex: Jl. Kenangan Blok V2 No.9
@@ -116,8 +118,76 @@ const BillingAddress = () => {
                   <input
                     type="text"
                     placeholder="Type here"
-                    class="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full max-w-xs"
                   />
+                  <div>
+                    <label className="label">
+                      <div className="flex ">
+                        <span className="label-text">Building Type</span>
+                      </div>
+                    </label>
+                    <select className="select select-bordered w-full max-w-xs">
+                      <option selected>Home</option>
+                      <option>Apartment</option>
+                      <option>Office</option>
+                      <option>Boarding House</option>
+                      <option>Dormitory</option>
+                      <option>School</option>
+                      <option>Hospital</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label">
+                      <div className="flex ">
+                        <span className="label-text">City</span>
+                      </div>
+                    </label>
+                    <select className="select select-bordered w-full max-w-xs">
+                      <option selected>Tangerang Selatan</option>
+                      <option>Jakarta</option>
+                      <option>Tangerang</option>
+                      <option>Bekasi</option>
+                      <option>Bogor</option>
+                      <option>Depok</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label">
+                      <div className="flex ">
+                        <span className="label-text">Province</span>
+                      </div>
+                    </label>
+                    <select className="select select-bordered w-full max-w-xs">
+                      <option selected>Banten</option>
+                      <option>DKI Jakarta</option>
+                      <option>Office</option>
+                      <option>Boarding House</option>
+                      <option>Dormitory</option>
+                      <option>School</option>
+                      <option>Hospital</option>
+                    </select>
+                    <label class="label">
+                      <div className="flex ">
+                        <span className="label-text">Postal Code</span>
+                      </div>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="ex: 15220"
+                      className="input input-bordered w-full max-w-xs"
+                    />
+                    <div class="">
+                      <label class="label cursor-pointer">
+                        <span class="label-text">
+                          Choose as Default Address
+                        </span>
+                        <input type="checkbox" class="checkbox" />
+                      </label>
+                    </div>
+                    <button className="w-full btn btn-accent mt-4 text-white">
+                      Submit My New Address
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
