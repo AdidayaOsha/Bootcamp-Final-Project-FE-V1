@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
@@ -6,15 +6,66 @@ import Axios from "axios";
 
 const BillingAddress = () => {
   const [data, setData] = useState({});
+  const [addressData, setAddressData] = useState([]);
+  const [address_line, setAddress_Line] = useState("");
+  const [address_type, setAddress_Type] = useState("");
+  const [cityId, setCityId] = useState(0);
+  const [provinceId, setProvinceId] = useState(0);
+  const [districtId, setDistrictId] = useState(0);
+  const [postal_code, setPostal_Code] = useState("");
+  const [userId, setUserId] = useState(0);
+  const [isDefault, setIsDefault] = useState(false);
+  console.log(`provinceId: ${provinceId}`);
+  console.log(`CityId: ${cityId}`);
+  console.log(`districtId: ${districtId}`);
+
+  useEffect(() => {
+    const getAddress = async () => {
+      try {
+        const results = await Axios.get(`${API_URL}/users/address`);
+        setAddressData(results.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAddress();
+  }, []);
 
   const addressHandler = async () => {
     try {
-      const res = await Axios.post(`${API_URL}`);
+      const res = await Axios.post(`${API_URL}/users/newaddress`, {
+        address_line,
+        address_type,
+        cityId,
+        provinceId,
+        postal_code,
+        userId,
+        isDefault,
+      });
       setData(res.data);
     } catch (err) {
       console.log(err);
     }
   };
+
+  const selectProvince = () => {
+    return addressData?.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
+  const selectCities = () => {
+    return addressData[provinceId - 1]?.cities.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
+  const selectDistrict = () => {
+    return addressData[0]?.cities[cityId]?.districts.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
   const userGlobal = useSelector((state) => state.user);
 
   const TableAdress = () => {
@@ -44,15 +95,11 @@ const BillingAddress = () => {
                   <div className="flex justify-between items-center">
                     <h2 className="text-gray-400">Phone: {val.phone}</h2>
                     <div className="flex space-x-2">
-                      {val.isDefault ? (
-                        <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
-                          Deliver To This Address
-                        </button>
-                      ) : (
+                      {val.isDefault ? null : (
                         <>
-                          <button className="flex btn btn-outline btn-black btn-sm font-bold normal-case">
-                            Delete
-                          </button>
+                          <td>
+                            <i className="hover:cursor-pointer fas fa-trash-alt align-middle mr-2"></i>
+                          </td>
                           <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
                             Deliver To This Address
                           </button>
@@ -72,7 +119,7 @@ const BillingAddress = () => {
   const Footer = () => {
     return (
       <>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4">
           <div className="items-start">
             <Link to="/checkout">
               <div className="text-gray-600 hover:text-gray-500 text-sm space-x-2 my-3 flex group">
@@ -119,6 +166,7 @@ const BillingAddress = () => {
                     type="text"
                     placeholder="Type here"
                     className="input input-bordered w-full max-w-xs"
+                    onChange={(e) => setAddress_Line(e.target.value)}
                   />
                   <div>
                     <label className="label">
@@ -126,8 +174,11 @@ const BillingAddress = () => {
                         <span className="label-text">Building Type</span>
                       </div>
                     </label>
-                    <select className="select select-bordered w-full max-w-xs">
-                      <option selected>Home</option>
+                    <select
+                      className="select select-bordered w-full max-w-xs"
+                      onChange={(e) => setAddress_Type(e.target.value)}
+                    >
+                      <option>Home</option>
                       <option>Apartment</option>
                       <option>Office</option>
                       <option>Boarding House</option>
@@ -139,33 +190,40 @@ const BillingAddress = () => {
                   <div>
                     <label className="label">
                       <div className="flex ">
-                        <span className="label-text">City</span>
-                      </div>
-                    </label>
-                    <select className="select select-bordered w-full max-w-xs">
-                      <option selected>Tangerang Selatan</option>
-                      <option>Jakarta</option>
-                      <option>Tangerang</option>
-                      <option>Bekasi</option>
-                      <option>Bogor</option>
-                      <option>Depok</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="label">
-                      <div className="flex ">
                         <span className="label-text">Province</span>
                       </div>
                     </label>
-                    <select className="select select-bordered w-full max-w-xs">
-                      <option selected>Banten</option>
-                      <option>DKI Jakarta</option>
-                      <option>Office</option>
-                      <option>Boarding House</option>
-                      <option>Dormitory</option>
-                      <option>School</option>
-                      <option>Hospital</option>
+                    <select
+                      className="select select-bordered w-full max-w-xs"
+                      onChange={(e) => setProvinceId(+e.target.value)}
+                    >
+                      {selectProvince()}
                     </select>
+                  </div>
+                  <div>
+                    <div>
+                      <label className="label">
+                        <div className="flex ">
+                          <span className="label-text">City</span>
+                        </div>
+                      </label>
+                      <select
+                        className="select select-bordered w-full max-w-xs"
+                        onChange={(e) => setCityId(+e.target.value)}
+                      >
+                        {selectCities()}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="label">
+                        <div className="flex ">
+                          <span className="label-text">District</span>
+                        </div>
+                      </label>
+                      <select className="select select-bordered w-full max-w-xs">
+                        {selectDistrict()}
+                      </select>
+                    </div>
                     <label class="label">
                       <div className="flex ">
                         <span className="label-text">Postal Code</span>

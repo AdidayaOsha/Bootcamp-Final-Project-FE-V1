@@ -36,17 +36,17 @@ const OrderProgress = () => {
           </div>
 
           {/* Progress Head */}
-          <div className="w-100 flex justify-center">
-            <div>
-              <p className="text-sm text-gray-500 font-bold">Cart</p>
+          <div className="w-full justify-center tabs ">
+            <div className="">
+              <a className="text-sm text-gray-500 font-bold tab">Cart</a>
             </div>
             <div className="mx-40 ">
-              <p className="text-sm text-gray-400 font-bold ml-10">
+              <a className="text-sm text-gray-400 font-bold tab">
                 Billing & Address
-              </p>
+              </a>
             </div>
             <div>
-              <p className="text-sm text-gray-400 font-bold">Payment</p>
+              <a className="text-sm text-gray-400 font-bold tab">Payment</a>
             </div>
           </div>
         </div>
