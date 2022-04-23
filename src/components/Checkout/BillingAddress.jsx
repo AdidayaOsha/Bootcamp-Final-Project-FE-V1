@@ -61,7 +61,12 @@ const BillingAddress = () => {
   };
 
   const selectDistrict = () => {
-    return addressData[0]?.cities[cityId]?.districts.map((val) => {
+    return addressData[provinceId - 1]?.cities[
+      (provinceId === 2 ? cityId - 5 : null,
+      provinceId === 3 ? cityId - 10 : null,
+      provinceId === 4 ? cityId - 19 : null,
+      provinceId === 5 ? cityId - 25 : null)
+    ]?.districts.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
