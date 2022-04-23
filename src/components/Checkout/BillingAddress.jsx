@@ -7,22 +7,24 @@ import Axios from "axios";
 const BillingAddress = () => {
   const [data, setData] = useState({});
   const [addressData, setAddressData] = useState([]);
+  const [cityData, setCityData] = useState([]);
+  const [districtData, setDistrictData] = useState([]);
   const [address_line, setAddress_Line] = useState("");
   const [address_type, setAddress_Type] = useState("");
   const [cityId, setCityId] = useState(0);
   const [provinceId, setProvinceId] = useState(0);
   const [districtId, setDistrictId] = useState(0);
-  const [postal_code, setPostal_Code] = useState("");
+  const [postal_code, setPostal_Code] = useState(0);
   const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
   console.log(`provinceId: ${provinceId}`);
-  console.log(`CityId: ${cityId}`);
-  console.log(`districtId: ${districtId}`);
+  console.log(`CityId: ${cityData}, ${cityId}`);
+  console.log(`districtId: ${districtData}, ${districtId}`);
 
   useEffect(() => {
     const getAddress = async () => {
       try {
-        const results = await Axios.get(`${API_URL}/users/address`);
+        const results = await Axios.get(`${API_URL}/users/provinces`);
         setAddressData(results.data);
       } catch (err) {
         console.log(err);
@@ -30,6 +32,32 @@ const BillingAddress = () => {
     };
     getAddress();
   }, []);
+
+  useEffect(() => {
+    const getCities = async () => {
+      try {
+        const results = await Axios.get(
+          `${API_URL}/users/cities/${provinceId}`
+        );
+        provinceId ? setCityData(results.data.cities) : setCityData([]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCities();
+  }, [provinceId]);
+
+  useEffect(() => {
+    const getDistricts = async () => {
+      try {
+        const results = await Axios.get(`${API_URL}/users/districts/${cityId}`);
+        cityId ? setDistrictData(results.data.districts) : setDistrictData([]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getDistricts();
+  }, [cityId]);
 
   const addressHandler = async () => {
     try {
@@ -55,13 +83,13 @@ const BillingAddress = () => {
   };
 
   const selectCities = () => {
-    return addressData[provinceId - 1]?.cities.map((val) => {
+    return cityData?.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
 
   const selectDistrict = () => {
-    return addressData[0]?.cities[cityId]?.districts.map((val) => {
+    return districtData?.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
@@ -132,7 +160,6 @@ const BillingAddress = () => {
             <label
               for="my-modal-3"
               className="btn modal-button text-accent btn-ghost btn-sm hover:bg-gray-200 normal-case"
-              onClick={() => addressHandler()}
             >
               + Add New Address
             </label>
@@ -187,6 +214,7 @@ const BillingAddress = () => {
                       <option>Hospital</option>
                     </select>
                   </div>
+                  {/* SELECT PROVINCES */}
                   <div>
                     <label className="label">
                       <div className="flex ">
@@ -195,12 +223,29 @@ const BillingAddress = () => {
                     </label>
                     <select
                       className="select select-bordered w-full max-w-xs"
-                      onChange={(e) => setProvinceId(+e.target.value)}
+                      onChange={(e) => {
+                        if (e.target.value === "reset") {
+                          setCityId(null);
+                          setCityData([]);
+                          setDistrictId(null);
+                          setDistrictData([]);
+                          setProvinceId(null);
+                        } else {
+                          setProvinceId(+e.target.value);
+                          setDistrictData([]);
+                          setCityData([]);
+                        }
+                      }}
                     >
+                      <option value={"reset"}>- Choose One -</option>
+                      {/* {provinceId === null
+                        ? setCityId(null) && setCityData([])
+                      : null} */}
                       {selectProvince()}
                     </select>
                   </div>
                   <div>
+                    {/* SELECT CITIES */}
                     <div>
                       <label className="label">
                         <div className="flex ">
@@ -208,19 +253,46 @@ const BillingAddress = () => {
                         </div>
                       </label>
                       <select
+                        disabled={!cityData.length}
                         className="select select-bordered w-full max-w-xs"
-                        onChange={(e) => setCityId(+e.target.value)}
+                        onChange={(e) => {
+                          if (e.target.value === "reset") {
+                            setDistrictId(null);
+                            setDistrictData([]);
+                            setCityId(null);
+                          } else {
+                            setCityId(+e.target.value);
+                          }
+                        }}
                       >
+                        {cityData.length ? (
+                          <option value={"reset"}>- Choose One -</option>
+                        ) : null}
                         {selectCities()}
                       </select>
                     </div>
+                    {/* SELECT DISTRICTS */}
                     <div>
                       <label className="label">
                         <div className="flex ">
                           <span className="label-text">District</span>
                         </div>
                       </label>
-                      <select className="select select-bordered w-full max-w-xs">
+                      <select
+                        disabled={!districtData.length}
+                        className="select select-bordered w-full max-w-xs"
+                        onChange={(e) => {
+                          if (e.target.value === "reset") {
+                            setDistrictId(null);
+                            setDistrictData([]);
+                          } else {
+                            setDistrictId(+e.target.value);
+                          }
+                        }}
+                      >
+                        {districtData.length ? (
+                          <option value="reset">- Choose One -</option>
+                        ) : null}
                         {selectDistrict()}
                       </select>
                     </div>
