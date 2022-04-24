@@ -24,6 +24,13 @@ import Home from "./pages/User/Home";
 import Catalog from "./pages/User/Catalog";
 import Details from "./pages/User/Details";
 
+import Report from "./pages/Admin/Report";
+import User from "./pages/Admin/User";
+import Warehouse from "./pages/Admin/Warehouse";
+import FormWarehouse from "./pages/Admin/FormWarehouse";
+import ShowWarehouse from "./pages/Admin/ShowWarehouse";
+import Dashboard from "./pages/Admin/Dashboard";
+
 import NotFound from "./pages/NotFound";
 import { ToastContainer } from "react-toastify";
 import CheckoutDetails from "./pages/CheckoutDetails";
@@ -112,6 +119,14 @@ function App() {
           <Route path="/detail/:id" element={<Details />} />
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
+
+          {/* ADMIN MASTER DATA */}
+          <Route path="/report" element={<Report />} />
+          <Route path="/warehouse" element={<Warehouse />} />
+          <Route path="/warehouse/:id" element={<ShowWarehouse />} />
+          <Route path="/addwarehouse" element={<FormWarehouse />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
