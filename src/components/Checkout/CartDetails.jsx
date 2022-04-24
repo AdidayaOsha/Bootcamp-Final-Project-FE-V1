@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { currencyFormatter } from "../../helpers/currencyFormatter";
 
 const CartDetails = () => {
   const [newData, setNewData] = useState([]);
@@ -10,27 +11,29 @@ const CartDetails = () => {
 
   const dispatch = useDispatch();
   const cartGlobal = useSelector((state) => state.cart);
+  console.log(cartGlobal);
 
-  useEffect(() => {
-    try {
-      const getUserCart = async (userId) => {
-        const results = await Axios.get(`${API_URL}/carts/get/1`);
-        dispatch({
-          type: "GET_CART",
-          payload: results.data,
-        });
-      };
-      getUserCart();
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const getUserCart = async (userId) => {
+  //       const results = await Axios.get(`${API_URL}/carts/get/2`);
+  //       dispatch({
+  //         type: "GET_CART",
+  //         payload: results.data,
+  //       });
+  //       console.log(results.data);
+  //     };
+  //     getUserCart();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
 
   const TableHead = () => {
     return (
       <thead>
         <tr className=" text-sm text-gray-500 h-14 bg-slate-100 ">
-          <th className="text-left w-1/2 rounded-l-md pl-2">Product</th>
+          <th className="text-left w-5/12 rounded-l-md pl-2">Product</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Total Price</th>
@@ -41,7 +44,7 @@ const CartDetails = () => {
   };
 
   const ProductList = () => {
-    return cartGlobal.cartList.carts?.map((val) => {
+    return cartGlobal.cartList?.map((val) => {
       return (
         <tr className="text-center h-20 border-none">
           <td>
@@ -73,7 +76,7 @@ const CartDetails = () => {
               </div>
             </div>
           </td>
-          <td className="text-left">Rp. {val.product.price}</td>
+          <td className="text-left">{currencyFormatter(val.product.price)}</td>
           <td className="text-left">
             <div>
               <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
@@ -101,9 +104,7 @@ const CartDetails = () => {
               </div>
             </div>
           </td>
-          <td className="text-center">
-            Rp. {val.product.price * val.quantity}{" "}
-          </td>
+          <td className="text-center">{currencyFormatter(val.subtotal)} </td>
 
           <td>
             <i className="hover:cursor-pointer fas fa-trash-alt"></i>
@@ -123,7 +124,7 @@ const CartDetails = () => {
             <h2 className="font-bold">
               Cart{" "}
               <span className="text-gray-400">
-                ({cartGlobal.cartList.carts?.length} Item)
+                ({cartGlobal.cartList?.length} Item)
               </span>
             </h2>
           </div>

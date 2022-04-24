@@ -5,16 +5,16 @@ import "../assets/styles/user.css";
 import "../assets/styles/responsive.css";
 
 const Header = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userGlobal = useSelector((state) => state.user)
+  const userGlobal = useSelector((state) => state.user);
   const logout = () => {
     dispatch({
-      type: "USER_LOGOUT"
-    })
-    localStorage.removeItem("userDataEmmerce")
-    navigate('/')
-  }
+      type: "USER_LOGOUT",
+    });
+    localStorage.removeItem("userDataEmmerce");
+    navigate("/login");
+  };
   return (
     <div>
       {/* Top Header */}
@@ -132,7 +132,7 @@ const Header = () => {
                 </Link>
               </div>
               <div className="col-md-9 d-flex align-items-center justify-content-end Login-Register">
-                  {userGlobal.id === 0 ?
+                  {userGlobal.id === 0 ? (
                     <>
                     <Link to="/">About Us</Link>
                     <Link to="/catalog">Catalog</Link>
@@ -149,7 +149,7 @@ const Header = () => {
                       </ul>
                     </div>
                     </>
-                    :
+                  ) : (
                     <>
                       <h1 className="text-gray-100 pr-7">Welcome, {userGlobal.username}!</h1>
                       <Link to="/cart">
@@ -167,7 +167,7 @@ const Header = () => {
                         </ul>
                       </div>
                     </>
-                  }
+                  )}
               </div>
             </div>
           </div>

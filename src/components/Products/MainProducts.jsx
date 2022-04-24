@@ -3,6 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { toast } from "react-toastify";
+import { currencyFormatter } from "../../helpers/currencyFormatter";
 
 const MainProducts = () => {
   const [data, setData] = useState([]);
@@ -149,7 +150,7 @@ const MainProducts = () => {
           </td>
           <td>{val.name}</td>
           <td>{val.description.slice(0, 12)}...</td>
-          <td>Rp. {val.price}</td>
+          <td className="tracking-wide">{currencyFormatter(val.price)}</td>
           <td>{val.product_category.name}</td>
           <td>{val.warehouse_products[0].stock_ready}</td>
           <td>{val.warehouse_products[0].stock_reserved}</td>
