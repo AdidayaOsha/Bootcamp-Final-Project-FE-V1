@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
@@ -149,12 +149,12 @@ const BillingAddress = () => {
       <>
         <div className="flex justify-between items-center mb-4">
           <div className="items-start">
-            <Link to="/checkout">
+            <NavLink to="/cart">
               <div className="text-gray-600 hover:text-gray-500 text-sm space-x-2 my-3 flex group">
                 <i className="fas fa-arrow-left transition-all group-hover:mr-1"></i>
                 <h2 className="font-bold">Back</h2>
               </div>
-            </Link>
+            </NavLink>
           </div>
           <div>
             <label

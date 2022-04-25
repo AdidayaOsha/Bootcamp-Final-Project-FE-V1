@@ -76,7 +76,7 @@ const OrderSummary = () => {
   return (
     <>
       {/* RIGHT COL ORDER SUMMARY */}
-      <div className=" w-3/12 flex flex-col ">
+      <div className="flex flex-col ">
         <div className="w-full rounded-xl flex flex-col p-4 shadow-sm">
           {/* Title Order Summary */}
           <div>
