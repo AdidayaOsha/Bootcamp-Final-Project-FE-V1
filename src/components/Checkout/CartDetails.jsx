@@ -13,21 +13,10 @@ const CartDetails = () => {
   const cartGlobal = useSelector((state) => state.cart);
   console.log(cartGlobal);
 
-  // useEffect(() => {
-  //   try {
-  //     const getUserCart = async (userId) => {
-  //       const results = await Axios.get(`${API_URL}/carts/get/2`);
-  //       dispatch({
-  //         type: "GET_CART",
-  //         payload: results.data,
-  //       });
-  //       console.log(results.data);
-  //     };
-  //     getUserCart();
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, []);
+  const renderSubTotalPrice = () => {
+    let subtotal = 0;
+    cartGlobal.cartsList.forEach((val) => {});
+  };
 
   const TableHead = () => {
     return (
