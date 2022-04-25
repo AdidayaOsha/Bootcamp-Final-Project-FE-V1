@@ -6,6 +6,10 @@ const reducer = (state = init_state, action) => {
   switch (action.type) {
     case "GET_CART":
       return { ...state, cartList: action.payload };
+    case "CART_INCREMENT":
+      return { ...state, cartList: action.payload };
+    case "CART_DECREMENT":
+      return { ...state, cartList: action.payload };
     default:
       return state;
   }

@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { currencyFormatter } from "../../helpers/currencyFormatter";
 
 const OrderSummary = () => {
+  const cartGlobal = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
+  const [subTotal, setSubTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [shipping, setShipping] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    const renderSubTotal = () => {
+      let total = 0;
+      cartGlobal.cartList.forEach((val) => {
+        total += val.subtotal;
+        setSubTotal(total);
+      });
+    };
+    renderSubTotal();
+  }, []);
+
+  useEffect(() => {
+    const renderTotalPrice = () => {
+      return subTotal + discount + shipping;
+    };
+    renderTotalPrice();
+  }, [subTotal, discount, shipping]);
+
   return (
     <>
       {/* RIGHT COL ORDER SUMMARY */}
@@ -13,7 +41,7 @@ const OrderSummary = () => {
           <div className="space-y-6 text-sm mt-4">
             <div className="flex justify-between">
               <h2 className="text-gray-400">Sub Total</h2>
-              <h2 className="font-bold">Rp. 20000</h2>
+              <h2 className="font-bold">{currencyFormatter(subTotal)}</h2>
             </div>
             <div className="flex justify-between">
               <h2 className="text-gray-400">Discount</h2>
@@ -30,7 +58,7 @@ const OrderSummary = () => {
               </div>
               <div className="">
                 <h2 className="text-lg font-bold text-red-400 text-right">
-                  Rp. 2.000.000
+                  Rp. {}
                 </h2>
                 <p className="text-xs font-extralight text-right italic">
                   (PPN Included if Applicable)
