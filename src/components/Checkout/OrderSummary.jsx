@@ -29,6 +29,7 @@ const OrderSummary = () => {
     renderTotalPrice();
   }, [subTotal, discount, shipping]);
 
+  console.log("testis");
   return (
     <>
       {/* RIGHT COL ORDER SUMMARY */}
