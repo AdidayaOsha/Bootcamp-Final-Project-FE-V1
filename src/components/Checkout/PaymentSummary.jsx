@@ -1,7 +1,11 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { currencyFormatter } from "../../helpers/currencyFormatter";
 
 const PaymentSummary = () => {
   const TableBilling = () => {
+    const summaryGlobal = useSelector((state) => state.summary);
+
     return (
       <>
         {/* RIGHT COL ORDER SUMMARY */}
@@ -14,11 +18,15 @@ const PaymentSummary = () => {
             <div className="space-y-6 text-sm mt-4">
               <div className="flex justify-between">
                 <h2 className="text-gray-400">Sub Total</h2>
-                <h2 className="font-bold">Rp. 20000</h2>
+                <h2 className="font-bold">
+                  {currencyFormatter(summaryGlobal.subTotal)}
+                </h2>
               </div>
               <div className="flex justify-between">
                 <h2 className="text-gray-400">Discount</h2>
-                <h2 className="font-bold">-</h2>
+                <h2 className="font-bold">
+                  {currencyFormatter(summaryGlobal.discount)}
+                </h2>
               </div>
               <div className="flex justify-between">
                 <h2 className="text-gray-400">Shipping</h2>
@@ -31,7 +39,7 @@ const PaymentSummary = () => {
                 </div>
                 <div className="">
                   <h2 className="text-lg font-bold text-red-400 text-right">
-                    Rp. 2.000.000
+                    {currencyFormatter(summaryGlobal.totalPrice)}
                   </h2>
                   <p className="text-xs font-extralight text-right italic">
                     (PPN Included if Applicable)
