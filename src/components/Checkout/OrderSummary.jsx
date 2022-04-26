@@ -17,7 +17,6 @@ const OrderSummary = () => {
 
   const cartGlobal = useSelector((state) => state.cart);
   const summaryGlobal = useSelector((state) => state.summary);
-  console.log(summaryGlobal);
 
   useEffect(() => {
     const renderSubTotal = async () => {

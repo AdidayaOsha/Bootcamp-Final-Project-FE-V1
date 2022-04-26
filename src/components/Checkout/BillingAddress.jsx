@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import useGeoLocation from "../../hooks/useGeoLocation";
 
 const BillingAddress = () => {
   const [data, setData] = useState({});
@@ -17,6 +18,8 @@ const BillingAddress = () => {
   const [postal_code, setPostal_Code] = useState(0);
   const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
+  const location = useGeoLocation();
+
   console.log(`provinceId: ${provinceId}`);
   console.log(`CityId: ${cityData}, ${cityId}`);
   console.log(`districtId: ${districtData}, ${districtId}`);
@@ -120,6 +123,9 @@ const BillingAddress = () => {
                     {val.address_line}, <span>{val.city}</span>
                   </h2>
                   <h2 className="">Postal Code: {val.postal_code}</h2>
+                  {/* {location.loaded
+                    ? JSON.stringify(location)
+                    : "Location data not available"} */}
                   <div className="flex justify-between items-center">
                     <h2 className="text-gray-400">Phone: {val.phone}</h2>
                     <div className="flex space-x-2">

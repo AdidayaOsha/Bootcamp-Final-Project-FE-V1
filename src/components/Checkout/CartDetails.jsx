@@ -1,22 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
+import { debounce } from "throttle-debounce";
 
 const CartDetails = () => {
-  const [newData, setNewData] = useState([]);
-  const [quantity, setQuantity] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [productImage, setProductImage] = useState("");
+  const [quantity, setQuantity] = useState(0);
 
-  const dispatch = useDispatch();
-  const cartGlobal = useSelector((state) => state.cart);
-  console.log(cartGlobal);
+  const qtyHandler = useCallback(
+    debounce(1500, async (id) => {
+      await Axios.patch(`${API_URL}/cart/quantity/${id}`, {
+        quantity,
+      });
+    }),
+    []
+  );
 
-  const renderSubTotalPrice = () => {
-    let subtotal = 0;
-    cartGlobal.cartsList.forEach((val) => {});
+  const getCart = async () => {
+    try {
+      await Axios.get(`${API_URL}/carts/get/2`);
+    } catch (err) {
+      console.log(err);
+    }
   };
+  useEffect(() => {}, []);
 
   const TableHead = () => {
     return (
@@ -69,19 +80,11 @@ const CartDetails = () => {
           <td className="text-left">
             <div>
               <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
-                <button
-                  className="text-4xl"
-                  onClick={() =>
-                    quantity > 1 ? setQuantity(quantity - 1) : setQuantity(1)
-                  }
-                >
+                <button className="text-4xl" onClick={() => qtyHandler(val.id)}>
                   -
                 </button>
                 <span className="text-1xl">{val.quantity}</span>
-                <button
-                  className="text-2xl"
-                  onClick={() => setQuantity(quantity + 1)}
-                >
+                <button className="text-2xl" onClick={() => qtyHandler(val.id)}>
                   +
                 </button>
               </div>

@@ -2,7 +2,7 @@ const init_state = {
   subTotal: 0,
   totalPrice: 0,
   discount: 0,
-  isAddressMode: true,
+  isAddressMode: false,
 };
 
 const reducer = (state = init_state, action) => {
