@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
+import Axios from "axios";
+import { API_URL } from "../../constant/api";
 
 const OrderSummary = () => {
   const dispatch = useDispatch();
-
+  const [cartItems, setCartItems] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [shipping, setShipping] = useState(0);
@@ -15,19 +17,29 @@ const OrderSummary = () => {
     `sub: ${subTotal}, disc: ${discount}, Ship: ${shipping}, TotalPrice: ${totalPrice}`
   );
 
-  const cartGlobal = useSelector((state) => state.cart);
+  const userGlobal = useSelector((state) => state.user);
   const summaryGlobal = useSelector((state) => state.summary);
+
+  useEffect(() => {
+    const getUserCart = async () => {
+      try {
+        const results = await Axios.get(
+          `${API_URL}/carts/get/${userGlobal.id}`
+        );
+        setCartItems(results.data.carts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUserCart();
+  }, [userGlobal]);
 
   useEffect(() => {
     const renderSubTotal = async () => {
       try {
         let total = 0;
-        await cartGlobal.cartList.forEach((val) => {
+        cartItems.forEach((val) => {
           total += val.subtotal;
-          dispatch({
-            type: "GET_SUBTOTAL",
-            payload: total,
-          });
           setSubTotal(total);
         });
       } catch (err) {
@@ -35,36 +47,29 @@ const OrderSummary = () => {
       }
     };
     renderSubTotal();
-  }, [cartGlobal]);
+  }, [cartItems]);
 
   useEffect(() => {
     const renderTotalPrice = () => {
       try {
         let total = 0;
         total = subTotal - discount + shipping;
-        dispatch({
-          type: "GET_TOTALPRICE",
-          payload: total,
-        });
+
         setTotalPrice(total);
       } catch (err) {
         console.log(err);
       }
     };
     renderTotalPrice();
-  }, [cartGlobal, subTotal, discount, shipping]);
+  }, [cartItems, subTotal, discount, shipping]);
 
   useEffect(() => {
     const discountHandler = () => {
       try {
-        let discountFee;
+        let discountFee = 0;
         discountFee = totalPrice * 0.05;
         setDiscount(discountFee);
         setTotalPrice(totalPrice - discountFee);
-        dispatch({
-          type: "GET_DISCOUNT",
-          payload: discountFee,
-        });
       } catch (err) {
         console.log(err);
       }
@@ -89,10 +94,8 @@ const OrderSummary = () => {
             {/* DISCOUNT */}
             <div className="flex justify-between">
               <h2 className="text-gray-400">Discount</h2>
-              {summaryGlobal.discount ? (
-                <h2 className="">
-                  {currencyFormatter(summaryGlobal.discount)}
-                </h2>
+              {discount ? (
+                <h2 className="">{currencyFormatter(discount)}</h2>
               ) : (
                 <h2 className="">-</h2>
               )}
