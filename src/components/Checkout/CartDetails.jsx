@@ -7,7 +7,23 @@ import { debounce } from "throttle-debounce";
 import Axios from "axios";
 
 const CartDetails = () => {
-  const [cartItems, setCartItems] = useOutletContext();
+  const [cartItems, setCartItems] = useState([]);
+  const userGlobal = useSelector((state) => state.user);
+  console.log(cartItems);
+
+  useEffect(() => {
+    const getCart = async () => {
+      try {
+        const results = await Axios.get(
+          `${API_URL}/carts/get/${userGlobal.id}`
+        );
+        setCartItems(results.data.carts);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCart();
+  }, [userGlobal]);
 
   const TableHead = () => {
     return (
@@ -29,10 +45,16 @@ const CartDetails = () => {
 
     const qtyHandler = useCallback(
       debounce(1000, async (quantity) => {
-        console.log("tes berapa lama muncul");
-        await Axios.patch(`${API_URL}/carts/quantity/${items.id}`, {
-          quantity,
-        });
+        await Axios.all([
+          await Axios.patch(`${API_URL}/carts/quantity/${items.id}`, {
+            quantity,
+          }),
+          await Axios.get(`${API_URL}/carts/get/${userGlobal.id}`).then(
+            (results) => {
+              // setCartItems(results.data.carts);
+            }
+          ),
+        ]);
       }),
       []
     );

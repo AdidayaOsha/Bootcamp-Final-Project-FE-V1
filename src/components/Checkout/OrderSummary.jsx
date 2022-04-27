@@ -13,10 +13,6 @@ const OrderSummary = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
 
-  console.log(
-    `sub: ${subTotal}, disc: ${discount}, Ship: ${shipping}, TotalPrice: ${totalPrice}`
-  );
-
   const userGlobal = useSelector((state) => state.user);
   const summaryGlobal = useSelector((state) => state.summary);
 
@@ -38,7 +34,7 @@ const OrderSummary = () => {
     const renderSubTotal = async () => {
       try {
         let total = 0;
-        cartItems.forEach((val) => {
+        cartItems?.forEach((val) => {
           total += val.subtotal;
           setSubTotal(total);
         });
