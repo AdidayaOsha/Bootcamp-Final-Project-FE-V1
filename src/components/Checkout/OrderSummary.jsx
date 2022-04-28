@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
 
 const OrderSummary = () => {
-  const dispatch = useDispatch();
   const [cartItems, setCartItems] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
-  const [shipping, setShipping] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
 
@@ -49,7 +47,7 @@ const OrderSummary = () => {
     const renderTotalPrice = () => {
       try {
         let total = 0;
-        total = subTotal - discount + shipping;
+        total = subTotal - discount;
 
         setTotalPrice(total);
       } catch (err) {
@@ -57,7 +55,7 @@ const OrderSummary = () => {
       }
     };
     renderTotalPrice();
-  }, [cartItems, subTotal, discount, shipping]);
+  }, [cartItems, subTotal, discount]);
 
   useEffect(() => {
     const discountHandler = () => {

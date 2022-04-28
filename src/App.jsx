@@ -32,7 +32,7 @@ import BillingDetails from "./pages/BillingDetails";
 import PaymentDetails from "./pages/PaymentDetails";
 import Axios from "axios";
 import { useDispatch } from "react-redux";
-import CartDetails from "./components/Checkout/CartDetails";
+import Cart from "./components/Checkout/Cart";
 
 function App() {
   const dispatch = useDispatch();
@@ -106,7 +106,7 @@ function App() {
 
           {/* CARTS */}
           <Route path="/cart" element={<CheckoutDetails />}>
-            <Route index element={<CartDetails />} />
+            <Route index element={<Cart />} />
             <Route path="billing" element={<BillingDetails />} />
             <Route path="payment" element={<PaymentDetails />} />
           </Route>
