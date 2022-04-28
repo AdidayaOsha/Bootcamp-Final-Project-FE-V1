@@ -1,98 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { currencyFormatter } from "../../helpers/currencyFormatter";
 
 const PaymentSummary = () => {
-  const TableBilling = () => {
-    const summaryGlobal = useSelector((state) => state.summary);
-
-    return (
-      <>
-        {/* RIGHT COL ORDER SUMMARY */}
-        <div className=" w-full flex flex-col ">
-          <div className="w-full rounded-xl flex flex-col p-4 shadow-sm">
-            {/* Title Order Summary */}
-            <div>
-              <h1 className="font-bold">Order Summary</h1>
-            </div>
-            <div className="space-y-6 text-sm mt-4">
-              <div className="flex justify-between">
-                <h2 className="text-gray-400">Sub Total</h2>
-                <h2 className="font-bold">
-                  {currencyFormatter(summaryGlobal.subTotal)}
-                </h2>
-              </div>
-              <div className="flex justify-between">
-                <h2 className="text-gray-400">Discount</h2>
-                <h2 className="font-bold">
-                  {currencyFormatter(summaryGlobal.discount)}
-                </h2>
-              </div>
-              <div className="flex justify-between">
-                <h2 className="text-gray-400">Shipping</h2>
-                <h2 className="font-bold">Free</h2>
-              </div>
-              <span className="flex border-top h-[2px] bg-slate-100 w-full"></span>
-              <div className="flex justify-between">
-                <div className="text-lg font-bold">
-                  <h2>Total</h2>
-                </div>
-                <div className="">
-                  <h2 className="text-lg font-bold text-red-400 text-right">
-                    {currencyFormatter(summaryGlobal.totalPrice)}
-                  </h2>
-                  <p className="text-xs font-extralight text-right italic">
-                    (PPN Included if Applicable)
-                  </p>
-                </div>
-              </div>
-              <div className="border-2 rounded-md flex justify-between p-2">
-                <h2 className="text-lg">DISCOUNT5</h2>
-                <button className="btn btn-ghost text-accent btn-sm">
-                  Apply
-                </button>
-              </div>
-            </div>
-          </div>
-          <button className="mt-4 btn btn-block btn-accent text-white">
-            CHECKOUT
-          </button>
-        </div>
-      </>
-    );
-  };
-  const TableAddress = () => {
-    return (
-      <div className="w-full items-end">
-        <div className=" w-full rounded-xl shadow-sm">
-          <div className="p-3 rounded-t-xl">
-            <div className="space-y-3">
-              <div className="flex space-x-2">
-                <h2 className="font-bold">Osha Prima Adidaya</h2>
-                <p className="text-gray-400 text-sm">( Home)</p>
-                <p className="text-xs border-1 bg-info text-white border-accent px-1 rounded-sm">
-                  Default
-                </p>
-              </div>
-              <h2 className="text-sm">
-                Villa Bintaro Regency, Jl.Lombok II Blok G2 No.9 Pondok Aren,
-                Tangerang Selatan. 15220
-              </h2>
-              <div className="flex justify-between items-center">
-                <h2 className="text-gray-400">021-7587535</h2>
-                <button className="flex btn btn-ghost text-accent hover:text-green-500 hover:bg-white btn-xs font-bold normal-case">
-                  Choose Another Address
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
   return (
     <>
-      <div className="w-1/2 flex flex-col space-y-2">
+      <div className="w-1/2 flex flex-col space-y-2 ">
         <div className="w-full flex space-x-6">
           {/* Delivery Time */}
           <div className="w-full h-32 rounded-xl shadow-sm ">
@@ -240,11 +151,6 @@ const PaymentSummary = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="w-3/12 flex flex-col items-end space-y-1">
-        {TableAddress()}
-        {TableBilling()}
       </div>
     </>
   );

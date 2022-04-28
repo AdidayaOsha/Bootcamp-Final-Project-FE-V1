@@ -32,6 +32,7 @@ import BillingDetails from "./pages/BillingDetails";
 import PaymentDetails from "./pages/PaymentDetails";
 import Axios from "axios";
 import { useDispatch } from "react-redux";
+import Cart from "./components/Checkout/Cart";
 
 function App() {
   const dispatch = useDispatch();
@@ -104,9 +105,12 @@ function App() {
           <Route path="/products/find/:id" element={<ProductEditScreen />} />
 
           {/* CARTS */}
-          <Route path="/checkout" element={<CheckoutDetails />} />
-          <Route path="/billing" element={<BillingDetails />} />
-          <Route path="/payment" element={<PaymentDetails />} />
+          <Route path="/cart" element={<CheckoutDetails />}>
+            <Route index element={<Cart />} />
+            <Route path="billing" element={<BillingDetails />} />
+            <Route path="payment" element={<PaymentDetails />} />
+          </Route>
+
           <Route
             path="/adminauthentication/:token"
             element={<AdminAuthentication />}

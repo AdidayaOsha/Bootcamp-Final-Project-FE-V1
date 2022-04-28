@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const OrderProgress = () => {
   return (
@@ -38,15 +38,53 @@ const OrderProgress = () => {
           {/* Progress Head */}
           <div className="w-full justify-center tabs ">
             <div className="">
-              <a className="text-sm text-gray-500 font-bold tab">Cart</a>
+              <NavLink
+                to="/cart"
+                end
+                className="text-sm text-gray-500 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Cart
+                  </button>
+                )}
+              </NavLink>
             </div>
             <div className="mx-40 ">
-              <a className="text-sm text-gray-400 font-bold tab">
-                Billing & Address
-              </a>
+              <NavLink
+                to="billing"
+                className="text-sm text-gray-400 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Billing & Address
+                  </button>
+                )}
+              </NavLink>
             </div>
             <div>
-              <a className="text-sm text-gray-400 font-bold tab">Payment</a>
+              <NavLink
+                to="payment"
+                className="text-sm text-gray-400 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Payment
+                  </button>
+                )}
+              </NavLink>
             </div>
           </div>
         </div>
