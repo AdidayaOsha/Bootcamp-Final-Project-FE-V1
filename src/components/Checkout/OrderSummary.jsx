@@ -26,7 +26,7 @@ const OrderSummary = () => {
       }
     };
     getUserCart();
-  }, [userGlobal]);
+  }, [userGlobal, cartItems]);
 
   useEffect(() => {
     const renderSubTotal = async () => {
