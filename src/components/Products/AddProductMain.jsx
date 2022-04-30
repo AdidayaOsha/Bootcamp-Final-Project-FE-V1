@@ -54,10 +54,9 @@ const AddProductMain = () => {
       formData.append("warehouseId", warehouseId);
       console.log(formData);
 
-      await Axios.post(`${API_URL}/products/add`, formData).then((results) => {
-        console.log(results.data);
-        navigate("/products");
-      });
+      const results = await Axios.post(`${API_URL}/products/add`, formData);
+      console.log(results.data);
+      navigate("/products");
     } catch (err) {
       console.log(err);
     }

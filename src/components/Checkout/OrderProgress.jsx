@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const OrderProgress = () => {
   return (
@@ -36,17 +36,55 @@ const OrderProgress = () => {
           </div>
 
           {/* Progress Head */}
-          <div className="w-100 flex justify-center">
-            <div>
-              <p className="text-sm text-gray-500 font-bold">Cart</p>
+          <div className="w-full justify-center tabs ">
+            <div className="">
+              <NavLink
+                to="/cart"
+                end
+                className="text-sm text-gray-500 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Cart
+                  </button>
+                )}
+              </NavLink>
             </div>
             <div className="mx-40 ">
-              <p className="text-sm text-gray-400 font-bold ml-10">
-                Billing & Address
-              </p>
+              <NavLink
+                to="billing"
+                className="text-sm text-gray-400 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Billing & Address
+                  </button>
+                )}
+              </NavLink>
             </div>
             <div>
-              <p className="text-sm text-gray-400 font-bold">Payment</p>
+              <NavLink
+                to="payment"
+                className="text-sm text-gray-400 font-bold tab"
+              >
+                {({ isActive }) => (
+                  <button
+                    className={`${
+                      isActive ? "text-accent italic" : "text-black"
+                    }`}
+                  >
+                    Payment
+                  </button>
+                )}
+              </NavLink>
             </div>
           </div>
         </div>

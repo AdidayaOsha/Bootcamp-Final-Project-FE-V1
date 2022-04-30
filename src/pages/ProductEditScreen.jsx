@@ -5,7 +5,6 @@ import EditProductMain from "../components/Products/EditproductMain";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../constant/api";
-import Products from "../data/Products";
 
 const ProductEditScreen = () => {
   const [products, setProducts] = useState([]);
@@ -23,8 +22,6 @@ const ProductEditScreen = () => {
     };
     getProducts();
   }, []);
-
-  // const productData = products.find((val) => val.id === Number(id));
 
   return (
     <>
