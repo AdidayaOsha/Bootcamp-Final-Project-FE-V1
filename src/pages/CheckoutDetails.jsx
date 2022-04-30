@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
+import { API_URL } from "../constant/api";
 import OrderProgress from "../components/Checkout/OrderProgress";
 import OrderSummary from "../components/Checkout/OrderSummary";
 import TableAddress from "../components/Checkout/TableAddress";
 import Axios from "axios";
-import { API_URL } from "../constant/api";
 
 const CheckoutDetails = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -33,7 +33,7 @@ const CheckoutDetails = () => {
         <Outlet context={[cartItems, setCartItems]} />
         <div className="w-3/12 space-y-4 flex flex-col">
           {summaryGlobal.isAddressMode && <TableAddress />}
-          <OrderSummary />
+          <OrderSummary cartItems={cartItems} setCartItems={setCartItems} />
         </div>
       </div>
     </div>

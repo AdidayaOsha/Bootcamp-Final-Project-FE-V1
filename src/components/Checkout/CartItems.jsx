@@ -6,8 +6,9 @@ import { currencyFormatter } from "../../helpers/currencyFormatter";
 import { useSelector } from "react-redux";
 
 const CartItems = ({ val, setCartItems }) => {
-  const [quantity, setQuantity] = useState(val.quantity);
+  let [quantity, setQuantity] = useState(val.quantity);
   const userGlobal = useSelector((state) => state.user);
+  const stockReady = val.product.warehouse_products[0].stock_ready;
 
   const qtyHandler = useCallback(
     debounce(1000, async (quantity) => {
@@ -21,7 +22,12 @@ const CartItems = ({ val, setCartItems }) => {
   );
 
   useEffect(() => {
-    qtyHandler(quantity);
+    let maxQty = quantity;
+    if (maxQty > stockReady) {
+      maxQty = stockReady;
+    } else {
+      qtyHandler(quantity);
+    }
   }, [quantity]);
 
   return (
@@ -60,25 +66,40 @@ const CartItems = ({ val, setCartItems }) => {
         <div>
           <div className="flex border-1 rounded-md space-x-4 items-center justify-center align-middle">
             <button
-              className="text-4xl"
-              onClick={() => {
-                setQuantity(quantity - 1);
-              }}
+              className={`${
+                quantity === 1 ? "text-4xl text-gray-400" : "text-4xl"
+              }`}
+              onClick={() =>
+                quantity === 1 ? (quantity = 1) : setQuantity(quantity - 1)
+              }
             >
               -
             </button>
             <span className="text-1xl">{quantity}</span>
             <button
-              className="text-2xl"
-              onClick={() => setQuantity(quantity + 1)}
+              className={`${
+                quantity === stockReady
+                  ? "text-2xl hover:pointer-events-none text-gray-400"
+                  : "text-2xl"
+              }`}
+              onClick={() =>
+                quantity === stockReady
+                  ? (quantity = stockReady)
+                  : setQuantity(quantity + 1)
+              }
             >
               +
             </button>
           </div>
           <div>
             <p className="text-gray-400 text-xs text-center mt-1">
-              available: {val.product.warehouse_products[0].stock_ready}
+              available: {stockReady}
             </p>
+            {quantity === stockReady ? (
+              <p className="text-white bg-accent text-xs text-center mt-1">
+                Limited Stock
+              </p>
+            ) : null}
           </div>
         </div>
       </td>

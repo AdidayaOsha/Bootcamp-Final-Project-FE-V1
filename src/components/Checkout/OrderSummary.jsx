@@ -1,32 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
-import Axios from "axios";
-import { API_URL } from "../../constant/api";
+import { setCartCookie } from "../../hooks/setCookie";
+import { useNavigate } from "react-router-dom";
+import SubmitCartButton from "./SubmitCartButton";
+import SubmitPaymentButton from "./SubmitPaymentButton";
+import SubmitAddressButton from "./SubmitAddressButton";
 
-const OrderSummary = () => {
-  const [cartItems, setCartItems] = useState([]);
+const OrderSummary = ({ cartItems, setCartItems }) => {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
+  const [isConflicted, setIsConflicted] = useState(false);
+  const [isHavingCart, setIsHavingCart] = useState(false);
+  const [isHavingAddress, setIsHavingAddress] = useState(false);
+  const [isHavingShipment, setIsHavingShipment] = useState(false);
+  const [isHavingPayment, setIsHavingPayment] = useState(false);
 
-  const userGlobal = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   const summaryGlobal = useSelector((state) => state.summary);
-
-  useEffect(() => {
-    const getUserCart = async () => {
-      try {
-        const results = await Axios.get(
-          `${API_URL}/carts/get/${userGlobal.id}`
-        );
-        setCartItems(results.data.carts);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserCart();
-  }, [userGlobal, cartItems]);
 
   useEffect(() => {
     const renderSubTotal = async () => {
@@ -70,6 +64,12 @@ const OrderSummary = () => {
     };
     discountHandler();
   }, [isClicked]);
+
+  const submitCart = () => {
+    setCartCookie("selectedCart", JSON.stringify(cartItems));
+    navigate("/cart/billing");
+    setIsHavingCart(true);
+  };
 
   return (
     <>
@@ -139,9 +139,7 @@ const OrderSummary = () => {
             </div>
           </div>
         </div>
-        <button className="mt-4 btn btn-block btn-accent text-white">
-          CHECKOUT
-        </button>
+        <SubmitCartButton submitCart={submitCart} />
       </div>
     </>
   );
