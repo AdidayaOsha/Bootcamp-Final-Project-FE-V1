@@ -7,6 +7,7 @@ import ProductScreen from "./pages/productScreen";
 import CategoriesScreen from "./pages/CategoriesScreen";
 import AddProduct from "./pages/AddProduct";
 import ProductEditScreen from "./pages/ProductEditScreen";
+import Transaction from "./pages/Transactions";
 
 import AdminAuthentication from "./pages/AdminAuth/AdminAuthentication";
 import AdminForgotPassword from "./pages/AdminAuth/AdminForgotPassword";
@@ -36,7 +37,6 @@ function App() {
   const dispatch = useDispatch()
   const userLocalStorage = localStorage.getItem("userDataEmmerce")
   const adminLocalStorage = localStorage.getItem("adminDataEmmerce")
-
 
   const userKeepLogin = () => {
     console.log(userLocalStorage)
@@ -89,11 +89,14 @@ function App() {
           <Route path="/category" element={<CategoriesScreen />} />
           <Route path="/addproduct" element={<AddProduct />} />
           <Route path="/products/find/:id" element={<ProductEditScreen />} />
+          <Route path="/transaction" element={<Transaction />} />
 
           {/* CARTS */}
           <Route path="/checkout" element={<CheckoutDetails />} />
           <Route path="/billing" element={<BillingDetails />} />
           <Route path="/payment" element={<PaymentDetails />} />
+
+          {/* ADMIN */}
           <Route path="/adminauthentication/:token" element={<AdminAuthentication />} />
           <Route path="/adminforgotpassword" element={<AdminForgotPassword />} />
           <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} />

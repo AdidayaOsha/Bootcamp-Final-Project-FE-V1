@@ -134,44 +134,47 @@ const MainProducts = () => {
   const TableBody = () => {
     return data.map((val, idx) => {
       return (
-        <tr key={idx}>
-          <td>
-            <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" />
-            </div>
-          </td>
-          <th>{val.id}</th>
-          <td>
-            <img
-              className="mask mask-squircle w-12"
-              src={`${API_URL}/${val.product_image}`}
-            />
-          </td>
-          <td>{val.name}</td>
-          <td>{val.description.slice(0, 12)}...</td>
-          <td>Rp. {val.price}</td>
-          <td>{val.product_category.name}</td>
-          <td>{val.warehouse_products[0].stock_ready}</td>
-          <td>{val.warehouse_products[0].stock_reserved}</td>
-          <td>{val.warehouse_products[0].warehouse.name}</td>
-          <td>
-            <div className="my-2 space-x-1">
-              <Link
-                to={`/products/find/${val.id}`}
-                className="btn btn-sm btn-accent p-2 pb-3"
-              >
-                <i className="fas fa-pen"></i>
-              </Link>
-              <Link
-                to="#"
-                className="btn btn-sm btn-error p-2 pb-3"
-                onClick={() => onDelete(val.id)}
-              >
-                <i className="fas fa-trash-alt"></i>
-              </Link>
-            </div>
-          </td>
-        </tr>
+        <div>
+
+        </div>
+        // <tr key={idx}>
+        //   <td>
+        //     <div className="form-check">
+        //       <input className="form-check-input" type="checkbox" value="" />
+        //     </div>
+        //   </td>
+        //   <th>{val.id}</th>
+        //   <td>
+        //     <img
+        //       className="mask mask-squircle w-12"
+        //       src={`${API_URL}/${val.product_image}`}
+        //     />
+        //   </td>
+        //   <td>{val.name}</td>
+        //   <td>{val.description.slice(0, 12)}...</td>
+        //   <td>Rp. {val.price}</td>
+        //   <td>{val.product_category.name}</td>
+        //   <td>{val.warehouse_products[0].stock_ready}</td>
+        //   <td>{val.warehouse_products[0].stock_reserved}</td>
+        //   <td>{val.warehouse_products[0].warehouse.name}</td>
+        //   <td>
+        //     <div className="my-2 space-x-1">
+        //       <Link
+        //         to={`/products/find/${val.id}`}
+        //         className="btn btn-sm btn-accent p-2 pb-3"
+        //       >
+        //         <i className="fas fa-pen"></i>
+        //       </Link>
+        //       <Link
+        //         to="#"
+        //         className="btn btn-sm btn-error p-2 pb-3"
+        //         onClick={() => onDelete(val.id)}
+        //       >
+        //         <i className="fas fa-trash-alt"></i>
+        //       </Link>
+        //     </div>
+        //   </td>
+        // </tr>
       );
     });
   };
