@@ -1,32 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
-import Axios from "axios";
+import { setAddressCookie, setCartCookie } from "../../hooks/setCookie";
+import { getCartCookie, getAddressCookie } from "../../hooks/getCookie";
+import { useNavigate } from "react-router-dom";
+import SubmitCartButton from "./SubmitCartButton";
+import SubmitPaymentButton from "./SubmitPaymentButton";
+import SubmitAddressButton from "./SubmitAddressButton";
 import { API_URL } from "../../constant/api";
+import Axios from "axios";
 
-const OrderSummary = () => {
-  const [cartItems, setCartItems] = useState([]);
+const OrderSummary = ({ cartItems, setCartItems }) => {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
+  const [isConflicted, setIsConflicted] = useState(false);
+  const [chosenAddress, setChosenAddress] = useState({});
+  console.log(chosenAddress);
 
-  const userGlobal = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const summaryGlobal = useSelector((state) => state.summary);
-
-  useEffect(() => {
-    const getUserCart = async () => {
-      try {
-        const results = await Axios.get(
-          `${API_URL}/carts/get/${userGlobal.id}`
-        );
-        setCartItems(results.data.carts);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUserCart();
-  }, [userGlobal, cartItems]);
 
   useEffect(() => {
     const renderSubTotal = async () => {
@@ -70,6 +64,48 @@ const OrderSummary = () => {
     };
     discountHandler();
   }, [isClicked]);
+
+  const submitCart = () => {
+    setCartCookie(JSON.stringify(cartItems));
+    navigate("/cart/billing");
+  };
+
+  const submitAddress = async () => {
+    try {
+      const id = JSON.parse(localStorage.getItem("addressId"));
+      const results = await Axios.get(`${API_URL}/users/getaddress/${id}`);
+
+      setAddressCookie(JSON.stringify(results.data));
+      navigate("/cart/payment");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const submitPayment = () => {
+    setAddressCookie("selectedPayment", JSON.stringify());
+  };
+
+  const submitShipping = () => {
+    setAddressCookie("selectedPayment", JSON.stringify());
+  };
+
+  const renderButton = () => {
+    const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+    const addressCookie = getAddressCookie()
+      ? JSON.parse(getAddressCookie())
+      : null;
+    console.log(cartCookie);
+    console.log(addressCookie?.id);
+
+    if (cartCookie?.length && addressCookie?.id) {
+      return <SubmitPaymentButton />;
+    } else if (cartCookie?.length) {
+      return <SubmitAddressButton submitAddress={submitAddress} />;
+    } else {
+      return <SubmitCartButton submitCart={submitCart} />;
+    }
+  };
 
   return (
     <>
@@ -139,9 +175,7 @@ const OrderSummary = () => {
             </div>
           </div>
         </div>
-        <button className="mt-4 btn btn-block btn-accent text-white">
-          CHECKOUT
-        </button>
+        {renderButton()}
       </div>
     </>
   );

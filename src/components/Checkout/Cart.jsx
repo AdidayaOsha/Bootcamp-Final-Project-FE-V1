@@ -1,15 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { API_URL } from "../../constant/api";
-import { currencyFormatter } from "../../helpers/currencyFormatter";
-import { debounce } from "throttle-debounce";
-import Axios from "axios";
 import CartItems from "./CartItems";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useOutletContext();
-  const userGlobal = useSelector((state) => state.user);
 
   const TableHead = () => {
     return (
@@ -28,7 +23,14 @@ const Cart = () => {
   // CART COMPONENT
   const cartList = () => {
     return cartItems?.map((val) => {
-      return <CartItems key={val.id} val={val} setCartItems={setCartItems} />;
+      return (
+        <CartItems
+          key={val.id}
+          val={val}
+          cartItems={cartItems}
+          setCartItems={setCartItems}
+        />
+      );
     });
   };
 
