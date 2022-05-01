@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
-import { setCartCookie } from "../../hooks/setCookie";
+import { setAddressCookie, setCartCookie } from "../../hooks/setCookie";
+import { getCartCookie, getAddressCookie } from "../../hooks/getCookie";
 import { useNavigate } from "react-router-dom";
 import SubmitCartButton from "./SubmitCartButton";
 import SubmitPaymentButton from "./SubmitPaymentButton";
 import SubmitAddressButton from "./SubmitAddressButton";
+import { API_URL } from "../../constant/api";
+import Axios from "axios";
 
 const OrderSummary = ({ cartItems, setCartItems }) => {
   const [subTotal, setSubTotal] = useState(0);
@@ -13,13 +16,10 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
   const [isConflicted, setIsConflicted] = useState(false);
-  const [isHavingCart, setIsHavingCart] = useState(false);
-  const [isHavingAddress, setIsHavingAddress] = useState(false);
-  const [isHavingShipment, setIsHavingShipment] = useState(false);
-  const [isHavingPayment, setIsHavingPayment] = useState(false);
+  const [chosenAddress, setChosenAddress] = useState({});
+  console.log(chosenAddress);
 
   const navigate = useNavigate();
-
   const summaryGlobal = useSelector((state) => state.summary);
 
   useEffect(() => {
@@ -66,9 +66,45 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
   }, [isClicked]);
 
   const submitCart = () => {
-    setCartCookie("selectedCart", JSON.stringify(cartItems));
+    setCartCookie(JSON.stringify(cartItems));
     navigate("/cart/billing");
-    setIsHavingCart(true);
+  };
+
+  const submitAddress = async () => {
+    try {
+      const id = JSON.parse(localStorage.getItem("addressId"));
+      const results = await Axios.get(`${API_URL}/users/getaddress/${id}`);
+
+      setAddressCookie(JSON.stringify(results.data));
+      navigate("/cart/payment");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const submitPayment = () => {
+    setAddressCookie("selectedPayment", JSON.stringify());
+  };
+
+  const submitShipping = () => {
+    setAddressCookie("selectedPayment", JSON.stringify());
+  };
+
+  const renderButton = () => {
+    const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+    const addressCookie = getAddressCookie()
+      ? JSON.parse(getAddressCookie())
+      : null;
+    console.log(cartCookie);
+    console.log(addressCookie?.id);
+
+    if (cartCookie?.length && addressCookie?.id) {
+      return <SubmitPaymentButton />;
+    } else if (cartCookie?.length) {
+      return <SubmitAddressButton submitAddress={submitAddress} />;
+    } else {
+      return <SubmitCartButton submitCart={submitCart} />;
+    }
   };
 
   return (
@@ -139,7 +175,7 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
             </div>
           </div>
         </div>
-        <SubmitCartButton submitCart={submitCart} />
+        {renderButton()}
       </div>
     </>
   );

@@ -62,22 +62,23 @@ const BillingAddress = () => {
     getDistricts();
   }, [cityId]);
 
-  const addressHandler = async () => {
-    try {
-      const res = await Axios.post(`${API_URL}/users/newaddress`, {
-        address_line,
-        address_type,
-        cityId,
-        provinceId,
-        postal_code,
-        userId,
-        isDefault,
-      });
-      setData(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const addressHandler = async () => {
+  //   try {
+  //     const res = await Axios.post(`${API_URL}/users/newaddress`, {
+  //       address_line,
+  //       address_type,
+  //       cityId,
+  //       provinceId,
+  //       districtId,
+  //       postal_code,
+  //       userId,
+  //       isDefault,
+  //     });
+  //     setData(res.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const selectProvince = () => {
     return addressData?.map((val) => {
@@ -120,7 +121,8 @@ const BillingAddress = () => {
                     ) : null}
                   </div>
                   <h2 className="">
-                    {val.address_line}, <span>{val.city}</span>
+                    {val.address_line}, <span>{val.district}</span>,{" "}
+                    <span>{val.city}</span>
                   </h2>
                   <h2 className="">Postal Code: {val.postal_code}</h2>
                   {/* {location.loaded
@@ -134,7 +136,15 @@ const BillingAddress = () => {
                           <td>
                             <i className="hover:cursor-pointer fas fa-trash-alt align-middle mr-2"></i>
                           </td>
-                          <button className="flex btn btn-outline btn-accent btn-sm font-bold normal-case">
+                          <button
+                            onClick={() =>
+                              localStorage.setItem(
+                                "addressId",
+                                JSON.stringify(val.id)
+                              )
+                            }
+                            className="flex btn btn-outline btn-accent btn-sm font-bold normal-case"
+                          >
                             Deliver To This Address
                           </button>
                         </>
@@ -244,9 +254,6 @@ const BillingAddress = () => {
                       }}
                     >
                       <option value={"reset"}>- Choose One -</option>
-                      {/* {provinceId === null
-                        ? setCityId(null) && setCityData([])
-                      : null} */}
                       {selectProvince()}
                     </select>
                   </div>

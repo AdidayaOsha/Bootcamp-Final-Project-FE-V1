@@ -1,8 +1,11 @@
 import React from "react";
 
-const SubmitAddressButton = () => {
+const SubmitAddressButton = ({ submitAddress }) => {
   return (
-    <button className="mt-4 btn btn-block btn-accent text-white">
+    <button
+      onClick={submitAddress}
+      className="mt-4 btn btn-block btn-accent text-white"
+    >
       PROCEED TO PAYMENT
     </button>
   );

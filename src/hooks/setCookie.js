@@ -1,6 +1,6 @@
 import Cookie from "js-cookie";
 
-export const setCartCookie = (cookiename, cartItems) => {
+export const setCartCookie = (cartItems) => {
   Cookie.set("selectedCart", cartItems, {
     expires: 1,
     secure: true,
@@ -8,15 +8,15 @@ export const setCartCookie = (cookiename, cartItems) => {
     path: "/",
   });
 };
-export const setAddressCookie = (cookiename, cartItems) => {
-  Cookie.set("selectedAdress", cartItems, {
+export const setAddressCookie = (chosenAddress) => {
+  Cookie.set("selectedAddress", chosenAddress, {
     expires: 1,
     secure: true,
     sameSite: "strict",
     path: "/",
   });
 };
-export const setPaymentCookie = (cookiename, cartItems) => {
+export const setPaymentCookie = (cartItems) => {
   Cookie.set("selectedPayment", cartItems, {
     expires: 1,
     secure: true,
