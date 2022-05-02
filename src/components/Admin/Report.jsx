@@ -113,7 +113,7 @@ const Warehouses = () => {
     return (
       <thead>
         <tr className="">
-          <th>ID</th>
+          <th>No. </th>
           <th>Username</th>
           <th>Warehouse</th>
           <th>Actual Order Time</th>
@@ -132,7 +132,7 @@ const Warehouses = () => {
     return data.map((val, idx) => {
       return (
         <tr key={idx}>
-          <td>{val.id}</td>
+          <td>{idx+1}</td>
           <td>{val.name}</td>
           <td>{val.address}</td>
           <td>{val.city}</td>

@@ -44,8 +44,9 @@ const ProductsTable = () => {
       <thead>
         <tr>
           <th>No. </th>
-          <th>Product Name</th>
-          <th>Stock Ready</th>
+          <th>Destination</th>
+          <th>Cost</th>
+          <th>Total Time</th>
           <th className="text-center">Action</th>
         </tr>
       </thead>
@@ -61,7 +62,8 @@ const ProductsTable = () => {
             <b>{val.product.name}</b>
           </td>
           <td>{val.stock_ready} pcs</td>
-          <td className="text-end">
+          <td>54 minutes</td>
+          <td>
             <div className="my-2 space-x-1 d-flex justify-content-center">
               <Link
                 to={`/addWarehouse`} state={val}

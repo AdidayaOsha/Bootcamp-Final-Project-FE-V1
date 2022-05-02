@@ -2,76 +2,57 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
+import { cities, provinces, postal_code } from "../../data/AdminMaster";
 
 const AddWarehouse = () => {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [stock_ready, setStock_ready] = useState(0);
-  const [productCategoryId, setProductCategoryId] = useState("");
-  const [warehouseId, setWarehouseId] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [postalcode, setPostalCode] = useState(0);
+  const [phone, setPhone] = useState(0);
   const [warehouses, setWarehouses] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [product_image, setProduct_Image] = useState("");
-
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const getWarehouses = async () => {
-      try {
-        await Axios.get(`${API_URL}/products/warehouses`).then((results) => {
-          setWarehouses(results.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getWarehouses();
-  }, []);
-
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        await Axios.get(`${API_URL}/products/categories`).then((results) => {
-          setCategories(results.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCategories();
+    console.log(location.state)
   }, []);
 
   const onSubmit = async () => {
     try {
       const formData = new FormData();
-      formData.append("product_image", product_image);
       formData.append("name", name);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("stock_ready", stock_ready);
-      formData.append("productCategoryId", productCategoryId);
-      formData.append("warehouseId", warehouseId);
+      formData.append("address", address);
+      formData.append("city", city);
+      formData.append("province", province);
+      formData.append("postal_code", postalcode);
+      formData.append("phone", phone);
       console.log(formData);
 
-      await Axios.post(`${API_URL}/products/add`, formData).then((results) => {
+      await Axios.post(`${API_URL}/warehouses/add`, formData).then((results) => {
         console.log(results.data);
-        navigate("/products");
+        navigate("/warehouse");
       });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const SelectCategories = () => {
-    return categories.map((val) => {
+  const SelectCities = () => {
+    return cities.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
 
-  const SelectWarehouse = () => {
-    return warehouses.map((val) => {
+  const SelectProvince = () => {
+    return provinces.map((val) => {
+      return <option value={val.id}>{val.name}</option>;
+    });
+  };
+
+  const SelectPostalCode = () => {
+    return postal_code.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
@@ -119,7 +100,7 @@ const AddWarehouse = () => {
                           id="product_price"
                           value={location.state!==null?"0"+location.state.phone:null}
                           required
-                          onChange={(e) => setPrice(+e.target.value)}
+                          onChange={(e) => setPhone(+e.target.value)}
                         />
                       </div>
                       <div className="mb-2">
@@ -134,7 +115,7 @@ const AddWarehouse = () => {
                           id="product_stock"
                           value={location.state!==null?location.state.address:null}
                           required
-                          onChange={(e) => setStock_ready(+e.target.value)}
+                          onChange={(e) => setAddress(+e.target.value)}
                         />
                       </div>
                     </div>
@@ -145,15 +126,15 @@ const AddWarehouse = () => {
                         </label>
                         <select
                           onChange={(e) => {
-                            setProductCategoryId(+e.target.value);
+                            setCity(+e.target.value);
                             e.preventDefault();
                           }}
                           className="form-select"
                           name="productCategoryId"
-                          value={productCategoryId}
+                          value={location.state!==null?location.state.city:city}
                         >
-                          <option>Choose Category</option>
-                          {SelectCategories()}
+                          <option>Choose City</option>
+                          {SelectCities()}
                         </select>
                       </div>
                       <div className="mb-2">
@@ -163,14 +144,14 @@ const AddWarehouse = () => {
                         <select
                           onChange={(e) => {
                             e.preventDefault();
-                            setWarehouseId(+e.target.value);
+                            setProvince(+e.target.value);
                           }}
                           className="form-select"
                           name="warehouseId"
-                          value={warehouseId}
+                          value={location.state!==null?location.state.province:province}
                         >
-                          <option>Choose Warehouse</option>
-                          {SelectWarehouse()}
+                          <option>Choose Province</option>
+                          {SelectProvince()}
                         </select>
                       </div>
                       <div className="mb-2">
@@ -178,14 +159,14 @@ const AddWarehouse = () => {
                         <select
                           onChange={(e) => {
                             e.preventDefault();
-                            setWarehouseId(+e.target.value);
+                            setPostalCode(+e.target.value);
                           }}
                           className="form-select"
                           name="warehouseId"
-                          value={warehouseId}
+                          value={location.state!==null?location.state.postal_code:postalcode}
                         >
-                          <option>Choose Warehouse</option>
-                          {SelectWarehouse()}
+                          <option>Choose Postal Code</option>
+                          {SelectPostalCode()}
                         </select>
                       </div>
                     </div>

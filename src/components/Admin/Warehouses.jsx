@@ -62,7 +62,7 @@ const Warehouses = () => {
     return (
       <thead>
         <tr className="">
-          <th>ID</th>
+          <th>No. </th>
           <th>Fullname</th>
           <th>Username</th>
           <th>Email</th>
@@ -78,7 +78,7 @@ const Warehouses = () => {
     return data.map((val, idx) => {
       return (
         <tr key={idx}>
-          <td>{val.id}</td>
+          <td>{idx+1}</td>
           <td>{val.name}</td>
           <td>{val.address}</td>
           <td>{val.city}</td>
@@ -127,7 +127,7 @@ const Warehouses = () => {
                 <input
                   type="text"
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search Product…"
+                  placeholder="Search Warehouse…"
                   className="input input-bordered w-60"
                   style={{backgroundColor:"white",borderColor:"teal"}}
                   value={search}

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
 import MainProducts from "../Admin/ProductWarehouse/MainProducts"
+import MainSupply from "./SupplyChain/MainSupply"
 
 const ShowWarehouse = () => {
   const [name, setName] = useState("");
@@ -69,7 +70,7 @@ const ShowWarehouse = () => {
               <Link to="/warehouse" className="btn btn-accent text-white">
                 <i className="fa fa-arrow-left" aria-hidden="true"></i>
               </Link>
-              <h2 className="content-title text-2xl">Warehouse BSD</h2>
+              <h2 className="content-title text-2xl">Warehouse {name}</h2>
             </div>
             <div className="col-xl-12 col-lg-12">
               <div className="card shadow-sm">
@@ -154,6 +155,7 @@ const ShowWarehouse = () => {
         </form>
       </section>
       {MainProducts()}
+      {MainSupply()}
     </>
   );
 };

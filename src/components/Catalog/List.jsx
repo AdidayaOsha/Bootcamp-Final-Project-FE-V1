@@ -261,13 +261,6 @@ const List = () => {
 
                       <div className="shoptext">
                         <p className="shopname">
-                          <Link to={`/detail/${product.id}`}>
-                            <div className="shopBack">
-                              <img src={`${API_URL}/${product.product_image}`} alt={product.name} 
-                              />
-                              <i className="icon fas fa-search box-icon-catalog"><p>See details</p></i>
-                            </div>
-                          </Link>
                         </p>
 
                         <h3>{currencyFormatter(product.price)}</h3>

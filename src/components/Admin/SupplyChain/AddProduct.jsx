@@ -26,7 +26,7 @@ const AddProduct = () => {
 
   const getProducts = async () => {
     try {
-      const results = await Axios.get(`${API_URL}/products`);
+      const results = await Axios.get(`${API_URL}/warehouses`);
       setData(results.data);
     } catch (err) {
       console.log(err);
@@ -57,20 +57,33 @@ const AddProduct = () => {
       <form>
         <div className="mb-4">
           <label htmlFor="product_name" className="form-label">
-            Product Name
+            Destination
           </label>
           <select
             onChange={(e) => {}}
             className="form-select"
             name="productCategoryId"
           >
-            <option>Choose Product</option>
+            <option>Choose Warehouse</option>
             {SelectProduct()}
           </select>
         </div>
 
         <div className="mb-4">
-          <label className="form-label">Stock Ready</label>
+          <label className="form-label">Cost</label>
+          <input
+            type="number"
+            placeholder="Type here"
+            className="form-control"
+            name="price"
+            id="product_price"
+            required
+            onChange={(e) => setStock(+e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label">Total Time</label>
           <input
             type="number"
             placeholder="Type here"
@@ -84,7 +97,7 @@ const AddProduct = () => {
 
         <div className="d-grid">
           <button className="btn btn-accent py-3" onClick={onSubmit}>
-            Add Product
+            Add Cost
           </button>
         </div>
       </form>
