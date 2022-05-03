@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import {
+  getCartCookie,
+  getAddressCookie,
+  getPaymentCookie,
+} from "../../hooks/getCookie";
+import { AiOutlineCheck } from "react-icons/ai";
 
 const OrderProgress = () => {
+  const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+  const paymentCookie = getPaymentCookie()
+    ? JSON.parse(getPaymentCookie())
+    : null;
+  const addressCookie = getAddressCookie()
+    ? JSON.parse(getAddressCookie())
+    : null;
+
   return (
     <>
       {/* HEADER STARTS */}
@@ -26,13 +40,41 @@ const OrderProgress = () => {
         </div>
 
         <div className="mr-60">
-          {/* Progress Bar Nya */}
-          <div className="w-100 flex justify-center space-x-5 text-center items-center">
-            <span className="text-4xl text-gray-400">•</span>
-            <span className="flex border-top h-[2px] bg-slate-100 w-[200px]"></span>
-            <span className="text-4xl text-gray-400">•</span>
-            <span className="flex border-top h-[2px] bg-slate-100 w-[200px]"></span>
-            <span className="text-4xl text-gray-400">•</span>
+          {/* PROGRESS BAR-NYA */}
+          <div className="w-full flex justify-center space-x-5 text-center items-center">
+            {cartCookie ? (
+              <>
+                <span className="text-xl text-green-600">
+                  <AiOutlineCheck />
+                </span>
+                <span className="flex border-top bg-green-600 h-[3px] w-[200px]"></span>
+              </>
+            ) : (
+              <>
+                <span className="text-4xl text-gray-400">•</span>
+                <span className="flex border-top h-[3px] bg-slate-100 w-[200px]"></span>
+              </>
+            )}
+            {cartCookie && addressCookie ? (
+              <>
+                <span className="text-xl text-green-600">
+                  <AiOutlineCheck />
+                </span>
+                <span className="flex border-top bg-green-600 h-[3px] w-[200px]"></span>
+              </>
+            ) : (
+              <>
+                <span className="text-4xl text-gray-400">•</span>
+                <span className="flex border-top h-[3px] bg-slate-100 w-[200px]"></span>
+              </>
+            )}
+            {cartCookie && addressCookie && paymentCookie ? (
+              <span className="text-4xl text-gray-400">
+                <AiOutlineCheck />
+              </span>
+            ) : (
+              <span className="text-4xl text-gray-400">•</span>
+            )}
           </div>
 
           {/* Progress Head */}
@@ -41,49 +83,34 @@ const OrderProgress = () => {
               <NavLink
                 to="/cart"
                 end
-                className="text-sm text-gray-500 font-bold tab"
+                className={
+                  cartCookie
+                    ? "italic text-black font-bold tab hover:text-accent"
+                    : "text-sm text-black font-bold tab"
+                }
               >
-                {({ isActive }) => (
-                  <button
-                    className={`${
-                      isActive ? "text-accent italic" : "text-black"
-                    }`}
-                  >
-                    Cart
-                  </button>
-                )}
+                Cart
               </NavLink>
             </div>
             <div className="mx-40 ">
               <NavLink
-                to="billing"
-                className="text-sm text-gray-400 font-bold tab"
+                to={cartCookie ? "billing" : "#"}
+                className={
+                  addressCookie
+                    ? "italic text-black font-bold tab hover:text-accent"
+                    : "text-sm text-gray-400 hover:text-gray-400 font-bold tab"
+                }
               >
-                {({ isActive }) => (
-                  <button
-                    className={`${
-                      isActive ? "text-accent italic" : "text-black"
-                    }`}
-                  >
-                    Billing & Address
-                  </button>
-                )}
+                {" "}
+                Billing & Address
               </NavLink>
             </div>
             <div>
               <NavLink
-                to="payment"
-                className="text-sm text-gray-400 font-bold tab"
+                to={cartCookie && addressCookie ? "payment" : "#"}
+                className="text-sm text-gray-400 hover:text-gray-400 font-bold tab"
               >
-                {({ isActive }) => (
-                  <button
-                    className={`${
-                      isActive ? "text-accent italic" : "text-black"
-                    }`}
-                  >
-                    Payment
-                  </button>
-                )}
+                Payment
               </NavLink>
             </div>
           </div>

@@ -16,8 +16,6 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [isClicked, setIsClicked] = useState(false);
   const [isConflicted, setIsConflicted] = useState(false);
-  const [chosenAddress, setChosenAddress] = useState({});
-  console.log(chosenAddress);
 
   const navigate = useNavigate();
   const summaryGlobal = useSelector((state) => state.summary);
