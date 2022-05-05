@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   getCartCookie,
   getAddressCookie,
   getPaymentCookie,
 } from "../../hooks/getCookie";
+import {
+  removeCartCookie,
+  removeAddressCookie,
+  removePaymentCookie,
+} from "../../hooks/removeCookie";
 import { AiOutlineCheck } from "react-icons/ai";
 
-const OrderProgress = () => {
+const OrderProgress = ({ change, setChange }) => {
   const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
   const paymentCookie = getPaymentCookie()
     ? JSON.parse(getPaymentCookie())
@@ -15,6 +20,11 @@ const OrderProgress = () => {
   const addressCookie = getAddressCookie()
     ? JSON.parse(getAddressCookie())
     : null;
+
+  useEffect(() => {
+    let total = change;
+    total += 1;
+  }, [setChange]);
 
   return (
     <>

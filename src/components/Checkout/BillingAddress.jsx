@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { AiOutlineCheck } from "react-icons/ai";
 import useGeoLocation from "../../hooks/useGeoLocation";
 
 const BillingAddress = () => {
@@ -18,7 +19,10 @@ const BillingAddress = () => {
   const [postal_code, setPostal_Code] = useState(0);
   const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
+  const [locStorage, setLocStorage] = useState(0);
   const location = useGeoLocation();
+
+  const userGlobal = useSelector((state) => state.user);
 
   console.log(`provinceId: ${provinceId}`);
   console.log(`CityId: ${cityData}, ${cityId}`);
@@ -62,6 +66,11 @@ const BillingAddress = () => {
     getDistricts();
   }, [cityId]);
 
+  useEffect(() => {
+    const storage = JSON.parse(localStorage.getItem("addressId"));
+    setLocStorage(storage);
+  }, []);
+
   // const addressHandler = async () => {
   //   try {
   //     const res = await Axios.post(`${API_URL}/users/newaddress`, {
@@ -97,8 +106,6 @@ const BillingAddress = () => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
-
-  const userGlobal = useSelector((state) => state.user);
 
   const TableAdress = () => {
     return userGlobal.user_addresses?.map((val) => {
@@ -137,15 +144,29 @@ const BillingAddress = () => {
                             <i className="hover:cursor-pointer fas fa-trash-alt align-middle mr-2"></i>
                           </td>
                           <button
-                            onClick={() =>
+                            onClick={() => {
                               localStorage.setItem(
                                 "addressId",
                                 JSON.stringify(val.id)
-                              )
+                              );
+                              setLocStorage(val.id);
+                            }}
+                            className={
+                              locStorage === val.id
+                                ? "flex btn btn-accent text-white btn-sm font-bold normal-case disabled"
+                                : "flex btn btn-outline btn-accent btn-sm font-bold normal-case"
                             }
-                            className="flex btn btn-outline btn-accent btn-sm font-bold normal-case"
                           >
-                            Deliver To This Address
+                            {locStorage === val.id ? (
+                              <span className="text-sm flex mx-3">
+                                Address Picked{" "}
+                                <span className="text-xl">
+                                  <AiOutlineCheck />
+                                </span>
+                              </span>
+                            ) : (
+                              "Deliver to This Address"
+                            )}
                           </button>
                         </>
                       )}

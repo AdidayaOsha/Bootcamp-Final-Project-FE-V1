@@ -8,6 +8,7 @@ import TableAddress from "../components/Checkout/TableAddress";
 import Axios from "axios";
 
 const CheckoutDetails = () => {
+  const [change, setChange] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const userGlobal = useSelector((state) => state.user);
   const summaryGlobal = useSelector((state) => state.summary);
@@ -33,7 +34,12 @@ const CheckoutDetails = () => {
         <Outlet context={[cartItems, setCartItems]} />
         <div className="w-3/12 space-y-4 flex flex-col">
           {summaryGlobal.isAddressMode && <TableAddress />}
-          <OrderSummary cartItems={cartItems} setCartItems={setCartItems} />
+          <OrderSummary
+            cartItems={cartItems}
+            setCartItems={setCartItems}
+            change={change}
+            setChange={setChange}
+          />
         </div>
       </div>
     </div>
