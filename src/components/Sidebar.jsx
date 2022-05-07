@@ -6,7 +6,7 @@ const Sidebar = () => {
     <div>
       <aside className="navbar-aside" id="offcanvas_aside">
         <div className="aside-top">
-          <Link to="/" className="brand-wrap">
+          <Link to="/category" className="brand-wrap">
             <img
               src="/images/logo.png"
               style={{ height: "46" }}
