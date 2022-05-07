@@ -1,9 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { getAddressCookie } from "../../hooks/getCookie";
-import { NavLink } from "react-router-dom";
 import { removeAddressCookie } from "../../hooks/removeCookie";
-
+import { NavLink } from "react-router-dom";
 const TableAddress = () => {
   const userGlobal = useSelector((state) => state.user);
   console.log(userGlobal);
@@ -20,9 +19,11 @@ const TableAddress = () => {
             <div className="flex space-x-2">
               <h2 className="font-bold">{userGlobal.full_name}</h2>
               <p className="text-gray-400 text-sm">(Home)</p>
-              <p className="text-xs border-1 bg-info text-white border-accent px-1 rounded-sm">
-                Default
-              </p>
+              {addressCookie?.isDefault ? (
+                <p className="text-xs border-1 bg-info text-white border-accent px-1 rounded-sm">
+                  Default
+                </p>
+              ) : null}
             </div>
             <h2 className="text-sm">
               {addressCookie.address_line},{" "}

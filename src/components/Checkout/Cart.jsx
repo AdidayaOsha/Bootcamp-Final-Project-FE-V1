@@ -1,13 +1,9 @@
 import React from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import { useSelector } from "react-redux";
 import CartItems from "./CartItems";
-import { getCartCookie } from "../../hooks/getCookie";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useOutletContext([]);
-
-  const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
 
   const TableHead = () => {
     return (
@@ -26,20 +22,21 @@ const Cart = () => {
   // CART COMPONENT
   const cartList = () => {
     return cartItems?.map((val) => {
-      return <CartItems key={val.id} val={val} setCartItems={setCartItems} />;
+      return (
+        <CartItems
+          key={val.id}
+          val={val}
+          cartItems={cartItems}
+          setCartItems={setCartItems}
+        />
+      );
     });
   };
 
   return (
     <>
       <div className="w-1/2">
-        <div
-          className={
-            cartCookie?.length
-              ? "w-full rounded-xl shadow-sm bg-gray-100"
-              : "w-full rounded-xl shadow-sm"
-          }
-        >
+        <div className="w-full rounded-xl shadow-sm">
           <div className="p-3 rounded-t-xl">
             <h2 className="font-bold">
               Cart{" "}

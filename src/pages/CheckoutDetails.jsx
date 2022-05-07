@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { API_URL } from "../constant/api";
 import OrderProgress from "../components/Checkout/OrderProgress";
 import OrderSummary from "../components/Checkout/OrderSummary";
 import TableAddress from "../components/Checkout/TableAddress";
 import Axios from "axios";
-import { removeAddressCookie, removeCartCookie } from "../hooks/removeCookie";
 import { getAddressCookie } from "../hooks/getCookie";
+import { removeAddressCookie, removeCartCookie } from "../hooks/removeCookie";
 
 const CheckoutDetails = () => {
   const [change, setChange] = useState(0);
