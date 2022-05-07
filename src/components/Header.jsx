@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import $ from "jquery";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
+  const adminGlobal = useSelector((state) => state.admin);
   const logout = () => {
     dispatch({
       type: "ADMIN_LOGOUT"
@@ -53,6 +54,9 @@ const Header = () => {
           <i className="md-28 fas fa-bars"></i>
         </button>
         <ul className="nav">
+          <li className="nav-item">
+            WELCOME {adminGlobal.username}!
+          </li>
           <li className="nav-item">
             <Link className={`nav-link btn-icon `} title="Dark mode" to="#">
               <i className="fas fa-moon"></i>
