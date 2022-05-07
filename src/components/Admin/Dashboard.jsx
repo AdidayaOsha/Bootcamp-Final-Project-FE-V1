@@ -56,8 +56,8 @@ const TableHead = () => {
             <div className="col-lg-4">
                 <div className="card card-body mb-4 shadow-sm">
                 <article className="icontext">
-                    <span className="icon icon-sm rounded-circle alert-primary">
-                    <i className="text-primary fas fa-usd-circle"></i>
+                    <span className="icon icon-sm rounded-circle alert-success">
+                    <i className="text-success fas fa-usd-circle"></i>
                     </span>
                     <div className="text">
                     <h6 className="mb-1">Total Sales</h6>{" "}
@@ -69,8 +69,8 @@ const TableHead = () => {
             <div className="col-lg-4">
                 <div className="card card-body mb-4 shadow-sm">
                 <article className="icontext">
-                    <span className="icon icon-sm rounded-circle alert-success">
-                    <i className="text-success fas fa-bags-shopping"></i>
+                    <span className="icon icon-sm rounded-circle alert-primary">
+                    <i className="text-primary fas fa-bags-shopping"></i>
                     </span>
                     <div className="text">
                     <h6 className="mb-1">Total Orders</h6>
