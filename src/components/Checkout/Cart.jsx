@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import { useSelector } from "react-redux";
 import CartItems from "./CartItems";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useOutletContext();
+  const [cartItems, setCartItems] = useOutletContext([]);
 
   const TableHead = () => {
     return (
@@ -37,7 +36,7 @@ const Cart = () => {
   return (
     <>
       <div className="w-1/2">
-        <div className=" w-full rounded-xl shadow-sm">
+        <div className="w-full rounded-xl shadow-sm">
           <div className="p-3 rounded-t-xl">
             <h2 className="font-bold">
               Cart{" "}

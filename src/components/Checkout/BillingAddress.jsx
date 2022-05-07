@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
+import { AiOutlineCheck } from "react-icons/ai";
 import useGeoLocation from "../../hooks/useGeoLocation";
+import { toast } from "react-toastify";
+import { getAddressCookie } from "../../hooks/getCookie";
+import { removeAddressCookie } from "../../hooks/removeCookie";
 
 const BillingAddress = () => {
+  const [cartItems, setCartItems] = useOutletContext([]);
+  const [change, setChange] = useOutletContext(0);
   const [data, setData] = useState({});
   const [addressData, setAddressData] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -18,11 +24,20 @@ const BillingAddress = () => {
   const [postal_code, setPostal_Code] = useState(0);
   const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
+  const [locStorage, setLocStorage] = useState(0);
+  const [addressCookies, setAddressCookies] = useState({});
   const location = useGeoLocation();
+
+  const userGlobal = useSelector((state) => state.user);
 
   console.log(`provinceId: ${provinceId}`);
   console.log(`CityId: ${cityData}, ${cityId}`);
   console.log(`districtId: ${districtData}, ${districtId}`);
+
+  const getUserCart = async () => {
+    const results = await Axios.get(`${API_URL}/carts/get/${userGlobal.id}`);
+    setCartItems(results.data.carts);
+  };
 
   useEffect(() => {
     const getAddress = async () => {
@@ -62,6 +77,35 @@ const BillingAddress = () => {
     getDistricts();
   }, [cityId]);
 
+  useEffect(() => {
+    const storage = JSON.parse(localStorage.getItem("addressId"));
+    setLocStorage(storage);
+  }, []);
+
+  useEffect(() => {
+    const getAddressCookieId = getAddressCookie()
+      ? JSON.parse(getAddressCookie())
+      : null;
+    setAddressCookies(getAddressCookieId);
+  }, []);
+
+  const removeLocalStorageBtn = () => {
+    localStorage.removeItem("addressId");
+    removeAddressCookie("selectedAddress");
+    setLocStorage(0);
+    toast("Default Address Picked", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setChange(Math.random() + 3);
+    getUserCart();
+  };
+
   // const addressHandler = async () => {
   //   try {
   //     const res = await Axios.post(`${API_URL}/users/newaddress`, {
@@ -98,8 +142,6 @@ const BillingAddress = () => {
     });
   };
 
-  const userGlobal = useSelector((state) => state.user);
-
   const TableAdress = () => {
     return userGlobal.user_addresses?.map((val) => {
       return (
@@ -119,6 +161,11 @@ const BillingAddress = () => {
                         Default
                       </p>
                     ) : null}
+                    {addressCookies?.id === val.id ? (
+                      <span className="text-xl text-green-600">
+                        <AiOutlineCheck />
+                      </span>
+                    ) : null}
                   </div>
                   <h2 className="">
                     {val.address_line}, <span>{val.district}</span>,{" "}
@@ -137,16 +184,49 @@ const BillingAddress = () => {
                             <i className="hover:cursor-pointer fas fa-trash-alt align-middle mr-2"></i>
                           </td>
                           <button
-                            onClick={() =>
+                            onClick={() => {
+                              removeAddressCookie();
                               localStorage.setItem(
                                 "addressId",
                                 JSON.stringify(val.id)
-                              )
+                              );
+                              setLocStorage(val.id);
+                              toast("Address Changed", {
+                                position: "top-right",
+                                autoClose: 1000,
+                                hideProgressBar: true,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                              });
+                              getUserCart();
+                            }}
+                            className={
+                              locStorage === val.id
+                                ? "flex btn btn-accent text-white btn-sm font-bold normal-case disabled"
+                                : "flex btn btn-outline btn-accent btn-sm font-bold normal-case"
                             }
-                            className="flex btn btn-outline btn-accent btn-sm font-bold normal-case"
                           >
-                            Deliver To This Address
+                            {locStorage === val.id ? (
+                              <span className="text-sm flex mx-3">
+                                Address Picked{" "}
+                                <span className="text-xl">
+                                  <AiOutlineCheck />
+                                </span>
+                              </span>
+                            ) : (
+                              "Deliver to This Address"
+                            )}
                           </button>
+                          {locStorage === val.id ? (
+                            <button
+                              onClick={() => removeLocalStorageBtn()}
+                              className="text-xs btn btn-sm btn-outline btn-error rounded-md"
+                            >
+                              Cancel
+                            </button>
+                          ) : null}
                         </>
                       )}
                     </div>

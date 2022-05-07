@@ -1,7 +1,11 @@
 import Cookie from "js-cookie";
 
-const removeCookie = (selectedCart) => {
+export const removeCartCookie = (selectedCart) => {
   Cookie.remove("selectedCart");
 };
-
-export default removeCookie;
+export const removeAddressCookie = (selectedAddress) => {
+  Cookie.remove("selectedAddress");
+};
+export const removePaymentCookie = (selectedPayment) => {
+  Cookie.remove("selectedPayment");
+};

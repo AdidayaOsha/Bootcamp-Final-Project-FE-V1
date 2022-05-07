@@ -10,7 +10,7 @@ import SubmitAddressButton from "./SubmitAddressButton";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 
-const OrderSummary = ({ cartItems, setCartItems }) => {
+const OrderSummary = ({ cartItems, setCartItems, setChange }) => {
   const [subTotal, setSubTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -65,15 +65,21 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
 
   const submitCart = () => {
     setCartCookie(JSON.stringify(cartItems));
+    setChange(Math.random());
     navigate("/cart/billing");
   };
 
   const submitAddress = async () => {
     try {
       const id = JSON.parse(localStorage.getItem("addressId"));
-      const results = await Axios.get(`${API_URL}/users/getaddress/${id}`);
-
-      setAddressCookie(JSON.stringify(results.data));
+      if (id) {
+        const results = await Axios.get(`${API_URL}/users/getaddress/${id}`);
+        setAddressCookie(JSON.stringify(results.data));
+      } else {
+        const results = await Axios.get(`${API_URL}/users/getdefaultaddress`);
+        setAddressCookie(JSON.stringify(results.data));
+      }
+      setChange(Math.random() + 1);
       navigate("/cart/payment");
     } catch (err) {
       console.log(err);
@@ -81,7 +87,7 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
   };
 
   const submitPayment = () => {
-    setAddressCookie("selectedPayment", JSON.stringify());
+    // setPaymentCookie("selectedPayment", JSON.stringify());
   };
 
   const submitShipping = () => {
@@ -93,7 +99,6 @@ const OrderSummary = ({ cartItems, setCartItems }) => {
     const addressCookie = getAddressCookie()
       ? JSON.parse(getAddressCookie())
       : null;
-    console.log(cartCookie);
     console.log(addressCookie?.id);
 
     if (cartCookie?.length && addressCookie?.id) {
