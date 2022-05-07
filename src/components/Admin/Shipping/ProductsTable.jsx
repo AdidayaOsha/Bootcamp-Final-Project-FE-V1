@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
+import { currencyFormatter } from '../../../helpers/currencyFormatter';
 import { useParams } from "react-router-dom";
 import { API_URL } from "../../../constant/api";
 import { toast } from "react-toastify";
@@ -44,9 +45,9 @@ const ProductsTable = () => {
       <thead>
         <tr>
           <th>No. </th>
-          <th className="text-center">Product Name</th>
-          <th className="text-center">Stock Ready</th>
-          <th className="text-center">Stock Reserved</th>
+          <th className="text-center">Destination</th>
+          <th className="text-center">Product</th>
+          <th className="text-center">Total Product</th>
           <th className="text-center">Action</th>
         </tr>
       </thead>
@@ -59,24 +60,30 @@ const ProductsTable = () => {
         <tr key={val.id}>
           <td>{i+1}</td>
           <td className="text-center">
-            <b>{val.product.name}</b>
+            <b>Cikarang</b>
           </td>
-          <td className="text-center">{val.stock_ready} pcs</td>
-          <td className="text-center">0 pcs</td>
-          <td className="text-end">
+          <td className="text-center">{val.product.name}</td>
+          <td className="text-center">2 pcs</td>
+          <td>
             <div className="my-2 space-x-1 d-flex justify-content-center">
-              {/* <Link
+              <Link
                 to={`/addWarehouse`} state={val}
-                className="btn btn-sm btn-outline"
+                className="btn btn-sm btn-outline btn-accent"
               >
-                <i className="fas fa-pen"></i>
-              </Link> */}
-              {/* <Link
+                <i className="fas fa-share-square"></i>
+              </Link>
+              <Link
                 to={`/warehouse/${val.id}`}
-                className="btn btn-sm btn-outline btn-error"
-              > */}
-                <i class="fa fa-trash"></i>
-              {/* </Link> */}
+                className="btn btn-sm btn-outline btn-warning"
+              >
+                <i class="fa fa-spinner"></i>
+              </Link>
+              <Link
+                to={`/warehouse/${val.id}`}
+                className="btn btn-sm btn-outline btn-success"
+              >
+                <i class="fa fa-check-square"></i>
+              </Link>
             </div>
           </td>
         </tr>

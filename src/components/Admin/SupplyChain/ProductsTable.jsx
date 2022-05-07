@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Axios from "axios";
+import { currencyFormatter } from '../../../helpers/currencyFormatter';
 import { useParams } from "react-router-dom";
 import { API_URL } from "../../../constant/api";
 import { toast } from "react-toastify";
@@ -44,9 +45,9 @@ const ProductsTable = () => {
       <thead>
         <tr>
           <th>No. </th>
-          <th>Destination</th>
-          <th>Cost</th>
-          <th>Total Time</th>
+          <th className="text-center">Destination</th>
+          <th className="text-center">Cost</th>
+          <th className="text-center">Total Time</th>
           <th className="text-center">Action</th>
         </tr>
       </thead>
@@ -58,11 +59,11 @@ const ProductsTable = () => {
       return (
         <tr key={val.id}>
           <td>{i+1}</td>
-          <td>
+          <td className="text-center">
             <b>{val.product.name}</b>
           </td>
-          <td>{val.stock_ready} pcs</td>
-          <td>54 minutes</td>
+          <td className="text-center">{currencyFormatter(25000)}</td>
+          <td className="text-center">54 minutes</td>
           <td>
             <div className="my-2 space-x-1 d-flex justify-content-center">
               <Link

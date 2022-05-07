@@ -6,10 +6,11 @@ import { toast } from "react-toastify";
 
 const Warehouses = () => {
   const [data, setData] = useState([]);
-  const [sortValue, setSortValue] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
+
+  const [pagination, setPagination] = useState([]);
+  const [pageStart, setPageStart] = useState(0);
+  const [pageEnd, setPageEnd] = useState(10);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -23,21 +24,9 @@ const Warehouses = () => {
     getUsers();
   }, []);
 
-  useEffect(() => {
-    const getWarehouses = async () => {
-      try {
-        await Axios.get(`${API_URL}/warehouses`).then((results) => {
-          setWarehouses(results.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getWarehouses();
-  }, []);
 
   const onSearch = async () => {
-    await Axios.post(`${API_URL}/products/search`, { name: search })
+    await Axios.post(`${API_URL}/warehouse/search`, { name: search })
       .then((results) => {
         setData(results.data);
       })
@@ -46,17 +35,26 @@ const Warehouses = () => {
       });
   };
 
-  const SelectCategories = () => {
-    return categories.map((val, idx) => {
-      return <option key={idx}>{val.name}</option>;
-    });
-  };
+  useEffect(() => {
+    getIndex(10);
+  }, [data]);
 
-  const SelectWarehouse = () => {
-    return warehouses.map((val, idx) => {
-      return <option key={idx}>{val.name}</option>;
-    });
-  };
+  const getIndex = (number) => {
+    let total = Math.ceil(data.length/number)
+    let page = []
+    for (let i = 1; i <= total; i++) {
+      page.push(i);
+    }
+    setPagination(page)
+  }
+
+  const selectpage = (id) => {
+    let num = id
+    let start = (num-1)*10
+    let end = num*10
+    setPageStart(start)
+    setPageEnd(end)
+  }
 
   const TableHead = () => {
     return (
@@ -162,6 +160,21 @@ const Warehouses = () => {
           {TableHead()}
           <tbody>{TableBody()}</tbody>
         </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            {/* <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li> */}
+            {pagination.map((item)=> {
+              return (
+                <li className="page-item" key={item} onClick={()=>selectpage(item)}><button className="page-link">{item}</button></li>
+              )
+            })}
+            {/* <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li> */}
+          </ul>
+        </nav>
       </div>
     </section>
   );

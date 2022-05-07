@@ -3,8 +3,6 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import { API_URL } from "../../constant/api";
-import MainProducts from "../Admin/ProductWarehouse/MainProducts"
-import MainSupply from "./SupplyChain/MainSupply"
 
 const ShowWarehouse = () => {
   const [name, setName] = useState("");
@@ -15,6 +13,7 @@ const ShowWarehouse = () => {
   const [phone, setphone] = useState(0);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [menu, setMenu] = useState(0);
 
   const {id}= useParams();
 
@@ -61,6 +60,96 @@ const ShowWarehouse = () => {
     });
   };
 
+  const GeneralInfo = () => {
+    return (
+      <section className="content-main-custom" style={{ maxWidth: "1600px" }}>
+      <form>
+          <div className="row">
+          <div className="col-xl-12 col-lg-12">
+            <div className="card-custom shadow-sm">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-xl-6 col-lg-6">
+                    <div className="mb-2">
+                      <label htmlFor="product_title" className="form-label">
+                        Warehouse Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Type here"
+                        className="form-control"
+                        name="name"
+                        id="product_title"
+                        value={warehouses.length!==0?name:null}
+                        disabled
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <label htmlFor="product_price" className="form-label">
+                        Contact Number
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={warehouses.length!==0?phone:null}
+                        disabled
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <label htmlFor="product_price" className="form-label">
+                        Address
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={warehouses.length!==0?addres:null}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                  <div className="col-xl-6 col-lg-6">
+                    <div className="mb-2">
+                      <label htmlFor="product_price" className="form-label">
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={warehouses.length!==0?city:null}
+                        disabled
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <label htmlFor="product_price" className="form-label">
+                        Province
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={warehouses.length!==0?province:null}
+                        disabled
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <label className="form-label">Postal Code</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={warehouses.length!==0?postalcode:null}
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </form>
+    </section>
+    );
+  }
+
   return (
     <>
       <section className="content-main" style={{ maxWidth: "1600px" }}>
@@ -72,90 +161,16 @@ const ShowWarehouse = () => {
               </Link>
               <h2 className="content-title text-2xl">Warehouse {name}</h2>
             </div>
-            <div className="col-xl-12 col-lg-12">
-              <div className="card shadow-sm">
-                <div className="card-body">
-                  <div className="row">
-                    <div className="col-xl-6 col-lg-6">
-                      <div className="mb-2">
-                        <label htmlFor="product_title" className="form-label">
-                          Warehouse Name
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Type here"
-                          className="form-control"
-                          name="name"
-                          id="product_title"
-                          value={warehouses.length!==0?name:null}
-                          disabled
-                        />
-                      </div>
-                      <div className="mb-2">
-                        <label htmlFor="product_price" className="form-label">
-                          Contact Number
-                        </label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          value={warehouses.length!==0?phone:null}
-                          disabled
-                        />
-                      </div>
-                      <div className="mb-2">
-                        <label htmlFor="product_price" className="form-label">
-                          Address
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={warehouses.length!==0?addres:null}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className="col-xl-6 col-lg-6">
-                      <div className="mb-2">
-                        <label htmlFor="product_price" className="form-label">
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={warehouses.length!==0?city:null}
-                          disabled
-                        />
-                      </div>
-                      <div className="mb-2">
-                        <label htmlFor="product_price" className="form-label">
-                          Province
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={warehouses.length!==0?province:null}
-                          disabled
-                        />
-                      </div>
-                      <div className="mb-2">
-                        <label className="form-label">Postal Code</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={warehouses.length!==0?postalcode:null}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </form>
       </section>
-      {MainProducts()}
-      {MainSupply()}
+      <div class="tabs">
+        <Link to={`/warehouse/${id}`} state={id}><a class="tab tab-lg tab-lifted tab-active">General Info</a></Link>
+        <Link to={`/warehouse/${id}/inventory`} state={{id:id,name:name}}><a class="tab tab-lg tab-lifted">Inventories</a></Link>
+        <Link to={`/warehouse/${id}/shipping`} state={{id:id,name:name}}><a class="tab tab-lg tab-lifted">Shipping</a></Link>
+        <Link to={`/warehouse/${id}/cost`} state={{id:id,name:name}}><a class="tab tab-lg tab-lifted">Operational Cost</a></Link>
+      </div>
+      {GeneralInfo()}
     </>
   );
 };

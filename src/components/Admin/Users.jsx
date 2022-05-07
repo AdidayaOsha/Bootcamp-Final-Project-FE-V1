@@ -68,10 +68,10 @@ const Users = () => {
   };
 
   const TableBody = () => {
-    return data.map((val, idx) => {
+    return data.map((val, i) => {
       return (
-        <tr key={idx}>
-          <td>{idx}</td>
+        <tr key={i}>
+          <td>{i+1}</td>
           <td>{val.full_name}</td>
           <td>{val.username}</td>
           <td>{val.email}</td>

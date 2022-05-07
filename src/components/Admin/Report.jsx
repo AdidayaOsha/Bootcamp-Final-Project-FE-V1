@@ -1,82 +1,88 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
-import { toast } from "react-toastify";
 import { currencyFormatter } from '../../helpers/currencyFormatter';
-import { topProduct } from "../../data/AdminMaster";
+import { topProduct, ReportData } from "../../data/AdminMaster";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Warehouses = () => {
   const [data, setData] = useState([]);
   const [sortValue, setSortValue] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
+
+  const [date, setDate] = useState(new Date());
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const [revenue, setRevenue] = useState(0);
+  const [profit, setProfit] = useState(0);
+  const [cost, setCost] = useState(0);
+  const [transactions, setTransactions] = useState(0);
+
+  const [pagination, setPagination] = useState([]);
+  const [pageStart, setPageStart] = useState(0);
+  const [pageEnd, setPageEnd] = useState(12);
 
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const results = await Axios.get(`${API_URL}/products/warehouses`);
-        setData(results.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUsers();
-  }, []);
-
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        await Axios.get(`${API_URL}/products/categories`).then((results) => {
-          setCategories(results.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCategories();
-  }, []);
-
-  useEffect(() => {
-    const getWarehouses = async () => {
-      try {
-        await Axios.get(`${API_URL}/warehouses`).then((results) => {
-          setWarehouses(results.data);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
     getWarehouses();
+    getCategories();
+    getValues();
   }, []);
 
-  const onDelete = async (id) => {
+  useEffect(() => {
+    setOpenCalendar(false)
+  }, [date]);
+
+  const getWarehouses = async () => {
     try {
-      await Axios.delete(`${API_URL}/products/delete/${id}`).then((results) => {
-        toast("Product Has Been Deleted");
-        Navigate("/products");
+      await Axios.get(`${API_URL}/warehouses`).then((results) => {
+        setWarehouses(results.data);
       });
     } catch (err) {
       console.log(err);
     }
   };
 
+  const getCategories = async () => {
+    try {
+      await Axios.get(`${API_URL}/products/categories`).then((results) => {
+        setCategories(results.data);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getValues = () => {
+    var rev = 0;
+    var cos = 0;
+    ReportData.map((val)=> {
+      rev = rev + parseInt(val.revenue)
+      cos = cos + parseInt(val.fixed_cost) + parseInt(val.operational_cost)
+    })
+    setRevenue(rev)
+    setCost(cos)
+    setProfit(rev-cos)
+    setTransactions(ReportData.length)
+    setData(ReportData)
+  }
+
   // SORTING PRODUCTS
   useEffect(() => {
     const getBySort = async () => {
       try {
         let results;
-        if (sortValue === "az") {
-          results = await Axios.get(`${API_URL}/products/sort/az`);
-        } else if (sortValue === "za") {
-          results = await Axios.get(`${API_URL}/products/sort/za`);
-        } else if (sortValue === "lowprice") {
-          results = await Axios.get(`${API_URL}/products/sort/lowprice`);
-        } else if (sortValue === "highprice") {
-          results = await Axios.get(`${API_URL}/products/sort/highprice`);
+        if (sortValue === "newenddate") {
+          results = await Axios.get(`${API_URL}/report/sort/newenddate`);
+        } else if (sortValue === "neworderdate") {
+          results = await Axios.get(`${API_URL}/report/sort/neworderdate`);
+        } else if (sortValue === "lowpofit") {
+          results = await Axios.get(`${API_URL}/report/sort/lowpofit`);
+        } else if (sortValue === "highprofit") {
+          results = await Axios.get(`${API_URL}/report/sort/highprofit`);
         } else if (sortValue === "sort") {
-          results = await Axios.get(`${API_URL}/products`);
+          results = await Axios.get(`${API_URL}/report`);
         }
         setData(results.data);
         console.log(results.data);
@@ -87,27 +93,32 @@ const Warehouses = () => {
     getBySort();
   }, [sortValue]);
 
-  const onSearch = async () => {
-    await Axios.post(`${API_URL}/products/search`, { name: search })
-      .then((results) => {
-        setData(results.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const SelectCategories = () => {
-    return categories.map((val, idx) => {
-      return <option key={idx}>{val.name}</option>;
-    });
-  };
-
   const SelectWarehouse = () => {
     return warehouses.map((val, idx) => {
       return <option key={idx}>{val.name}</option>;
     });
   };
+
+  useEffect(() => {
+    getIndex(12);
+  }, [data]);
+
+  const getIndex = (number) => {
+    let total = Math.ceil(data.length/number)
+    let page = []
+    for (let i = 1; i <= total; i++) {
+      page.push(i);
+    }
+    setPagination(page)
+  }
+
+  const selectpage = (id) => {
+    let num = id
+    let start = (num-1)*12
+    let end = num*12
+    setPageStart(start)
+    setPageEnd(end)
+  }
 
   const TableHead = () => {
     return (
@@ -129,15 +140,19 @@ const Warehouses = () => {
   };
 
   const TableBody = () => {
-    return data.map((val, idx) => {
+    return ReportData.map((val, idx) => {
       return (
         <tr key={idx}>
           <td>{idx+1}</td>
-          <td>{val.name}</td>
-          <td>{val.address}</td>
-          <td>{val.city}</td>
-          <td>{val.province}</td>
-          <td>{val.phone}</td>
+          <td>{val.username}</td>
+          <td>{val.warehouse}</td>
+          <td>{val.actual_order_time}</td>
+          <td>{val.actual_end_time}</td>
+          <td>{currencyFormatter(val.fixed_cost)}</td>
+          <td>{currencyFormatter(val.operational_cost)}</td>
+          <td>{currencyFormatter((parseInt(val.fixed_cost)+parseInt(val.operational_cost)))}</td>
+          <td>{currencyFormatter(val.revenue)}</td>
+          <td>{currencyFormatter((parseInt(val.revenue)-(parseInt(val.fixed_cost)+parseInt(val.operational_cost))))}</td>
         </tr>
       );
     });
@@ -181,8 +196,29 @@ const Warehouses = () => {
             <div className="col-lg-2 col-6 col-md-3">
               <select 
                 style={{backgroundColor:"white",borderColor:"teal"}}
-                className="select w-full max-w-xs input-bordered text-gray-500 bg-light">
-                <option>Filter Date</option>
+                className="select w-full max-w-xs input-bordered text-gray-500 bg-light"
+                onClick={()=>setOpenCalendar(!openCalendar)}>
+                <option>
+                  {date.toString().slice(4,15)}
+                </option>
+              </select>
+              {openCalendar && (
+                <div className='calendar-container'>
+                  <Calendar onChange={setDate} value={date} />
+                </div>
+              )}
+            </div>
+            <div className="col-lg-2 col-6 col-md-3">
+              <select
+                style={{backgroundColor:"white",borderColor:"teal"}}
+                className="select w-full max-w-xs input-bordered text-gray-500 bg-light"
+                onChange={(e) => setSortValue(e.target.value)}
+                name="sort"
+              >
+                <option name="sort" value="sort">
+                  Filter Warehouse
+                </option>
+                {SelectWarehouse()}
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
@@ -196,15 +232,18 @@ const Warehouses = () => {
                   Filter By
                 </option>
                 <option name="lowprice" value="lowprice">
-                  Lowest Transaction
+                  Lowest Profit
                 </option>
                 <option name="highprice" value="highprice">
-                  Highest Transaction
+                  Highest Profit
+                </option>
+                <option name="neworderdate" value="neworderdate">
+                  Newest Order Time
+                </option>
+                <option name="newenddate" value="newenddate">
+                  Newest Endt Time
                 </option>
               </select>
-            </div>
-            <div className="col-lg-1 col-6 col-md-3">
-              <button className="btn w-full btn-accent">EXPORT</button>
             </div>
           </div>
         </header>
@@ -219,7 +258,7 @@ const Warehouses = () => {
                   </span>
                   <div className="text">
                   <h6 className="mb-1">Revenue</h6>{" "}
-                  <span>{currencyFormatter(50000000)}</span>
+                  <span>{currencyFormatter(revenue)}</span>
                   </div>
               </article>
               </div>
@@ -230,7 +269,7 @@ const Warehouses = () => {
                   </span>
                   <div className="text">
                   <h6 className="mb-1">Number Of Sales</h6>
-                  <span>1200 transactions</span>
+                  <span>{transactions} transactions</span>
                   </div>
               </article>
               </div>
@@ -243,7 +282,7 @@ const Warehouses = () => {
                   </span>
                   <div className="text">
                   <h6 className="mb-1">Profit</h6>
-                  <span>{currencyFormatter(22000000)}</span>
+                  <span>{currencyFormatter(profit)}</span>
                   </div>
               </article>
               </div>
@@ -254,7 +293,7 @@ const Warehouses = () => {
                   </span>
                   <div className="text">
                   <h6 className="mb-1">Total Cost</h6>
-                  <span>{currencyFormatter(25000000)}</span>
+                  <span>{currencyFormatter(cost)}</span>
                   </div>
               </article>
               </div>
@@ -278,10 +317,24 @@ const Warehouses = () => {
           {TableHead()}
           <tbody>{TableBody()}</tbody>
         </table>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            {/* <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li> */}
+            {pagination.map((item)=> {
+              return (
+                <li className="page-item" key={item} onClick={()=>selectpage(item)}><button className="page-link">{item}</button></li>
+              )
+            })}
+            {/* <li class="page-item">
+              <a class="page-link" href="#">Next</a>
+            </li> */}
+          </ul>
+        </nav>
       </div>
     </section>
   );
 };
 
 export default Warehouses;
-

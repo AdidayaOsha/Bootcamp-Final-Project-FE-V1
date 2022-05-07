@@ -30,6 +30,9 @@ import User from "./pages/Admin/User";
 import Warehouse from "./pages/Admin/Warehouse";
 import FormWarehouse from "./pages/Admin/FormWarehouse";
 import ShowWarehouse from "./pages/Admin/ShowWarehouse";
+import CostWarehouse from "./pages/Admin/CostWarehouse";
+import ProductWarehouse from "./pages/Admin/ProductWarehouse";
+import ShippingWarehouse from "./pages/Admin/ShippingWarehouse";
 import Dashboard from "./pages/Admin/Dashboard";
 
 import NotFound from "./pages/NotFound";
@@ -140,6 +143,9 @@ function App() {
           <Route path="/report" element={<Report />} />
           <Route path="/warehouse" element={<Warehouse />} />
           <Route path="/warehouse/:id" element={<ShowWarehouse />} />
+          <Route path="/warehouse/:id/inventory" element={<ProductWarehouse />} />
+          <Route path="/warehouse/:id/cost" element={<CostWarehouse />} />
+          <Route path="/warehouse/:id/shipping" element={<ShippingWarehouse />} />
           <Route path="/addwarehouse" element={<FormWarehouse />} />
           <Route path="/user" element={<User />} />
           <Route path="/dashboard" element={<Dashboard />} />
