@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useOutletContext } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
 import Axios from "axios";
 import { AiOutlineCheck } from "react-icons/ai";
 import useGeoLocation from "../../hooks/useGeoLocation";
+import { toast } from "react-toastify";
+import { getAddressCookie } from "../../hooks/getCookie";
+import { removeAddressCookie } from "../../hooks/removeCookie";
 
 const BillingAddress = () => {
+  const [cartItems, setCartItems] = useOutletContext([]);
+  const [change, setChange] = useOutletContext(0);
   const [data, setData] = useState({});
   const [addressData, setAddressData] = useState([]);
   const [cityData, setCityData] = useState([]);
@@ -20,6 +25,7 @@ const BillingAddress = () => {
   const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
   const [locStorage, setLocStorage] = useState(0);
+  const [addressCookies, setAddressCookies] = useState({});
   const location = useGeoLocation();
 
   const userGlobal = useSelector((state) => state.user);
@@ -27,6 +33,11 @@ const BillingAddress = () => {
   console.log(`provinceId: ${provinceId}`);
   console.log(`CityId: ${cityData}, ${cityId}`);
   console.log(`districtId: ${districtData}, ${districtId}`);
+
+  const getUserCart = async () => {
+    const results = await Axios.get(`${API_URL}/carts/get/${userGlobal.id}`);
+    setCartItems(results.data.carts);
+  };
 
   useEffect(() => {
     const getAddress = async () => {
@@ -70,6 +81,30 @@ const BillingAddress = () => {
     const storage = JSON.parse(localStorage.getItem("addressId"));
     setLocStorage(storage);
   }, []);
+
+  useEffect(() => {
+    const getAddressCookieId = getAddressCookie()
+      ? JSON.parse(getAddressCookie())
+      : null;
+    setAddressCookies(getAddressCookieId);
+  }, []);
+
+  const removeLocalStorageBtn = () => {
+    localStorage.removeItem("addressId");
+    removeAddressCookie("selectedAddress");
+    setLocStorage(0);
+    toast("Default Address Picked", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setChange(Math.random() + 3);
+    getUserCart();
+  };
 
   // const addressHandler = async () => {
   //   try {
@@ -126,6 +161,11 @@ const BillingAddress = () => {
                         Default
                       </p>
                     ) : null}
+                    {addressCookies?.id === val.id ? (
+                      <span className="text-xl text-green-600">
+                        <AiOutlineCheck />
+                      </span>
+                    ) : null}
                   </div>
                   <h2 className="">
                     {val.address_line}, <span>{val.district}</span>,{" "}
@@ -145,11 +185,22 @@ const BillingAddress = () => {
                           </td>
                           <button
                             onClick={() => {
+                              removeAddressCookie();
                               localStorage.setItem(
                                 "addressId",
                                 JSON.stringify(val.id)
                               );
                               setLocStorage(val.id);
+                              toast("Address Changed", {
+                                position: "top-right",
+                                autoClose: 1000,
+                                hideProgressBar: true,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                              });
+                              getUserCart();
                             }}
                             className={
                               locStorage === val.id
@@ -168,6 +219,14 @@ const BillingAddress = () => {
                               "Deliver to This Address"
                             )}
                           </button>
+                          {locStorage === val.id ? (
+                            <button
+                              onClick={() => removeLocalStorageBtn()}
+                              className="text-xs btn btn-sm btn-outline btn-error rounded-md"
+                            >
+                              Cancel
+                            </button>
+                          ) : null}
                         </>
                       )}
                     </div>

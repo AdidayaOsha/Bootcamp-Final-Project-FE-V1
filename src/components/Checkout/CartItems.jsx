@@ -4,8 +4,10 @@ import { API_URL } from "../../constant/api";
 import { debounce } from "throttle-debounce";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
 import { useSelector } from "react-redux";
+import { useOutletContext } from "react-router-dom";
 
 const CartItems = ({ val, setCartItems }) => {
+  const [change, setChange] = useOutletContext(0);
   let [quantity, setQuantity] = useState(val.quantity);
   const userGlobal = useSelector((state) => state.user);
   const stockReady = val.product.warehouse_products[0].stock_ready;

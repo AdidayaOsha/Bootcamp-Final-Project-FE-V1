@@ -5,11 +5,7 @@ import {
   getAddressCookie,
   getPaymentCookie,
 } from "../../hooks/getCookie";
-import {
-  removeCartCookie,
-  removeAddressCookie,
-  removePaymentCookie,
-} from "../../hooks/removeCookie";
+
 import { AiOutlineCheck } from "react-icons/ai";
 
 const OrderProgress = ({ change, setChange }) => {
