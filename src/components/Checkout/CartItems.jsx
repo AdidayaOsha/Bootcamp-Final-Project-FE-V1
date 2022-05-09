@@ -4,12 +4,10 @@ import { API_URL } from "../../constant/api";
 import { debounce } from "throttle-debounce";
 import { currencyFormatter } from "../../helpers/currencyFormatter";
 import { useSelector } from "react-redux";
-import { useOutletContext } from "react-router-dom";
 import { getCartCookie } from "../../hooks/getCookie";
 import { setCartCookie } from "../../hooks/setCookie";
 
 const CartItems = ({ val, setCartItems, cartItems }) => {
-  const [change, setChange] = useOutletContext(0);
   let [quantity, setQuantity] = useState(val.quantity);
 
   const userGlobal = useSelector((state) => state.user);
@@ -22,18 +20,23 @@ const CartItems = ({ val, setCartItems, cartItems }) => {
         quantity,
       });
       setCartItems(results.data.getUserCart);
+      if (getCart) {
+        setCartCookie(JSON.stringify(results.data.getUserCart));
+      }
     }),
     []
   );
 
+  const getCart = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+
   useEffect(() => {
     let maxQty = quantity;
+
     if (maxQty > stockReady) {
       maxQty = stockReady;
     } else {
       qtyHandler(quantity);
     }
-    setCartCookie(JSON.stringify(cartItems));
   }, [quantity]);
 
   return (

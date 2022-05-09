@@ -75,7 +75,7 @@ const OrderProgress = ({ change, setChange }) => {
               </>
             )}
             {cartCookie && addressCookie && paymentCookie ? (
-              <span className="text-4xl text-gray-400">
+              <span className="text-xl text-green-600">
                 <AiOutlineCheck />
               </span>
             ) : (
@@ -114,7 +114,11 @@ const OrderProgress = ({ change, setChange }) => {
             <div>
               <NavLink
                 to={cartCookie && addressCookie ? "payment" : "#"}
-                className="text-sm text-gray-400 hover:text-gray-400 font-bold tab"
+                className={
+                  paymentCookie
+                    ? "italic text-black font-bold tab hover:text-accent"
+                    : "text-sm text-gray-400 hover:text-gray-400 font-bold tab"
+                }
               >
                 Payment
               </NavLink>
