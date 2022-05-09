@@ -1,38 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useOutletContext } from "react-router-dom";
+import {
+  Navigate,
+  NavLink,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { API_URL } from "../../constant/api";
-import Axios from "axios";
 import { AiOutlineCheck } from "react-icons/ai";
-import useGeoLocation from "../../hooks/useGeoLocation";
 import { toast } from "react-toastify";
 import { getAddressCookie } from "../../hooks/getCookie";
-import { removeAddressCookie } from "../../hooks/removeCookie";
+import {
+  removeAddressCookie,
+  removePaymentCookie,
+} from "../../hooks/removeCookie";
+import Axios from "axios";
+import useGeoLocation from "../../hooks/useGeoLocation";
 
 const BillingAddress = () => {
   const [cartItems, setCartItems] = useOutletContext([]);
   const [change, setChange] = useOutletContext(0);
   const [data, setData] = useState({});
-  const [provinceData, setProvinceData] = useState([]);
+  const [provinceData, setProvincesData] = useState([]);
   const [cityData, setCityData] = useState([]);
   const [districtData, setDistrictData] = useState([]);
   const [address_line, setAddress_Line] = useState("");
   const [address_type, setAddress_Type] = useState("");
   const [cityId, setCityId] = useState(0);
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
+  const [province, setProvince] = useState("");
   const [provinceId, setProvinceId] = useState(0);
   const [districtId, setDistrictId] = useState(0);
   const [postal_code, setPostal_Code] = useState(0);
+  const [phone, setPhone] = useState(0);
+  const [mobile, setMobile] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
   const [locStorage, setLocStorage] = useState(0);
   const [addressCookies, setAddressCookies] = useState({});
-  let [userId, setUserId] = useState(0);
+
   const location = useGeoLocation();
-
   const userGlobal = useSelector((state) => state.user);
-
-  console.log(`provinceId: ${provinceId}`);
-  console.log(`CityId: ${cityData}, ${cityId}`);
-  console.log(`districtId: ${districtData}, ${districtId}`);
+  const navigate = useNavigate();
 
   const getUserCart = async () => {
     const results = await Axios.get(`${API_URL}/carts/get/${userGlobal.id}`);
@@ -40,15 +49,15 @@ const BillingAddress = () => {
   };
 
   useEffect(() => {
-    const getProvince = async () => {
+    const getProvinces = async () => {
       try {
         const results = await Axios.get(`${API_URL}/users/provinces`);
-        setProvinceData(results.data);
+        setProvincesData(results.data);
       } catch (err) {
         console.log(err);
       }
     };
-    getProvince();
+    getProvinces();
   }, []);
 
   useEffect(() => {
@@ -77,6 +86,46 @@ const BillingAddress = () => {
     getDistricts();
   }, [cityId]);
 
+  useEffect(() => {
+    const getProvince = async () => {
+      try {
+        const results = await Axios.get(
+          `${API_URL}/users/province/${provinceId}`
+        );
+        setProvince(results.data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getProvince();
+  });
+
+  useEffect(() => {
+    const getCity = async () => {
+      try {
+        const results = await Axios.get(`${API_URL}/users/city/${cityId}`);
+        setCity(results.data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getCity();
+  }, [cityId]);
+
+  useEffect(() => {
+    const getDistrict = async () => {
+      try {
+        const results = await Axios.get(
+          `${API_URL}/users/district/${districtId}`
+        );
+        setDistrict(results.data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getDistrict();
+  }, [districtId]);
+
   const updateDefaultAddress = async () => {
     try {
       await Axios.patch(`${API_URL}/users/updatedefaultaddress`, {
@@ -100,7 +149,7 @@ const BillingAddress = () => {
     setAddressCookies(getAddressCookieId);
   }, []);
 
-  const removeLocalStorageBtn = () => {
+  const removeLocalAddressId = () => {
     localStorage.removeItem("addressId");
     removeAddressCookie("selectedAddress");
     setLocStorage(0);
@@ -117,28 +166,30 @@ const BillingAddress = () => {
     getUserCart();
   };
 
-  const addressHandler = async () => {
+  const newAddressHandler = async () => {
     try {
       const res = await Axios.post(`${API_URL}/users/newaddress`, {
-        // address_line,
-        // address_type,
-        // provinceId,
-        // cityId,
-        // districtId,
-        // postal_code,
-        // userId: userGlobal.id,
-        // isDefault,
-      });
-      console.log(
         address_line,
         address_type,
-        provinceId,
-        cityId,
-        districtId,
+        province,
+        city,
+        district,
         postal_code,
-        (userId = userGlobal.id),
-        isDefault
-      );
+        phone,
+        mobile,
+        userId: userGlobal.id,
+        isDefault,
+      });
+      navigate("/cart/billing");
+      toast.success("New Address Added!", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -188,7 +239,7 @@ const BillingAddress = () => {
                     ) : null}
                   </div>
                   <h2 className="">
-                    {val.address_line}, <span>{val.province.name}</span>,{" "}
+                    {val.address_line}, <span>{val.province}</span>,{" "}
                     <span>{val.city}</span>
                   </h2>
                   <h2 className="">Postal Code: {val.postal_code}</h2>
@@ -198,6 +249,7 @@ const BillingAddress = () => {
                   <div className="flex justify-between items-center">
                     <h2 className="text-gray-400">Phone: {val.phone}</h2>
                     <div className="flex space-x-2">
+                      {/* PICKING ADDRESS  */}
                       {val.isDefault ? null : (
                         <>
                           <td>
@@ -206,6 +258,7 @@ const BillingAddress = () => {
                           <button
                             onClick={() => {
                               removeAddressCookie();
+                              removePaymentCookie();
                               localStorage.setItem(
                                 "addressId",
                                 JSON.stringify(val.id)
@@ -232,7 +285,7 @@ const BillingAddress = () => {
                           </button>
                           {locStorage === val.id ? (
                             <button
-                              onClick={() => removeLocalStorageBtn()}
+                              onClick={() => removeLocalAddressId()}
                               className="text-xs btn btn-sm btn-outline btn-error rounded-md"
                             >
                               Cancel
@@ -265,17 +318,17 @@ const BillingAddress = () => {
           </div>
           <div>
             <label
-              for="my-modal-3"
+              for="my-modal-4"
               className="btn modal-button text-accent btn-ghost btn-sm hover:bg-gray-200 normal-case"
             >
               + Add New Address
             </label>
 
-            <input type="checkbox" id="my-modal-3" className="modal-toggle" />
+            <input type="checkbox" id="my-modal-4" className="modal-toggle" />
             <div className="modal">
               <div className="modal-box relative">
                 <label
-                  for="my-modal-3"
+                  for="my-modal-4"
                   className="btn btn-sm btn-circle absolute right-2 top-2"
                 >
                   ✕
@@ -400,6 +453,7 @@ const BillingAddress = () => {
                         {selectDistrict()}
                       </select>
                     </div>
+                    {/* ADD POSTAL CODE */}
                     <label class="label">
                       <div className="flex ">
                         <span className="label-text">Postal Code</span>
@@ -411,16 +465,41 @@ const BillingAddress = () => {
                       placeholder="ex: 15220"
                       className="input input-bordered w-full max-w-xs"
                     />
+
+                    {/* ADD PHONE OR MOBILE */}
+                    <label class="label">
+                      <div className="flex ">
+                        <span className="label-text">Contact</span>
+                      </div>
+                    </label>
+                    <div className="flex flex-row space-x-2">
+                      <input
+                        onChange={(e) => setMobile(+e.target.value)}
+                        type="text"
+                        placeholder="Mobile"
+                        className="input input-bordered w-full max-w-xs"
+                      />
+                      <input
+                        onChange={(e) => setPhone(+e.target.value)}
+                        type="text"
+                        placeholder="Phone"
+                        className="input input-bordered w-full max-w-xs"
+                      />
+                    </div>
                     <div class="">
                       <label class="label cursor-pointer">
                         <span class="label-text">
                           Choose as Default Address
                         </span>
-                        <input type="checkbox" class="checkbox" />
+                        <input
+                          type="checkbox"
+                          class="checkbox"
+                          onChange={updateDefaultAddress}
+                        />
                       </label>
                     </div>
                     <button
-                      onClick={updateDefaultAddress}
+                      onClick={newAddressHandler}
                       className="w-full btn btn-accent mt-4 text-white"
                     >
                       Submit My New Address

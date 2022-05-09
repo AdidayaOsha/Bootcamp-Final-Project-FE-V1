@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { API_URL } from "../../constant/api.js";
+import { getCartCookie } from "../../hooks/getCookie.js";
+import { currencyFormatter } from "../../helpers/currencyFormatter.js";
+import { setPaymentCookie } from "../../hooks/setCookie.js";
 
 const PaymentSummary = () => {
-  const [shipmentOption, setShipmentOptions] = useState([]);
+  const [shipmentOption, setShipmentOption] = useState([]);
+  const [paymentOption, setPaymentOption] = useState([]);
   const [shipmentValue, setShipmentValue] = useState("");
-  console.log(shipmentOption);
-  console.log(shipmentValue);
+  const [quantity, setQuantity] = useState(0);
+  const [selectedPaymentId, setSelectedPaymentId] = useState("");
+  console.log(selectedPaymentId);
 
   useEffect(() => {
     const getShipments = async () => {
       try {
         const results = await Axios.get(`${API_URL}/carts/getshipments`);
-        setShipmentOptions(results.data);
+        setShipmentOption(results.data);
       } catch (err) {
         console.log(err);
       }
@@ -20,10 +25,70 @@ const PaymentSummary = () => {
     getShipments();
   }, []);
 
+  useEffect(() => {
+    const getPaymentOption = async () => {
+      try {
+        const results = await Axios.get(`${API_URL}/carts/getpaymentoptions`);
+        setPaymentOption(results.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getPaymentOption();
+  }, []);
+
   const selectShipmentOptions = () => {
-    return shipmentOption.map((val) => {
-      return <option value={val.name}>{val.name}</option>;
+    return shipmentOption?.map((val) => {
+      return (
+        <option key={val.id} value={val.name}>
+          {val.name}
+        </option>
+      );
     });
+  };
+
+  const selectPaymentOptions = () => {
+    return paymentOption?.map((val) => {
+      return (
+        <div className="form-control rounded-xl border-0 ">
+          <div className="flex justify-between w-full items-center">
+            <div className="flex space-x-4">
+              <img src={val.logo} alt="" className="w-12" />
+              <div className="flex flex-col">
+                <span className="label-text text-left">{val.name}</span>
+                <span className="label-text text-sm text-gray-400">
+                  {val.description}
+                </span>
+              </div>
+            </div>
+            <input
+              onChange={(e) => setSelectedPaymentId(+e.target.value)}
+              value={val.id}
+              type="radio"
+              name="radio-6"
+              className="radio checked:bg-accent items-end"
+            />
+          </div>
+        </div>
+      );
+    });
+  };
+
+  const getCart = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+
+  useEffect(() => {
+    const cartItemsQty = () => {
+      let total = 0;
+      getCart.forEach((val) => {
+        total += val.quantity;
+        setQuantity(total);
+      });
+    };
+    cartItemsQty();
+  }, []);
+
+  const paymentOptionsHandler = () => {
+    setPaymentCookie(JSON.stringify(selectedPaymentId));
   };
 
   return (
@@ -60,7 +125,7 @@ const PaymentSummary = () => {
             </div>
           </div>
           {/* Choose Courier */}
-          <div className=" w-full h-32 rounded-xl shadow-sm ">
+          <div className=" w-full rounded-xl shadow-sm ">
             <div className="p-3 rounded-t-xl">
               <div className="space-y-3">
                 <div className="flex space-x-2">
@@ -78,97 +143,99 @@ const PaymentSummary = () => {
                   >
                     {selectShipmentOptions()}
                   </select>
-                  <h2 className="text-teal-400 text-md italic">Rp 25.000</h2>
+                  <h2 className="text-md">Shipping Cost :</h2>
+                  <h2 className="text-teal-400 text-md font-bold">Rp 25.000</h2>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* PAYMENT OPTIONS */}
+        {/* PRODUCT SUMMARY */}
         <div className=" w-full rounded-xl shadow-sm ">
           <div className="p-3 rounded-t-xl">
             <div className="flex flex-col">
               <div className="space-x-2">
-                <h2 className="font-bold">Cart Summary</h2>
+                <h2 className="font-bold">Cart Details</h2>
               </div>
               <span className="border-1 w-full mt-2"></span>
-              <div className="flex flex-col mt-4 space-y-4">
-                <h2 className="mb-2">Please check twice before you checkout</h2>
-                <div className="form-control rounded-xl border-0 ">
-                  <div className="flex justify-between w-full items-center">
-                    <div className="flex space-x-4">
-                      <img
-                        src="https://www.yayasansimetri.or.id/wp-content/uploads/2021/03/Logo-BCA-blue-A4.png"
-                        alt=""
-                        className="w-12"
-                      />
-                      <div className="flex flex-col">
-                        <span className="label-text text-left">
-                          BCA Bank Transfer
-                        </span>
-                        <span className="label-text text-sm text-gray-400">
-                          360037812 a.n E-Commerce
-                        </span>
+              <div className="flex flex-col mt-4">
+                <h2 className="mb-2 font-bold">Product Details :</h2>
+
+                {/* LIST STARTS HERE */}
+                <h2 className="text-sm mb-2">
+                  Total: <span className="font-bold">{quantity}</span> Items
+                </h2>
+                {getCart?.map((val) => {
+                  return (
+                    <div className="form-control rounded-xl border-0 ">
+                      <div className="flex justify-between w-full items-center">
+                        <div className="flex space-x-4">
+                          <img
+                            src={`${API_URL}/${val.product.product_image}`}
+                            alt=""
+                            className="w-12"
+                          />
+                          <div className="flex flex-col">
+                            <span className="label-text text-left">
+                              {val.product.name}
+                            </span>
+                            <span className="label-text text-sm text-gray-400">
+                              {val.quantity} x{" "}
+                              {currencyFormatter(val.product.price)}
+                            </span>
+                            <div className="mt-2">
+                              <span className="flex border-top h-[1px] bg-slate-100 w-[500px]"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <h2 className="text-sm text-gray-500">
+                          {currencyFormatter(val.subtotal)}
+                        </h2>
                       </div>
                     </div>
-                    <input
-                      type="radio"
-                      name="radio-6"
-                      className="radio checked:bg-accent items-end"
-                      checked
-                    />
-                  </div>
-                </div>
-                <div className="form-control rounded-xl border-0">
-                  <div className="flex justify-between w-full items-center ">
-                    <div className="flex space-x-4">
-                      <img
-                        src="https://mpng.subpng.com/20180815/ab/kisspng-bank-mandiri-depok-logo-bank-mandiri-semarang-kred-5b74ed29b6a585.5966533915343895457481.jpg"
-                        alt=""
-                        className="w-12"
-                      />
-                      <div className="flex flex-col">
-                        <span className="label-text text-left">
-                          Mandiri Bank Transfer
-                        </span>
-                        <span className="label-text text-gray-400">
-                          8256000378274 a.n E-Commerce
-                        </span>
+                  );
+                })}
+              </div>
+
+              {/* PAYMENT SERVICES */}
+              <div className="mt-4">
+                <label
+                  htmlFor="my-modal-4"
+                  className="btn modal-button bg-accent border-none w-1/3 hover:bg-accent"
+                >
+                  Choose Payment
+                </label>
+
+                <input
+                  type="checkbox"
+                  id="my-modal-4"
+                  className="modal-toggle"
+                />
+                <label htmlFor="my-modal-4" className="modal cursor-pointer">
+                  <label className="modal-box relative" htmlFor="">
+                    <div className=" w-full rounded-xl shadow-sm ">
+                      <div className="p-3 rounded-t-xl">
+                        <div className="flex flex-col">
+                          <div className="space-x-2">
+                            <h2 className="font-bold">Payment Options</h2>
+                          </div>
+                          <span className="border-1 w-full mt-2"></span>
+                          <div className="flex flex-col mt-4 space-y-4">
+                            <h2 className="mb-2">How would you like to pay?</h2>
+                            {selectPaymentOptions()}
+                          </div>
+                          <button
+                            onClick={paymentOptionsHandler}
+                            className="btn btn-sm btn-accent text-white mt-4"
+                          >
+                            Proceed
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    <input
-                      type="radio"
-                      name="radio-6"
-                      className="radio checked:bg-accent"
-                      checked
-                    />
-                  </div>
-                </div>
-                <div className="form-control rounded-xl border-0">
-                  <div className="flex justify-between w-full items-center ">
-                    <div className="flex space-x-4">
-                      <img
-                        src="https://download.logo.wine/logo/PayPal/PayPal-Logo.wine.png"
-                        alt=""
-                        className="w-12"
-                      />
-                      <div className="flex flex-col">
-                        <span className="label-text text-left">Paypal</span>
-                        <span className="label-text text-sm text-gray-400">
-                          You will be redirected to PayPal website to complete
-                          your purchase securely.
-                        </span>
-                      </div>
-                    </div>
-                    <input
-                      type="radio"
-                      name="radio-6"
-                      className="radio checked:bg-accent"
-                      checked
-                    />
-                  </div>
-                </div>
+                  </label>
+                </label>
               </div>
             </div>
           </div>

@@ -16,8 +16,8 @@ export const setAddressCookie = (chosenAddress) => {
     path: "/",
   });
 };
-export const setPaymentCookie = (cartItems) => {
-  Cookie.set("selectedPayment", cartItems, {
+export const setPaymentCookie = (selectedPaymentId) => {
+  Cookie.set("selectedPayment", selectedPaymentId, {
     expires: 1,
     secure: true,
     sameSite: "strict",

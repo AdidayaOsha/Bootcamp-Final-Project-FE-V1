@@ -5,8 +5,9 @@ import { API_URL } from "../constant/api";
 import OrderProgress from "../components/Checkout/OrderProgress";
 import OrderSummary from "../components/Checkout/OrderSummary";
 import TableAddress from "../components/Checkout/TableAddress";
+import TablePayment from "../components/Checkout/TablePayment";
 import Axios from "axios";
-import { getAddressCookie } from "../hooks/getCookie";
+import { getAddressCookie, getPaymentCookie } from "../hooks/getCookie";
 import { removeAddressCookie, removeCartCookie } from "../hooks/removeCookie";
 
 const CheckoutDetails = () => {
@@ -17,6 +18,10 @@ const CheckoutDetails = () => {
 
   const addressCookie = getAddressCookie()
     ? JSON.parse(getAddressCookie())
+    : null;
+
+  const paymentCookie = getPaymentCookie()
+    ? JSON.parse(getPaymentCookie())
     : null;
 
   useEffect(() => {
@@ -36,10 +41,11 @@ const CheckoutDetails = () => {
   return (
     <div>
       <OrderProgress />
-      <div className="flex w-screen space-x-4 pt-5 justify-end pr-48 ">
+      <div className="flex w-screen space-x-4 pt-5 justify-end pr-48">
         <Outlet context={[cartItems, setCartItems, change, setChange]} />
         <div className="w-3/12 space-y-4 flex flex-col">
           {addressCookie && <TableAddress />}
+          {paymentCookie && <TablePayment />}
           <OrderSummary
             cartItems={cartItems}
             setCartItems={setCartItems}
