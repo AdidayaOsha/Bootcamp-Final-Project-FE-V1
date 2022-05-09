@@ -4,14 +4,56 @@ import { API_URL } from "../../constant/api.js";
 import { getCartCookie } from "../../hooks/getCookie.js";
 import { currencyFormatter } from "../../helpers/currencyFormatter.js";
 import { setPaymentCookie } from "../../hooks/setCookie.js";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { useOutletContext } from "react-router-dom";
 
 const PaymentSummary = () => {
+  const [cartItems, setCartItems] = useOutletContext();
   const [shipmentOption, setShipmentOption] = useState([]);
   const [paymentOption, setPaymentOption] = useState([]);
   const [shipmentValue, setShipmentValue] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [selectedPaymentId, setSelectedPaymentId] = useState("");
   console.log(selectedPaymentId);
+
+  const userGlobal = useSelector((state) => state.user);
+  const getCart = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+
+  const getUserCart = async () => {
+    const results = await Axios.get(`${API_URL}/carts/get/${userGlobal.id}`);
+    setCartItems(results.data.carts);
+  };
+
+  const closeModal = () => {
+    document.getElementById("my-modal-4").click();
+    toast.success("Payment Options Has Been Added!", {
+      position: "top-center",
+      autoClose: 1500,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    getUserCart();
+  };
+
+  useEffect(() => {
+    const setPaymentOptionsCookie = async () => {
+      try {
+        if (selectedPaymentId) {
+          const results = await Axios.get(
+            `${API_URL}/carts/getpaymentoption/${selectedPaymentId}`
+          );
+          setPaymentCookie(JSON.stringify(results.data));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    setPaymentOptionsCookie();
+  }, [selectedPaymentId]);
 
   useEffect(() => {
     const getShipments = async () => {
@@ -74,8 +116,6 @@ const PaymentSummary = () => {
     });
   };
 
-  const getCart = getCartCookie() ? JSON.parse(getCartCookie()) : null;
-
   useEffect(() => {
     const cartItemsQty = () => {
       let total = 0;
@@ -86,10 +126,6 @@ const PaymentSummary = () => {
     };
     cartItemsQty();
   }, []);
-
-  const paymentOptionsHandler = () => {
-    setPaymentCookie(JSON.stringify(selectedPaymentId));
-  };
 
   return (
     <>
@@ -155,12 +191,10 @@ const PaymentSummary = () => {
         <div className=" w-full rounded-xl shadow-sm ">
           <div className="p-3 rounded-t-xl">
             <div className="flex flex-col">
-              <div className="space-x-2">
-                <h2 className="font-bold">Cart Details</h2>
-              </div>
-              <span className="border-1 w-full mt-2"></span>
               <div className="flex flex-col mt-4">
-                <h2 className="mb-2 font-bold">Product Details :</h2>
+                <h2 className="mb-2 font-bold">
+                  Here is your Product Details :
+                </h2>
 
                 {/* LIST STARTS HERE */}
                 <h2 className="text-sm mb-2">
@@ -226,10 +260,10 @@ const PaymentSummary = () => {
                             {selectPaymentOptions()}
                           </div>
                           <button
-                            onClick={paymentOptionsHandler}
+                            onClick={closeModal}
                             className="btn btn-sm btn-accent text-white mt-4"
                           >
-                            Proceed
+                            Choose Payment
                           </button>
                         </div>
                       </div>

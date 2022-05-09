@@ -86,8 +86,8 @@ const OrderSummary = ({ cartItems, setCartItems, setChange }) => {
     }
   };
 
-  const submitPayment = () => {
-    // setPaymentCookie("selectedPayment", JSON.stringify());
+  const submitCheckout = () => {
+    console.log("hi");
   };
 
   const submitShipping = () => {
@@ -102,7 +102,7 @@ const OrderSummary = ({ cartItems, setCartItems, setChange }) => {
     console.log(addressCookie?.id);
 
     if (cartCookie?.length && addressCookie?.id) {
-      return <SubmitPaymentButton />;
+      return <SubmitPaymentButton submitCheckout={submitCheckout} />;
     } else if (cartCookie?.length) {
       return <SubmitAddressButton submitAddress={submitAddress} />;
     } else {

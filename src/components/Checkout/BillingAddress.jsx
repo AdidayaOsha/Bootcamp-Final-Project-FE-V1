@@ -152,6 +152,7 @@ const BillingAddress = () => {
   const removeLocalAddressId = () => {
     localStorage.removeItem("addressId");
     removeAddressCookie("selectedAddress");
+    removePaymentCookie("selectedPayment");
     setLocStorage(0);
     toast.success("Automatically Set to Default Address", {
       position: "top-center",

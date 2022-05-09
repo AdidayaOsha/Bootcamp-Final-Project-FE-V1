@@ -8,7 +8,6 @@ import TableAddress from "../components/Checkout/TableAddress";
 import TablePayment from "../components/Checkout/TablePayment";
 import Axios from "axios";
 import { getAddressCookie, getPaymentCookie } from "../hooks/getCookie";
-import { removeAddressCookie, removeCartCookie } from "../hooks/removeCookie";
 
 const CheckoutDetails = () => {
   const [change, setChange] = useState(0);
