@@ -13,7 +13,7 @@ const BillingAddress = () => {
   const [cartItems, setCartItems] = useOutletContext([]);
   const [change, setChange] = useOutletContext(0);
   const [data, setData] = useState({});
-  const [addressData, setAddressData] = useState([]);
+  const [provinceData, setProvinceData] = useState([]);
   const [cityData, setCityData] = useState([]);
   const [districtData, setDistrictData] = useState([]);
   const [address_line, setAddress_Line] = useState("");
@@ -22,10 +22,10 @@ const BillingAddress = () => {
   const [provinceId, setProvinceId] = useState(0);
   const [districtId, setDistrictId] = useState(0);
   const [postal_code, setPostal_Code] = useState(0);
-  const [userId, setUserId] = useState(0);
   const [isDefault, setIsDefault] = useState(false);
   const [locStorage, setLocStorage] = useState(0);
   const [addressCookies, setAddressCookies] = useState({});
+  let [userId, setUserId] = useState(0);
   const location = useGeoLocation();
 
   const userGlobal = useSelector((state) => state.user);
@@ -40,15 +40,15 @@ const BillingAddress = () => {
   };
 
   useEffect(() => {
-    const getAddress = async () => {
+    const getProvince = async () => {
       try {
         const results = await Axios.get(`${API_URL}/users/provinces`);
-        setAddressData(results.data);
+        setProvinceData(results.data);
       } catch (err) {
         console.log(err);
       }
     };
-    getAddress();
+    getProvince();
   }, []);
 
   useEffect(() => {
@@ -77,6 +77,17 @@ const BillingAddress = () => {
     getDistricts();
   }, [cityId]);
 
+  const updateDefaultAddress = async () => {
+    try {
+      await Axios.patch(`${API_URL}/users/updatedefaultaddress`, {
+        isDefault: false,
+      });
+      setIsDefault(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const storage = JSON.parse(localStorage.getItem("addressId"));
     setLocStorage(storage);
@@ -93,9 +104,9 @@ const BillingAddress = () => {
     localStorage.removeItem("addressId");
     removeAddressCookie("selectedAddress");
     setLocStorage(0);
-    toast("Default Address Picked", {
-      position: "top-right",
-      autoClose: 1000,
+    toast.success("Automatically Set to Default Address", {
+      position: "top-center",
+      autoClose: 1500,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
@@ -106,26 +117,35 @@ const BillingAddress = () => {
     getUserCart();
   };
 
-  // const addressHandler = async () => {
-  //   try {
-  //     const res = await Axios.post(`${API_URL}/users/newaddress`, {
-  //       address_line,
-  //       address_type,
-  //       cityId,
-  //       provinceId,
-  //       districtId,
-  //       postal_code,
-  //       userId,
-  //       isDefault,
-  //     });
-  //     setData(res.data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const addressHandler = async () => {
+    try {
+      const res = await Axios.post(`${API_URL}/users/newaddress`, {
+        // address_line,
+        // address_type,
+        // provinceId,
+        // cityId,
+        // districtId,
+        // postal_code,
+        // userId: userGlobal.id,
+        // isDefault,
+      });
+      console.log(
+        address_line,
+        address_type,
+        provinceId,
+        cityId,
+        districtId,
+        postal_code,
+        (userId = userGlobal.id),
+        isDefault
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const selectProvince = () => {
-    return addressData?.map((val) => {
+    return provinceData?.map((val) => {
       return <option value={val.id}>{val.name}</option>;
     });
   };
@@ -168,7 +188,7 @@ const BillingAddress = () => {
                     ) : null}
                   </div>
                   <h2 className="">
-                    {val.address_line}, <span>{val.district}</span>,{" "}
+                    {val.address_line}, <span>{val.province.name}</span>,{" "}
                     <span>{val.city}</span>
                   </h2>
                   <h2 className="">Postal Code: {val.postal_code}</h2>
@@ -191,15 +211,6 @@ const BillingAddress = () => {
                                 JSON.stringify(val.id)
                               );
                               setLocStorage(val.id);
-                              toast("Address Changed", {
-                                position: "top-right",
-                                autoClose: 1000,
-                                hideProgressBar: true,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                              });
                               getUserCart();
                             }}
                             className={
@@ -395,6 +406,7 @@ const BillingAddress = () => {
                       </div>
                     </label>
                     <input
+                      onChange={(e) => setPostal_Code(+e.target.value)}
                       type="text"
                       placeholder="ex: 15220"
                       className="input input-bordered w-full max-w-xs"
@@ -407,7 +419,10 @@ const BillingAddress = () => {
                         <input type="checkbox" class="checkbox" />
                       </label>
                     </div>
-                    <button className="w-full btn btn-accent mt-4 text-white">
+                    <button
+                      onClick={updateDefaultAddress}
+                      className="w-full btn btn-accent mt-4 text-white"
+                    >
                       Submit My New Address
                     </button>
                   </div>

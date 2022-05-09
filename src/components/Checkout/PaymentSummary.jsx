@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Axios from "axios";
+import { API_URL } from "../../constant/api.js";
 
 const PaymentSummary = () => {
+  const [shipmentOption, setShipmentOptions] = useState([]);
+  const [shipmentValue, setShipmentValue] = useState("");
+  console.log(shipmentOption);
+  console.log(shipmentValue);
+
+  useEffect(() => {
+    const getShipments = async () => {
+      try {
+        const results = await Axios.get(`${API_URL}/carts/getshipments`);
+        setShipmentOptions(results.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getShipments();
+  }, []);
+
+  const selectShipmentOptions = () => {
+    return shipmentOption.map((val) => {
+      return <option value={val.name}>{val.name}</option>;
+    });
+  };
+
   return (
     <>
       <div className="w-1/2 flex flex-col space-y-2 ">
@@ -49,12 +74,9 @@ const PaymentSummary = () => {
                     name=""
                     id=""
                     className="text-left text-md border-2 rounded-md w-1/2"
+                    onChange={(e) => setShipmentValue(e.target.value)}
                   >
-                    <option value="">JNE</option>
-                    <option value="">TIKI</option>
-                    <option value="">NINJA</option>
-                    <option value="">Go-Send</option>
-                    <option value="">Grab-Send</option>
+                    {selectShipmentOptions()}
                   </select>
                   <h2 className="text-teal-400 text-md italic">Rp 25.000</h2>
                 </div>
@@ -68,11 +90,11 @@ const PaymentSummary = () => {
           <div className="p-3 rounded-t-xl">
             <div className="flex flex-col">
               <div className="space-x-2">
-                <h2 className="font-bold">Payment</h2>
+                <h2 className="font-bold">Cart Summary</h2>
               </div>
               <span className="border-1 w-full mt-2"></span>
               <div className="flex flex-col mt-4 space-y-4">
-                <h2 className="mb-2">Pay Via Bank Transfer</h2>
+                <h2 className="mb-2">Please check twice before you checkout</h2>
                 <div className="form-control rounded-xl border-0 ">
                   <div className="flex justify-between w-full items-center">
                     <div className="flex space-x-4">

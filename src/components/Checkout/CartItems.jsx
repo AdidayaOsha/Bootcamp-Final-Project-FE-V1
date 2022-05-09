@@ -9,7 +9,6 @@ import { getCartCookie } from "../../hooks/getCookie";
 import { setCartCookie } from "../../hooks/setCookie";
 
 const CartItems = ({ val, setCartItems, cartItems }) => {
-  const [change, setChange] = useOutletContext(0);
   let [quantity, setQuantity] = useState(val.quantity);
 
   const userGlobal = useSelector((state) => state.user);
@@ -33,7 +32,6 @@ const CartItems = ({ val, setCartItems, cartItems }) => {
     } else {
       qtyHandler(quantity);
     }
-    setCartCookie(JSON.stringify(cartItems));
   }, [quantity]);
 
   return (
