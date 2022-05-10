@@ -24,3 +24,19 @@ export const setPaymentCookie = (selectedPaymentId) => {
     path: "/",
   });
 };
+export const setShipmentCookie = (selectedShipmentId) => {
+  Cookie.set("selectedShipment", selectedShipmentId, {
+    expires: 1,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+  });
+};
+export const setDiscountCookie = (selectedDiscount) => {
+  Cookie.set("selectedShipment", selectedDiscount, {
+    expires: 1,
+    secure: true,
+    sameSite: "strict",
+    path: "/",
+  });
+};

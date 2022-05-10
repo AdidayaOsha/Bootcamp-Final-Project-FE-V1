@@ -13,6 +13,7 @@ import { getAddressCookie } from "../../hooks/getCookie";
 import {
   removeAddressCookie,
   removePaymentCookie,
+  removeShipmentCookie,
 } from "../../hooks/removeCookie";
 import Axios from "axios";
 import useGeoLocation from "../../hooks/useGeoLocation";
@@ -152,6 +153,8 @@ const BillingAddress = () => {
   const removeLocalAddressId = () => {
     localStorage.removeItem("addressId");
     removeAddressCookie("selectedAddress");
+    removePaymentCookie("selectedPayment");
+    removeShipmentCookie("selectedShipment");
     setLocStorage(0);
     toast.success("Automatically Set to Default Address", {
       position: "top-center",
@@ -259,6 +262,7 @@ const BillingAddress = () => {
                             onClick={() => {
                               removeAddressCookie();
                               removePaymentCookie();
+                              removeShipmentCookie();
                               localStorage.setItem(
                                 "addressId",
                                 JSON.stringify(val.id)
