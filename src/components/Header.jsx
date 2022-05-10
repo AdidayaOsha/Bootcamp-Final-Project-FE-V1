@@ -40,7 +40,7 @@ const Header = () => {
   return (
     <header className="main-header navbar">
       <div className="col-search">
-        {newDate.toString().slice(0,3)}, {date.toString()} - {newDate.toString().slice(4,7)} - {year.toString()}
+        {newDate.toString().slice(0,3)}, {date.toString()} {newDate.toString().slice(4,7)} {year.toString()}
       </div>
       <div className="col-nav">
         <div className="mx-4">
