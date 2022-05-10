@@ -6,6 +6,7 @@ import $ from "jquery";
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
+  const adminGlobal = useSelector((state) => state.admin);
   const logout = () => {
     dispatch({
       type: "ADMIN_LOGOUT"
@@ -39,7 +40,7 @@ const Header = () => {
       </div>
       <div className="col-nav">
         <div className="mx-4">
-          Welcome, {userGlobal.username}
+          Welcome, {adminGlobal.username}
         </div>
         <div class="dropdown dropdown-end">
           <label tabindex="0" class="btn btn-ghost btn-circle avatar">

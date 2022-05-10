@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API_URL } from "./constant/api";
 import "./App.css";
 import "./responsive.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+
 import ProductScreen from "./pages/productScreen";
 import CategoriesScreen from "./pages/CategoriesScreen";
 import AddProduct from "./pages/AddProduct";
 import ProductEditScreen from "./pages/ProductEditScreen";
+import Transaction from "./pages/Transactions";
 
 import AdminAuthentication from "./pages/AdminAuth/AdminAuthentication";
-// import AdminForgotPassword from "./pages/Auth/AdminForgotPassword";
-// import AdminRecoverPassword from "./pages/Auth/AdminRecoverPassword";
+import AdminForgotPassword from "./pages/AdminAuth/AdminForgotPassword";
+import AdminRecoverPassword from "./pages/AdminAuth/AdminRecoverPassword";
 import AdminRegister from "./pages/AdminAuth/AdminRegister";
 import AdminLogin from "./pages/AdminAuth/AdminLogin";
 
@@ -40,16 +44,17 @@ import { ToastContainer } from "react-toastify";
 import CheckoutDetails from "./pages/CheckoutDetails";
 import BillingDetails from "./pages/BillingDetails";
 import PaymentDetails from "./pages/PaymentDetails";
-import Axios from "axios";
-import { useDispatch } from "react-redux";
+import Cart from "./components/Checkout/Cart";
 
 function App() {
   const dispatch = useDispatch();
   const userLocalStorage = localStorage.getItem("userDataEmmerce");
   const adminLocalStorage = localStorage.getItem("adminDataEmmerce");
+  const userGlobal = useSelector((state) => state.user);
+  const adminGlobal = useSelector((state) => state.admin);
+  const [currentUser, setCurrentUser] = useState(0)
 
   const userKeepLogin = () => {
-    console.log(userLocalStorage);
     Axios.post(
       `http://localhost:9990/users/auth`,
       {},
@@ -60,7 +65,6 @@ function App() {
       }
     )
       .then((res) => {
-        console.log(res);
         dispatch({
           type: "USER_KEEP_LOGIN",
           payload: res.data,
@@ -76,7 +80,6 @@ function App() {
   };
 
   const adminKeepLogin = () => {
-    console.log(adminLocalStorage);
     Axios.post(
       `http://localhost:9990/admins/auth`,
       {},
@@ -87,7 +90,6 @@ function App() {
       }
     )
       .then((res) => {
-        console.log(res);
         dispatch({
           type: "ADMIN_KEEP_LOGIN",
           payload: res.data,
@@ -98,40 +100,103 @@ function App() {
       });
   };
 
+
+
   useEffect(() => {
     userKeepLogin();
     adminKeepLogin();
   }, []);
+
+  useEffect(() => {
+    if (adminGlobal.id) {
+      console.log("aku admin");
+      setCurrentUser(2)
+    }
+    if (userGlobal.id) {
+      console.log("aku user");
+      setCurrentUser(1)
+    }
+    if (!userGlobal.id && !adminGlobal.id) {
+      console.log("aku belom daftar")
+      setCurrentUser(0)
+    }
+  }, [userGlobal, adminGlobal])
+
+
 
   return (
     <>
       <BrowserRouter>
         <Routes>
           {/* PRODUCTS */}
-          <Route path="/products" element={<ProductScreen />} />
-          <Route path="/category" element={<CategoriesScreen />} />
-          <Route path="/addproduct" element={<AddProduct />} />
-          <Route path="/products/find/:id" element={<ProductEditScreen />} />
+          {currentUser === 2 ?
+            <>
+              <Route path="/category" element={<CategoriesScreen />} />
+              <Route path="/products" element={<ProductScreen />} />
+              <Route path="/addproduct" element={<AddProduct />} />
+              <Route path="/products/find/:id" element={<ProductEditScreen />} />
+              <Route path="/transaction" element={<Transaction />} />
+              <Route path="/report" element={<Report />} />
+              <Route path="/warehouse" element={<Warehouse />} />
+              <Route path="/warehouse/:id" element={<ShowWarehouse />} />
+              <Route path="/warehouse/:id/inventory" element={<ProductWarehouse />} />
+              <Route path="/warehouse/:id/cost" element={<CostWarehouse />} />
+              <Route path="/warehouse/:id/shipping" element={<ShippingWarehouse />} />
+              <Route path="/addwarehouse" element={<FormWarehouse />} />
+              <Route path="/user" element={<User />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+            </>
+            :
+            <>
+              <Route path="*" element={<NotFound />} />
+            </>
+          }
 
           {/* CARTS */}
-          <Route path="/checkout" element={<CheckoutDetails />} />
-          <Route path="/billing" element={<BillingDetails />} />
-          <Route path="/payment" element={<PaymentDetails />} />
-          <Route
-            path="/adminauthentication/:token"
-            element={<AdminAuthentication />}
-          />
-          {/* <Route path="/adminforgotpassword" element={<AdminForgotPassword />} /> */}
-          {/* <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} /> */}
-          <Route path="/adminregister" element={<AdminRegister />} />
-          <Route path="/admin" element={<AdminLogin />} />
+          {currentUser === 1 ?
+            <>
+              <Route path="/checkout" element={<CheckoutDetails />} />
+              <Route path="/billing" element={<BillingDetails />} />
+              <Route path="/payment" element={<PaymentDetails />} />
+              <Route path="/cart" element={<CheckoutDetails />}>
+                <Route index element={<Cart />} />
+                <Route path="billing" element={<BillingDetails />} />
+                <Route path="payment" element={<PaymentDetails />} />
+              </Route>
+              <Route path="/detail/:id" element={<Details />} />
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/" element={<Home />} />
+            </>
+            :
+            <>
+              <Route path="*" element={<NotFound />} />
+            </>
+          }
 
-          {/* USER */}
-          <Route path="/authentication/:token" element={<Authentication />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/recoverpassword/:token" element={<RecoverPassword />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          {currentUser === 0 ?
+            <>
+              {/* ADMIN */}
+              <Route path="/adminauthentication/:token" element={<AdminAuthentication />} />
+              <Route path="/adminforgotpassword" element={<AdminForgotPassword />} />
+              <Route path="/adminrecoverpassword/:token" element={<AdminRecoverPassword />} />
+              <Route path="/adminregister" element={<AdminRegister />} />
+              <Route path="/admin" element={<AdminLogin />} />
+
+              {/* USER */}
+              <Route path="/authentication/:token" element={<Authentication />} />
+              <Route path="/forgotpassword" element={<ForgotPassword />} />
+              <Route path="/recoverpassword/:token" element={<RecoverPassword />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/" element={<Home />} />
+            </>
+            :
+            <>
+              <Route path="*" element={<NotFound />} />
+            </>
+          }
 
           {/* HOMEPAGE */}
           <Route path="/catalog" element={<Catalog />} />
@@ -139,16 +204,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
 
-          {/* ADMIN MASTER DATA */}
-          <Route path="/report" element={<Report />} />
-          <Route path="/warehouse" element={<Warehouse />} />
-          <Route path="/warehouse/:id" element={<ShowWarehouse />} />
-          <Route path="/warehouse/:id/inventory" element={<ProductWarehouse />} />
-          <Route path="/warehouse/:id/cost" element={<CostWarehouse />} />
-          <Route path="/warehouse/:id/shipping" element={<ShippingWarehouse />} />
-          <Route path="/addwarehouse" element={<FormWarehouse />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />
