@@ -44,7 +44,7 @@ const CheckoutDetails = () => {
         <Outlet context={[cartItems, setCartItems, change, setChange]} />
         <div className="w-3/12 space-y-4 flex flex-col">
           {addressCookie && <TableAddress />}
-          {paymentCookie && <TablePayment />}
+          {paymentCookie && <TablePayment setChange={setChange} />}
           <OrderSummary
             cartItems={cartItems}
             setCartItems={setCartItems}

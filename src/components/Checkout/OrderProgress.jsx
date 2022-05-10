@@ -4,17 +4,24 @@ import {
   getCartCookie,
   getAddressCookie,
   getPaymentCookie,
+  getShipmentCookie,
 } from "../../hooks/getCookie";
 
 import { AiOutlineCheck } from "react-icons/ai";
 
 const OrderProgress = ({ change, setChange }) => {
   const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
+
   const paymentCookie = getPaymentCookie()
     ? JSON.parse(getPaymentCookie())
     : null;
+
   const addressCookie = getAddressCookie()
     ? JSON.parse(getAddressCookie())
+    : null;
+
+  const shipmentCookie = getShipmentCookie()
+    ? JSON.parse(getShipmentCookie())
     : null;
 
   useEffect(() => {
@@ -74,7 +81,7 @@ const OrderProgress = ({ change, setChange }) => {
                 <span className="flex border-top h-[3px] bg-slate-100 w-[200px]"></span>
               </>
             )}
-            {cartCookie && addressCookie && paymentCookie ? (
+            {cartCookie && addressCookie && paymentCookie && shipmentCookie ? (
               <span className="text-xl text-green-600">
                 <AiOutlineCheck />
               </span>
@@ -83,7 +90,7 @@ const OrderProgress = ({ change, setChange }) => {
             )}
           </div>
 
-          {/* Progress Head */}
+          {/* Progress Head-nya */}
           <div className="w-full justify-center tabs ">
             <div className="">
               <NavLink

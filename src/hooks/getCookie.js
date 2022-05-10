@@ -9,3 +9,9 @@ export const getAddressCookie = (x) => {
 export const getPaymentCookie = (x) => {
   return Cookie.get("selectedPayment");
 };
+export const getShipmentCookie = (x) => {
+  return Cookie.get("selectedShipment");
+};
+export const getDiscountCookie = (x) => {
+  return Cookie.get("selectedDiscount");
+};

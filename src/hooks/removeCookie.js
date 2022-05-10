@@ -9,3 +9,6 @@ export const removeAddressCookie = (selectedAddress) => {
 export const removePaymentCookie = (selectedPayment) => {
   Cookie.remove("selectedPayment");
 };
+export const removeShipmentCookie = (selectedShipment) => {
+  Cookie.remove("selectedShipment");
+};

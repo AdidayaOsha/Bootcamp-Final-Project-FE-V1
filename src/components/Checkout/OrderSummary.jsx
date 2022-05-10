@@ -90,10 +90,6 @@ const OrderSummary = ({ cartItems, setCartItems, setChange }) => {
     console.log("hi");
   };
 
-  const submitShipping = () => {
-    setAddressCookie("selectedPayment", JSON.stringify());
-  };
-
   const renderButton = () => {
     const cartCookie = getCartCookie() ? JSON.parse(getCartCookie()) : null;
     const addressCookie = getAddressCookie()
