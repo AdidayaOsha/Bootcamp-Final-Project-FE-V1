@@ -6,10 +6,6 @@ import $ from "jquery";
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
-  let newDate = new Date();
-  let date = newDate.getDate();
-  let month = newDate.getMonth() + 1;
-  let year = newDate.getFullYear();
   const logout = () => {
     dispatch({
       type: "ADMIN_LOGOUT"
@@ -40,7 +36,6 @@ const Header = () => {
   return (
     <header className="main-header navbar">
       <div className="col-search">
-        {newDate.toString().slice(0,3)}, {date.toString()} {newDate.toString().slice(4,7)} {year.toString()}
       </div>
       <div className="col-nav">
         <div className="mx-4">
