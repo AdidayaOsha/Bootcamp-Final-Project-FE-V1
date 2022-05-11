@@ -60,7 +60,7 @@ const ProductsTable = () => {
         <tr key={val.id}>
           <td>{i+1}</td>
           <td className="text-center">
-            <b>Cikarang</b>
+            <b>Pluit</b>
           </td>
           <td className="text-center">{val.product.name}</td>
           <td className="text-center">2 pcs</td>
